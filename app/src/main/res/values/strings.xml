@@ -1,0 +1,23 @@
+<resources>
+
+    <string name="app_name">AllWeather</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="intro_title_1">Welcome</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="firstCategory">General</string>
+    <string name="system">System of Units</string>
+    <string-array name="systemUnit">
+        <item>Metric (°C, m/s)</item>
+        <item>Imprerial (°F, mhp)</item>
+    </string-array>
+    <string-array name="systemValue">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+</resources>

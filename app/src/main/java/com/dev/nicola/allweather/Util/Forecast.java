@@ -1,0 +1,52 @@
+package com.dev.nicola.allweather.Util;
+
+/**
+ * Created by Nicola on 09/05/2016.
+ */
+public class Forecast {
+
+    private String date;
+    private String condition;
+    private int temperature;
+    private int icon;
+
+    public Forecast(String date, String condition, int temperature, int icon) {
+        this.date = date;
+        this.condition = condition;
+        this.temperature = temperature;
+        this.icon = icon;
+    }
+
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
+
+    public int getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(int temperature) {
+        this.temperature = temperature;
+    }
+
+    public int getIcon() {
+        return icon;
+    }
+
+    public void setIcon(int icon) {
+        this.icon = icon;
+    }
+}
