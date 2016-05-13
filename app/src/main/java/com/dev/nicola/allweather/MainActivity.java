@@ -37,7 +37,6 @@ import com.lapism.searchview.SearchView;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -252,10 +251,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             });
 
-            suggestionsList = new ArrayList<>();
-            suggestionsList.add(new SearchItem("search1"));
-            suggestionsList.add(new SearchItem("search2"));
-            suggestionsList.add(new SearchItem("search3"));
+//            suggestionsList = new ArrayList<>();
+//            suggestionsList.add(new SearchItem("search1"));
+//            suggestionsList.add(new SearchItem("search2"));
+//            suggestionsList.add(new SearchItem("search3"));
 
             SearchAdapter searchAdapter = new SearchAdapter(this, suggestionsList);
             searchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
