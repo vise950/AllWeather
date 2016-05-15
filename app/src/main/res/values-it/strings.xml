@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AllWeather</string>
-    
+
     <string name="intro_title_1">Benvenuto</string>
     <string name="intro_description_1">Grazie per avermi scelto \nSpero di soddisfare le tue richieste</string>
     <string name="intro_title_2">Posizione</string>

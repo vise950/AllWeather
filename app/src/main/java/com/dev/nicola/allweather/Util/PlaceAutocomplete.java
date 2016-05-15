@@ -27,16 +27,17 @@ public class PlaceAutocomplete {
     private static final String TYPES = "geocode";
     private static final String GOOGLE_API_KEY = "AIzaSyASZMgu_N3JTvHcbLhs57ZEKOEyqrIPF6g";
     private static String TAG = PlaceAutocomplete.class.getSimpleName();
-    private JSONObject mObject;
     private StringBuilder mBuilder;
     private OkHttpClient mClient;
     private Request mRequest;
     private Response mResponse;
+    private JSONObject mObject;
 
     public List autocomplete(String query) {
         String url;
 
-        List<SearchItem>suggestionsList = null;
+        List<SearchItem> suggestionsList = null;
+        String suggestion = null;
 
         mBuilder = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
         mBuilder.append("?input=" + query);
@@ -53,17 +54,14 @@ public class PlaceAutocomplete {
         try {
             mResponse = mClient.newCall(mRequest).execute();
             String responseData = mResponse.body().string();
+
             mObject = new JSONObject(responseData);
-            Log.d(TAG, "object " + mObject);
 
             JSONArray predsJsonArray = mObject.getJSONArray("predictions");
-
-            // Extract the Place descriptions from the results
-//            List<String> list = new ArrayList<>(predsJsonArray.length());
-            suggestionsList = new ArrayList<>(predsJsonArray.length());
+            suggestionsList = new ArrayList<>();
             for (int i = 0; i < predsJsonArray.length(); i++) {
-                System.out.println(predsJsonArray.getJSONObject(i).getString("description"));
-                suggestionsList.add(new SearchItem(predsJsonArray.getJSONObject(i).getString("description")));
+                suggestion = predsJsonArray.getJSONObject(i).getString("description");
+                suggestionsList.add(new SearchItem(suggestion));
             }
 
         } catch (IOException | JSONException e) {

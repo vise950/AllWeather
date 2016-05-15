@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIORequest;
@@ -37,6 +36,7 @@ import com.lapism.searchview.SearchView;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -44,36 +44,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     final static String TAG = MainActivity.class.getSimpleName();
 
     final String PREFERENCES = MainActivity.class.getName();
-
+    String sugg;
     private DrawerLayout mDrawer;
     private NavigationView mNavigationView;
     private SearchView mSearchView;
-
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
-
     private boolean firstRun;
     private Preferences mPreferences;
     private String locationName;
-
     private Utils mUtils;
     private Bundle mBundle;
     private DailyFragment mDailyFragment;
     private PlaceAutocomplete mPlaceAutocomplete;
-
     private Handler mHandler;
-
     private GoogleApiClient mGoogleApiClient;
     private Location mLocation;
     private LocationRequest mLocationRequest;
-
     private ForecastIORequest mRequest;
-
-
     private JSONObject mJSONObject;
-
     private ProgressDialog mProgressDialog;
-
     private List<SearchItem> suggestionsList;
 
     @Override
@@ -107,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             setDrawer();
             setNavigationView();
             setSearchView();
-            setViewPager();
+//            setViewPager();
         }
     }
 
@@ -202,10 +192,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
-    private void setViewPager() {
-        final FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager());
-        fragmentAdapter.addFragment(new DailyFragment(), "NOW");
-        fragmentAdapter.addFragment(new ForecastFragment(), "WEEK");
+    private void setViewPager(String argument) {
+        Log.d(TAG, "setViewPager");
+        FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), argument);
 
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         if (mViewPager != null) {
@@ -238,9 +227,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    if (newText.length()>3) {
-                        taskAutoComplete(newText);
-                    }
+//                    if (newText.length() > 3) {
+//                    taskAutoComplete(newText);
+//                    }
                     return false;
                 }
 
@@ -251,75 +240,54 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             });
 
-//            suggestionsList = new ArrayList<>();
+            suggestionsList = new ArrayList<>();
 //            suggestionsList.add(new SearchItem("search1"));
 //            suggestionsList.add(new SearchItem("search2"));
 //            suggestionsList.add(new SearchItem("search3"));
-
-            SearchAdapter searchAdapter = new SearchAdapter(this, suggestionsList);
-            searchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    mSearchView.close(false);
-                    TextView textView=(TextView)view.findViewById(R.id.textView_item_text);
-                    String item=textView.getText().toString();
-                    Toast.makeText(getApplicationContext(), item, Toast.LENGTH_LONG).show();
-                }
-            });
-            mSearchView.setAdapter(searchAdapter);
+//
+//            SearchAdapter searchAdapter = new SearchAdapter(this, suggestionsList);
+//            searchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(View view, int position) {
+//                    mSearchView.close(false);
+//                    TextView textView=(TextView)view.findViewById(R.id.textView_item_text);
+//                    String item=textView.getText().toString();
+//                    Toast.makeText(getApplicationContext(), item, Toast.LENGTH_LONG).show();
+//                }
+//            });
+//            mSearchView.setAdapter(searchAdapter);
         }
     }
 
-//    private void setUpLayout() {
-//        Log.d(TAG, "setUpLayout");
-//
-//        mViewPager = (ViewPager) findViewById(R.id.viewPager);
-//
-//        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-//        mTabLayout.addTab(mTabLayout.newTab().setText("NOW"));
-//        mTabLayout.addTab(mTabLayout.newTab().setText("WEEK"));
-//
-//        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), mTabLayout.getTabCount());
-//        mViewPager.setAdapter(adapter);
-//        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-//
-//    }
-//
-//
-//    ///adapter tabLayout
-//    public class PagerAdapter extends FragmentStatePagerAdapter {
-//        int mNumOfTabs;
-//        Bundle bundle=new Bundle();
-//
-//        public PagerAdapter(FragmentManager fm, int NumOfTabs) {
-//            super(fm);
-//            this.mNumOfTabs = NumOfTabs;
-//        }
-//
-//        @Override
-//        public Fragment getItem(int position) {
-//
-//            switch (position) {
-//                case 0:
-//                    DailyFragment dailyFragment = new DailyFragment();
-//                    bundle.putString("JsonObject", mJSONObject.toString());
-//                    dailyFragment.setArguments(bundle);
-//                    return dailyFragment;
-//                case 1:
-//                    ForecastFragment forecastFragment = new ForecastFragment();
-//                    bundle.putString("JsonObject",mJSONObject.toString());
-//                    forecastFragment.setArguments(bundle);
-//                    return forecastFragment;
-//                default:
-//                    return null;
-//            }
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return mNumOfTabs;
-//        }
-//    }
+
+    private void taskAutoComplete(final String query) {
+        mHandler = new Handler();
+
+        new Thread() {
+            public void run() {
+
+                suggestionsList = mPlaceAutocomplete.autocomplete(query);
+                Log.d(TAG, "autocomplete object" + mJSONObject);
+
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < suggestionsList.size(); i++) {
+                            Log.d(TAG, "suggestion list " + suggestionsList.get(i).get_text().toString());
+                        }
+                    }
+                });
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SearchAdapter searchAdapter = new SearchAdapter(getApplicationContext(), suggestionsList);
+                        mSearchView.setAdapter(searchAdapter);
+                    }
+                });
+            }
+        }.start();
+    }
 
 
     @Override
@@ -331,14 +299,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLocation != null) {
-
             Log.d(TAG, "latitude:" + mLocation.getLatitude() + " longitude:" + mLocation.getLongitude());
             new task().execute();
-
         } else {
-
-//            Snackbar snackbar = Snackbar.make(findViewById(R.id.content_layout), "Impossibile recuperare la posizione", Snackbar.LENGTH_LONG);
-//            snackbar.show();
+            Toast.makeText(getApplicationContext(), "Impossibile recuperare la posizione", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -358,35 +322,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
-    private void initialTask() {
-        Log.d(TAG, "initialTask");
-        mHandler = new Handler();
-        new Thread() {
-            public void run() {
-
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-//                        setUpLayout();
-                    }
-                });
-            }
-        }.start();
-    }
-
-
-    private void taskAutoComplete(final String query) {
-        new Thread() {
-            public void run() {
-                suggestionsList=mPlaceAutocomplete.autocomplete(query);
-            }
-        }.start();
-
-    }
-
-
     public class task extends AsyncTask<Void, Void, Void> {
-
 
         @Override
         protected void onPreExecute() {
@@ -406,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         protected void onPostExecute(Void v) {
             Log.d(TAG, "AsyncTask onPostExecute");
 
-//            setUpLayout();
+            setViewPager(mJSONObject.toString());
 
             if (mProgressDialog.isShowing())
                 mProgressDialog.dismiss();

@@ -26,10 +26,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainIntro"
-                  android:theme="@style/FullscreenTheme"/>
+        <activity
+            android:name=".MainIntro"
+            android:theme="@style/FullscreenTheme"/>
 
-        <activity android:name=".AppPreferences"
+        <activity
+            android:name=".AppPreferences"
             android:label="@string/action_settings"/>
 
         <!-- This meta-data tag is required to use Google Play Services. -->

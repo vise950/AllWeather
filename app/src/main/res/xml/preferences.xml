@@ -5,11 +5,11 @@
         android:title="@string/firstCategory">
 
         <ListPreference
-            android:title="@string/system"
-            android:key="systemUnit"
             android:defaultValue="1"
             android:entries="@array/systemUnit"
-            android:entryValues="@array/systemValue"/>
+            android:entryValues="@array/systemValue"
+            android:key="systemUnit"
+            android:title="@string/system"/>
 
     </PreferenceCategory>
 

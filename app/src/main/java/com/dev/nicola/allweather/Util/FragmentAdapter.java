@@ -4,39 +4,39 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.dev.nicola.allweather.DailyFragment;
+import com.dev.nicola.allweather.ForecastFragment;
 
 /**
  * Created by Nicola on 12/05/2016.
  */
 public class FragmentAdapter extends FragmentPagerAdapter {
 
-    private final List<Fragment> mFragments = new ArrayList<>();
-    private final List<String> mFragmentTitles = new ArrayList<>();
+    final int PAGE_COUNT = 2;
+    private String tabTitles[] = {"NOW", "WEEK"};
+    private String argument;
 
-    public FragmentAdapter(FragmentManager fm) {
+    public FragmentAdapter(FragmentManager fm, String argument) {
         super(fm);
-    }
-
-    public void addFragment(Fragment fragment, String title) {
-        mFragments.add(fragment);
-        mFragmentTitles.add(title);
+        this.argument = argument;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return mFragments.get(position);
+        if (position == 0)
+            return DailyFragment.newInstance(argument);
+        else
+            return ForecastFragment.newInstance(argument);
     }
 
     @Override
     public int getCount() {
-        return mFragments.size();
+        return PAGE_COUNT;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mFragmentTitles.get(position);
+        return tabTitles[position];
     }
 
 }

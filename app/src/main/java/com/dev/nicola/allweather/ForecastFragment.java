@@ -34,14 +34,21 @@ public class ForecastFragment extends Fragment {
     private ForecastIOData mData;
     private Gson mGson;
 
-    private String dataObject;
+    private String argument;
 
-    public ForecastFragment() {
+    public static ForecastFragment newInstance(String argument) {
+        Bundle bundle = new Bundle();
+        bundle.putString("ARGUMENT", argument);
+        ForecastFragment forecastFragment = new ForecastFragment();
+        forecastFragment.setArguments(bundle);
+        return forecastFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        argument = getArguments().getString("ARGUMENT");
 
         mUtils = new Utils(getContext());
         mData = new ForecastIOData();
@@ -50,22 +57,20 @@ public class ForecastFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View mInflateView = inflater.inflate(R.layout.forecast_fragment, container, false);
+        View view = inflater.inflate(R.layout.forecast_fragment, container, false);
 
-//        dataObject = getArguments().getString("JsonObject");
-//        Log.d(TAG, "object forecast fragment" + dataObject);
-//        mData = mGson.fromJson(dataObject, ForecastIOData.class);
+        mData = mGson.fromJson(argument, ForecastIOData.class);
 
-        mRecyclerView = (RecyclerView) mInflateView.findViewById(R.id.forecast_recycle_view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.forecast_recycle_view);
         mForecastAdapter = new ForecastAdapter(mForecastList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mForecastAdapter);
 
-//        prepareForecastData();
+        prepareForecastData();
 
-        return mInflateView;
+        return view;
     }
 
     private void prepareForecastData() {
@@ -79,7 +84,5 @@ public class ForecastFragment extends Fragment {
             mForecastList.add(forecast);
         }
         mForecastAdapter.notifyDataSetChanged();
-
-
     }
 }

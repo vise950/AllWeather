@@ -48,15 +48,22 @@ public class DailyFragment extends Fragment {
     private ForecastIOData mData;
     private Gson mGson;
 
-    private String dataObject;
+    private String argument;
 
 
-    public DailyFragment() {
+    public static DailyFragment newInstance(String argument) {
+        Bundle bundle = new Bundle();
+        bundle.putString("ARGUMENT", argument);
+        DailyFragment dailyFragment = new DailyFragment();
+        dailyFragment.setArguments(bundle);
+        return dailyFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        argument = getArguments().getString("ARGUMENT");
 
         mUtils = new Utils(getContext());
         mData = new ForecastIOData();
@@ -66,19 +73,14 @@ public class DailyFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        Log.d(TAG, "onCreateView");
+        View view = inflater.inflate(R.layout.daily_fragment, container, false);
 
-        View mInflatedView = inflater.inflate(R.layout.daily_fragment, container, false);
+        mData = mGson.fromJson(argument, ForecastIOData.class);
 
-//        dataObject=getArguments().getString("JsonObject");
-//        Log.d(TAG,"object daily fragment"+dataObject);
-//        mData = mGson.fromJson(dataObject, ForecastIOData.class);
+        setUpLayout(view);
+        setText();
 
-//        setUpLayout(mInflatedView);
-//        setText();
-
-        return mInflatedView;
-
+        return view;
     }
 
 

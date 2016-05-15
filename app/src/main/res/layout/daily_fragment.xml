@@ -50,8 +50,8 @@
                     android:paddingLeft="8dp"
                     android:text="Sossano"
                     android:textColor="#ffffff"
-                    android:textStyle="bold"
-                    android:textSize="36sp"/>
+                    android:textSize="36sp"
+                    android:textStyle="bold"/>
             </RelativeLayout>
 
 
