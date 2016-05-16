@@ -1,5 +1,6 @@
 package com.dev.nicola.allweather;
 
+
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
