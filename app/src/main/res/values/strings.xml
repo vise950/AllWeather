@@ -20,4 +20,6 @@
         <item>2</item>
     </string-array>
 
+    <string name="credits">Credits</string>
+
 </resources>

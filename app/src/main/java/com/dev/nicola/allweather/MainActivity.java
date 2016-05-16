@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,7 +25,6 @@ import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIORequest;
 import com.dev.nicola.allweather.Util.FragmentAdapter;
 import com.dev.nicola.allweather.Util.PlaceAutocomplete;
 import com.dev.nicola.allweather.Util.Preferences;
-import com.dev.nicola.allweather.Util.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -36,7 +36,6 @@ import com.lapism.searchview.SearchView;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -44,27 +43,29 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     final static String TAG = MainActivity.class.getSimpleName();
 
     final String PREFERENCES = MainActivity.class.getName();
-    String sugg;
+
     private DrawerLayout mDrawer;
     private NavigationView mNavigationView;
     private SearchView mSearchView;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+    private ProgressDialog mProgressDialog;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     private boolean firstRun;
     private Preferences mPreferences;
-    private String locationName;
-    private Utils mUtils;
-    private Bundle mBundle;
-    private DailyFragment mDailyFragment;
+
     private PlaceAutocomplete mPlaceAutocomplete;
-    private Handler mHandler;
+    private List<SearchItem> suggestionsList;
+
     private GoogleApiClient mGoogleApiClient;
     private Location mLocation;
     private LocationRequest mLocationRequest;
+
+    private Handler mHandler;
     private ForecastIORequest mRequest;
     private JSONObject mJSONObject;
-    private ProgressDialog mProgressDialog;
-    private List<SearchItem> suggestionsList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +83,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         } else {
             mProgressDialog = ProgressDialog.show(MainActivity.this, "", "loading...", true);
 
-            mUtils = new Utils(getApplicationContext());
-            mBundle = new Bundle();
-            mDailyFragment = new DailyFragment();
             mPlaceAutocomplete = new PlaceAutocomplete();
             mRequest = new ForecastIORequest(getApplicationContext());
 
@@ -97,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             setDrawer();
             setNavigationView();
             setSearchView();
-//            setViewPager();
         }
     }
 
@@ -205,6 +202,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if (mTabLayout != null) {
             mTabLayout.setupWithViewPager(mViewPager);
         }
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new task().execute();
+            }
+        });
     }
 
 
@@ -240,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             });
 
-            suggestionsList = new ArrayList<>();
+//            suggestionsList = new ArrayList<>();
 //            suggestionsList.add(new SearchItem("search1"));
 //            suggestionsList.add(new SearchItem("search2"));
 //            suggestionsList.add(new SearchItem("search3"));
@@ -333,7 +338,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         protected Void doInBackground(Void... params) {
             Log.d(TAG, "AsyncTask doInBackground");
             mJSONObject = mRequest.getData(mRequest.setUrl(mLocation.getLatitude(), mLocation.getLongitude()));
-//            Log.d(TAG, "Json" + mJSONObject);
 
             return null;
         }
@@ -346,6 +350,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             if (mProgressDialog.isShowing())
                 mProgressDialog.dismiss();
+
+            if (mSwipeRefreshLayout.isRefreshing())
+                mSwipeRefreshLayout.setRefreshing(false);
 
         }
     }
