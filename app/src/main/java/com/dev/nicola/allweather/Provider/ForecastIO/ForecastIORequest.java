@@ -36,10 +36,13 @@ public class ForecastIORequest {
     private Request mRequest;
     private Response mResponse;
 
+    private Context mContext;
+
 
     public ForecastIORequest(Context context) {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         units = mPreferences.getString("systemUnit", "1");
+        this.mContext = context;
     }
 
 
@@ -82,6 +85,7 @@ public class ForecastIORequest {
             mObject = new JSONObject(responseData);
         } catch (IOException | JSONException e) {
             Log.d(TAG, "exception:" + e);
+            return null;
         }
 
 //        Log.d(TAG, "object:" + mObject);

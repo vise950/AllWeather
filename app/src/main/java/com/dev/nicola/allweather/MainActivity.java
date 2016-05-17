@@ -9,7 +9,9 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -20,7 +22,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIORequest;
 import com.dev.nicola.allweather.Util.FragmentAdapter;
@@ -50,8 +51,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private SearchView mSearchView;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+    private CoordinatorLayout mCoordinatorLayout;
     private ProgressDialog mProgressDialog;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private Snackbar mSnackbar;
 
     private boolean firstRun;
     private Preferences mPreferences;
@@ -104,7 +107,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d(TAG, "onStart");
         super.onStart();
 
-        mGoogleApiClient.connect();
+        if (firstRun)
+            mGoogleApiClient.connect();
     }
 
     @Override
@@ -215,11 +219,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
     private void setSearchView() {
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         mSearchView = (SearchView) findViewById(R.id.search_view);
         if (mSearchView != null) {
             mSearchView.setVersion(SearchView.VERSION_TOOLBAR);
             mSearchView.setVersionMargins(SearchView.VERSION_MARGINS_TOOLBAR_BIG);
-            mSearchView.setHint("Search location");
+            mSearchView.setHint("Non funziona per ora");
             mSearchView.setVoice(false);
             mSearchView.setShadow(false);
 
@@ -234,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 @Override
                 public boolean onQueryTextChange(String newText) {
 //                    if (newText.length() > 3) {
-//                    taskAutoComplete(newText);
+//                       taskAutoComplete(newText);
 //                    }
                     return false;
                 }
@@ -308,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Log.d(TAG, "latitude:" + mLocation.getLatitude() + " longitude:" + mLocation.getLongitude());
             new task().execute();
         } else {
-            Toast.makeText(getApplicationContext(), "Impossibile recuperare la posizione", Toast.LENGTH_LONG).show();
+            mSnackbar = Snackbar.make(mCoordinatorLayout, "Impossibile recuperare la posizione", Snackbar.LENGTH_LONG);
         }
     }
 
@@ -347,7 +352,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         protected void onPostExecute(Void v) {
             Log.d(TAG, "AsyncTask onPostExecute");
 
-            setViewPager(mJSONObject.toString());
+            if (mJSONObject != null)
+                setViewPager(mJSONObject.toString());
+            else
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Impossibile contattare il server in questo momento", Snackbar.LENGTH_LONG);
 
             if (mProgressDialog.isShowing())
                 mProgressDialog.dismiss();

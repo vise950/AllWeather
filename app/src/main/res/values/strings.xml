@@ -21,5 +21,11 @@
     </string-array>
 
     <string name="credits">Credits</string>
+    <string name="intro_title_2">Location</string>
+    <string name="intro_title_3">Let\'s start</string>
+    <string name="intro_description_1"> Thanks for choosing me\n I hope to satisfy your applications</string>
+    <string name="intro_description_2"> Make sure you have geolocation enabled to improve the information</string>
+    <string name="intro_description_3"> I\'m ready to show the information</string>
+    <string name="intro_description_permission_2"> I need to access your location to improve the information</string>
 
 </resources>
