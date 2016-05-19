@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
@@ -27,6 +28,7 @@ import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIORequest;
 import com.dev.nicola.allweather.Util.FragmentAdapter;
 import com.dev.nicola.allweather.Util.PlaceAutocomplete;
 import com.dev.nicola.allweather.Util.Preferences;
+import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     final static String TAG = MainActivity.class.getSimpleName();
 
     final String PREFERENCES = MainActivity.class.getName();
+
+    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
     private DrawerLayout mDrawer;
     private NavigationView mNavigationView;
@@ -73,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -84,7 +89,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Intent intent = new Intent(getApplicationContext(), MainIntro.class);
             startActivity(intent);
             mPreferences.setBooleanPrefences(PREFERENCES, "firstRun", true);
-        } else {
+        }
+
+
+        if (checkPermission()) {
             mProgressDialog = ProgressDialog.show(MainActivity.this, "", "loading...", true);
 
             mPlaceAutocomplete = new PlaceAutocomplete();
@@ -94,11 +102,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
-                    .build();
+                    .addApi(AppIndex.API).build();
 
             setDrawer();
             setNavigationView();
             setSearchView();
+        } else {
+            mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+            mSnackbar = Snackbar.make(mCoordinatorLayout, "Non è possibile recuperare i dati senza la posizione", Snackbar.LENGTH_LONG);
+            mSnackbar.show();
         }
     }
 
@@ -107,8 +119,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d(TAG, "onStart");
         super.onStart();
 
-        if (firstRun)
+        if (firstRun && checkPermission())
             mGoogleApiClient.connect();
+
     }
 
     @Override
@@ -123,8 +136,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d(TAG, "onStop");
         super.onStop();
 
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
+        if (firstRun && checkPermission()) {
+            if (mGoogleApiClient.isConnected()) {
+                mGoogleApiClient.disconnect();
+            }
         }
     }
 
@@ -239,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 @Override
                 public boolean onQueryTextChange(String newText) {
 //                    if (newText.length() > 3) {
-//                       taskAutoComplete(newText);
+//                        taskAutoComplete(newText);
 //                    }
                     return false;
                 }
@@ -278,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void run() {
 
                 suggestionsList = mPlaceAutocomplete.autocomplete(query);
-                Log.d(TAG, "autocomplete object" + mJSONObject);
+                Log.d(TAG, "autocomplete object " + mJSONObject);
 
                 mHandler.post(new Runnable() {
                     @Override
@@ -314,6 +329,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             new task().execute();
         } else {
             mSnackbar = Snackbar.make(mCoordinatorLayout, "Impossibile recuperare la posizione", Snackbar.LENGTH_LONG);
+            mSnackbar.show();
         }
     }
 
@@ -332,6 +348,42 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onLocationChanged(Location location) {
     }
 
+
+    private boolean checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void askPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    Log.d(TAG, "permission granted");
+                } else {
+                    // Permission Denied
+                    mSnackbar = Snackbar.make(mCoordinatorLayout, "Non sarà possibile recuperare i dati", Snackbar.LENGTH_LONG);
+                    mSnackbar.show();
+
+                    if (mProgressDialog.isShowing())
+                        mProgressDialog.dismiss();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
     public class task extends AsyncTask<Void, Void, Void> {
 
@@ -352,10 +404,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         protected void onPostExecute(Void v) {
             Log.d(TAG, "AsyncTask onPostExecute");
 
-            if (mJSONObject != null)
+            if (mJSONObject != null) {
                 setViewPager(mJSONObject.toString());
-            else
+            } else {
                 mSnackbar = Snackbar.make(mCoordinatorLayout, "Impossibile contattare il server in questo momento", Snackbar.LENGTH_LONG);
+                mSnackbar.show();
+            }
 
             if (mProgressDialog.isShowing())
                 mProgressDialog.dismiss();

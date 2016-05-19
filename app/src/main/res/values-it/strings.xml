@@ -3,7 +3,7 @@
     <string name="app_name">AllWeather</string>
 
     <string name="intro_title_1">Benvenuto</string>
-    <string name="intro_description_1">Grazie per avermi scelto\n Spero di soddisfare le tue richieste</string>
+    <string name="intro_description_1">Grazie per avermi scelto\nSpero di soddisfare le tue richieste</string>
     <string name="intro_title_2">Posizione</string>
     <string name="intro_description_permission_2">Ho bisogno di accedere alla tua posizione per migliorare le informazioni</string>
     <string name="intro_description_2">Assicurati di avere la geolocalizzazione attiva per migliorare le informazioni</string>
