@@ -5,11 +5,13 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -28,6 +30,7 @@ import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIORequest;
 import com.dev.nicola.allweather.Util.FragmentAdapter;
 import com.dev.nicola.allweather.Util.PlaceAutocomplete;
 import com.dev.nicola.allweather.Util.Preferences;
+import com.dev.nicola.allweather.Util.Utils;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -40,6 +43,7 @@ import com.lapism.searchview.SearchView;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private boolean firstRun;
     private Preferences mPreferences;
+    private Utils mUtils;
 
     private PlaceAutocomplete mPlaceAutocomplete;
     private List<SearchItem> suggestionsList;
@@ -82,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
 
         mPreferences = new Preferences(getApplicationContext());
+        mUtils = new Utils(getApplicationContext());
 
         firstRun = mPreferences.getBoolenaPrefences(PREFERENCES, "firstRun");
 
@@ -92,26 +98,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
 
-        if (checkPermission()) {
-            mProgressDialog = ProgressDialog.show(MainActivity.this, "", "loading...", true);
-
-            mPlaceAutocomplete = new PlaceAutocomplete();
-            mRequest = new ForecastIORequest(getApplicationContext());
-
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .addApi(AppIndex.API).build();
-
-            setDrawer();
-            setNavigationView();
-            setSearchView();
-        } else {
-            mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
-            mSnackbar = Snackbar.make(mCoordinatorLayout, "Non è possibile recuperare i dati senza la posizione", Snackbar.LENGTH_LONG);
-            mSnackbar.show();
-        }
+        if (!mUtils.checkPermission())
+            showSnackbar(1);
+        else if (!mUtils.checkGpsEnable())
+            showSnackbar(2);
+        else if (!mUtils.checkInternetConnession())
+            showSnackbar(3);
     }
 
     @Override
@@ -119,9 +111,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d(TAG, "onStart");
         super.onStart();
 
-        if (firstRun && checkPermission())
+        if (firstRun && mUtils.checkPermission() && mUtils.checkGpsEnable() && mUtils.checkInternetConnession()) {
+            initialSetup();
             mGoogleApiClient.connect();
-
+        }
     }
 
     @Override
@@ -129,6 +122,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d(TAG, "onResume");
         super.onResume();
 
+        if (!mUtils.checkPermission())
+            showSnackbar(1);
+        else if (!mUtils.checkGpsEnable())
+            showSnackbar(2);
+        else if (!mUtils.checkInternetConnession())
+            showSnackbar(3);
     }
 
     @Override
@@ -136,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d(TAG, "onStop");
         super.onStop();
 
-        if (firstRun && checkPermission()) {
+        if (firstRun && mUtils.checkPermission() && mUtils.checkGpsEnable() && mUtils.checkInternetConnession()) {
             if (mGoogleApiClient.isConnected()) {
                 mGoogleApiClient.disconnect();
             }
@@ -166,6 +165,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
+
+    private void initialSetup() {
+        mProgressDialog = ProgressDialog.show(MainActivity.this, "", "loading...", true);
+
+        mPlaceAutocomplete = new PlaceAutocomplete();
+        mRequest = new ForecastIORequest(getApplicationContext());
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .addApi(AppIndex.API).build();
+
+        setDrawer();
+        setNavigationView();
+        setSearchView();
+    }
 
     private void setDrawer() {
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -253,9 +269,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextChange(String newText) {
-//                    if (newText.length() > 3) {
-//                        taskAutoComplete(newText);
-//                    }
+                    if (newText.length() > 3) {
+                        taskAutoComplete(newText);
+//                        suggestionsList=mPlaceAutocomplete.getSuggestionList();
+//                        Log.d(TAG,"suggestions list "+suggestionsList.size());
+                    }
                     return false;
                 }
 
@@ -266,12 +284,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             });
 
-//            suggestionsList = new ArrayList<>();
-//            suggestionsList.add(new SearchItem("search1"));
-//            suggestionsList.add(new SearchItem("search2"));
-//            suggestionsList.add(new SearchItem("search3"));
-//
-//            SearchAdapter searchAdapter = new SearchAdapter(this, suggestionsList);
+
+//            suggestionsList = mPlaceAutocomplete.getSuggestionList();
+//            Log.d(TAG,"suggestions list "+suggestionsList.size());
+            suggestionsList = new ArrayList<>();
+            suggestionsList.add(new SearchItem("search1"));
+            suggestionsList.add(new SearchItem("search2"));
+            suggestionsList.add(new SearchItem("search3"));
+
+            SearchAdapter searchAdapter = new SearchAdapter(this, suggestionsList);
+//            Log.d(TAG,"searchAdapter "+searchAdapter.getItemCount());
 //            searchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
 //                @Override
 //                public void onItemClick(View view, int position) {
@@ -281,36 +303,91 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 //                    Toast.makeText(getApplicationContext(), item, Toast.LENGTH_LONG).show();
 //                }
 //            });
-//            mSearchView.setAdapter(searchAdapter);
+            mSearchView.setAdapter(searchAdapter);
         }
     }
 
 
+    private void showSnackbar(int code) {
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+        switch (code) {
+            case 1:// ask LOCATION permission
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Non ho accesso alla posione\nVuoi dare il permesso?", Snackbar.LENGTH_INDEFINITE);
+                mSnackbar.setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        askPermission();
+                    }
+                });
+                mSnackbar.setActionTextColor(Color.YELLOW);
+                break;
+
+            case 2:// GPS disable
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Geolocalizzazione non attiva\nVuoi attivarla?", Snackbar.LENGTH_INDEFINITE);
+                mSnackbar.setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent gpsSetting = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(gpsSetting);
+                    }
+                });
+                mSnackbar.setActionTextColor(Color.YELLOW);
+                break;
+
+            case 3:// No internet connession
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Nessuna connessione ad internet", Snackbar.LENGTH_LONG);
+                break;
+
+            case 4:// Impossibile recuperare la posizione
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Impossibile recuperare la posizione", Snackbar.LENGTH_LONG);
+                break;
+
+            case 5:// LOCATION permission denied
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Non sarà possibile recuperare i dati", Snackbar.LENGTH_LONG);
+                break;
+
+            case 6:// Impossibile contattare il server
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Impossibile contattare il server in questo momento", Snackbar.LENGTH_INDEFINITE);
+                mSnackbar.setAction("RETRY", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new task().execute();
+                    }
+                });
+                mSnackbar.setActionTextColor(Color.YELLOW);
+                break;
+        }
+        mSnackbar.show();
+    }
+
     private void taskAutoComplete(final String query) {
         mHandler = new Handler();
+        suggestionsList = new ArrayList<>();
 
         new Thread() {
             public void run() {
 
-                suggestionsList = mPlaceAutocomplete.autocomplete(query);
-                Log.d(TAG, "autocomplete object " + mJSONObject);
+                mPlaceAutocomplete.autocomplete(query);
 
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        for (int i = 0; i < suggestionsList.size(); i++) {
-                            Log.d(TAG, "suggestion list " + suggestionsList.get(i).get_text().toString());
-                        }
-                    }
-                });
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                        suggestionsList = mPlaceAutocomplete.getSuggestionList();
+                        Log.d(TAG, "suggestion list " + suggestionsList.size());
                         SearchAdapter searchAdapter = new SearchAdapter(getApplicationContext(), suggestionsList);
+                        Log.d(TAG, "searchAdapter " + searchAdapter.getItemCount());
                         mSearchView.setAdapter(searchAdapter);
                     }
                 });
+
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        SearchAdapter searchAdapter = new SearchAdapter(getApplicationContext(), suggestionsList);
+//                        Log.d(TAG,"searchAdapter "+searchAdapter.getItemCount());
+//                        mSearchView.setAdapter(searchAdapter);
+//                    }
+//                });
             }
         }.start();
     }
@@ -328,8 +405,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Log.d(TAG, "latitude:" + mLocation.getLatitude() + " longitude:" + mLocation.getLongitude());
             new task().execute();
         } else {
-            mSnackbar = Snackbar.make(mCoordinatorLayout, "Impossibile recuperare la posizione", Snackbar.LENGTH_LONG);
-            mSnackbar.show();
+            showSnackbar(4);
         }
     }
 
@@ -349,16 +425,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
-    private boolean checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private void askPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
@@ -373,8 +439,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     Log.d(TAG, "permission granted");
                 } else {
                     // Permission Denied
-                    mSnackbar = Snackbar.make(mCoordinatorLayout, "Non sarà possibile recuperare i dati", Snackbar.LENGTH_LONG);
-                    mSnackbar.show();
+                    showSnackbar(5);
 
                     if (mProgressDialog.isShowing())
                         mProgressDialog.dismiss();
@@ -407,8 +472,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             if (mJSONObject != null) {
                 setViewPager(mJSONObject.toString());
             } else {
-                mSnackbar = Snackbar.make(mCoordinatorLayout, "Impossibile contattare il server in questo momento", Snackbar.LENGTH_LONG);
-                mSnackbar.show();
+                showSnackbar(6);
             }
 
             if (mProgressDialog.isShowing())

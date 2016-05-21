@@ -1,8 +1,15 @@
 package com.dev.nicola.allweather.Util;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.dev.nicola.allweather.R;
 
@@ -19,7 +26,8 @@ import java.util.TimeZone;
  */
 public class Utils {
 
-    Context mContext;
+    private static String TAG = Utils.class.getSimpleName();
+    private Context mContext;
 
     public Utils(Context context) {
         this.mContext = context;
@@ -27,23 +35,14 @@ public class Utils {
 
     public String getLocationName(double latitude, double longitude) {
         String cityName = "Not Found";
-        Geocoder gcd = new Geocoder(mContext, Locale.getDefault());
+        Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         try {
-
-            List<Address> addresses = gcd.getFromLocation(latitude, longitude, 10);
-
-            for (Address adrs : addresses) {
-                if (adrs != null) {
-
-                    String city = adrs.getLocality();
-                    if (city != null && !city.equals("")) {
-                        cityName = city;
-                    }
-                }
-
-            }
+            List<Address> addresses = addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0)
+                cityName = addresses.get(0).getAddressLine(0);
         } catch (IOException e) {
             e.printStackTrace();
+            Log.d(TAG, "exception " + e);
         }
         return cityName;
     }
@@ -111,7 +110,31 @@ public class Utils {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH);
         t = days[dayindex - 1] + " " + day + " " + months[month];
-//        t=dayindex+" "+day+" "+month;
         return t;
+    }
+
+
+    public boolean checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public boolean checkGpsEnable() {
+        LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+
+    public boolean checkInternetConnession() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return connectivityManager.getActiveNetworkInfo() != null &&
+                connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 }
