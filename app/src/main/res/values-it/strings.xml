@@ -2,20 +2,22 @@
 <resources>
     <string name="app_name">AllWeather</string>
 
-    <string name="intro_title_1">Benvenuto</string>
-    <string name="intro_description_1">Grazie per avermi scelto\nSpero di soddisfare le tue richieste</string>
-    <string name="intro_title_2">Posizione</string>
-    <string name="intro_description_permission_2">Ho bisogno di accedere alla tua posizione per migliorare le informazioni</string>
-    <string name="intro_description_2">Assicurati di avere la geolocalizzazione attiva per migliorare le informazioni</string>
-    <string name="intro_title_3">Iniziamo</string>
-    <string name="intro_description_3">Sono pronto a mostrarti le informazioni</string>
-    <string name="action_settings">Impostazioni</string>
-    <string name="credits">Crediti</string>
-    <string name="firstCategory">Generale</string>
-    <string name="system">Sistema</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
 
+    <string name="intro_title_1">Benvenuto</string>
+    <string name="intro_title_2">Posizione</string>
+    <string name="intro_title_3">Iniziamo</string>
+    <string name="intro_description_1">Grazie per avermi scelto\nSpero di soddisfare le tue richieste</string>
+    <string name="intro_description_2">Assicurati di avere la geolocalizzazione attiva per migliorare le informazioni</string>
+    <string name="intro_description_3">Sono pronto a mostrarti le informazioni</string>
+    <string name="intro_description_permission_2">Ho bisogno di accedere alla tua posizione per migliorare le informazioni</string>
+
+    <string name="action_settings">Impostazioni</string>
+    <string name="credits">Crediti</string>
+
+    <string name="firstCategory">Generale</string>
+    <string name="system">Sistema di misura</string>
     <string-array name="systemUnit">
         <item>Metrico (°C, m/s)</item>
         <item>Impreriale (°F, mhp)</item>
@@ -23,6 +25,42 @@
     <string-array name="systemValue">
         <item>1</item>
         <item>2</item>
+    </string-array>
+
+    <string name="theme">Tema</string>
+    <string-array name="themeUnit">
+        <item>Chiaro</item>
+        <item>Scuro</item>
+    </string-array>
+    <string-array name="themeValue">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+
+    <string-array name="days">
+        <item>Lunedi</item>
+        <item>Martedi</item>
+        <item>Mercoledi</item>
+        <item>Giovedi</item>
+        <item>Venerdi</item>
+        <item>Sabato</item>
+        <item>Domenica</item>
+    </string-array>
+
+    <string-array name="months">
+        <item>Gennaio</item>
+        <item>Febbraio</item>
+        <item>Marzo</item>
+        <item>Aprile</item>
+        <item>Maggio</item>
+        <item>Giugno</item>
+        <item>Luglio</item>
+        <item>Agosto</item>
+        <item>Settembre</item>
+        <item>Ottobre</item>
+        <item>Novembre</item>
+        <item>Dicembre</item>
     </string-array>
 
 

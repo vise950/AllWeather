@@ -50,7 +50,7 @@ public class ForecastFragment extends Fragment {
 
         argument = getArguments().getString("ARGUMENT");
 
-        mUtils = new Utils(getContext());
+        mUtils = new Utils(getContext(), getResources());
         mData = new ForecastIOData();
         mGson = new GsonBuilder().create();
     }

@@ -59,6 +59,7 @@ public class PlaceAutocomplete {
             JSONArray predsJsonArray = mObject.getJSONArray("predictions");
             for (int i = 0; i < predsJsonArray.length(); i++) {
                 suggestion = predsJsonArray.getJSONObject(i).getString("description");
+                Log.d(TAG, "Suggestion " + suggestion);
                 suggestionsList.add(new SearchItem(suggestion));
             }
 
@@ -72,4 +73,5 @@ public class PlaceAutocomplete {
     public List<SearchItem> getSuggestionList() {
         return suggestionsList;
     }
+
 }

@@ -6,8 +6,15 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="intro_title_1">Welcome</string>
+    <string name="intro_title_2">Location</string>
+    <string name="intro_title_3">Let\'s start</string>
+    <string name="intro_description_1"> Thanks for choosing me\n I hope to satisfy your applications</string>
+    <string name="intro_description_2"> Make sure you have geolocation enabled to improve the information</string>
+    <string name="intro_description_3"> I\'m ready to show the information</string>
+    <string name="intro_description_permission_2"> I need to access your location to improve the information</string>
 
     <string name="action_settings">Settings</string>
+    <string name="credits">Credits</string>
 
     <string name="firstCategory">General</string>
     <string name="system">System of Units</string>
@@ -20,12 +27,40 @@
         <item>2</item>
     </string-array>
 
-    <string name="credits">Credits</string>
-    <string name="intro_title_2">Location</string>
-    <string name="intro_title_3">Let\'s start</string>
-    <string name="intro_description_1"> Thanks for choosing me\n I hope to satisfy your applications</string>
-    <string name="intro_description_2"> Make sure you have geolocation enabled to improve the information</string>
-    <string name="intro_description_3"> I\'m ready to show the information</string>
-    <string name="intro_description_permission_2"> I need to access your location to improve the information</string>
+    <string name="theme">Theme</string>
+    <string-array name="themeUnit">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="themeValue">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+
+    <string-array name="days">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wendnesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+
+    <string-array name="months">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>Dicember</item>
+    </string-array>
 
 </resources>

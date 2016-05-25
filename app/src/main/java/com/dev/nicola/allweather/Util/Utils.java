@@ -3,6 +3,7 @@ package com.dev.nicola.allweather.Util;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
@@ -28,18 +29,20 @@ public class Utils {
 
     private static String TAG = Utils.class.getSimpleName();
     private Context mContext;
+    private Resources mResources;
 
-    public Utils(Context context) {
+    public Utils(Context context, Resources resources) {
         this.mContext = context;
+        this.mResources = resources;
     }
 
     public String getLocationName(double latitude, double longitude) {
         String cityName = "Not Found";
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         try {
-            List<Address> addresses = addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0)
-                cityName = addresses.get(0).getAddressLine(0);
+                cityName = addresses.get(0).getLocality();
         } catch (IOException e) {
             e.printStackTrace();
             Log.d(TAG, "exception " + e);
@@ -54,6 +57,7 @@ public class Utils {
         switch (condition) {
             case "clear-day":
                 icon = R.drawable.clear_day;
+//                icon = R.drawable.sun;
                 break;
             case "clear-night":
                 icon = R.drawable.clear_night;
@@ -100,8 +104,8 @@ public class Utils {
 
     public String getDayFormat(Integer time) {
         String t;
-        String days[] = {"Domenica", "Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi", "Sabato"};
-        String months[] = {"Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"};
+        String days[] = mResources.getStringArray(R.array.days);
+        String months[] = mResources.getStringArray(R.array.months);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(time * 1000L);
         calendar.setTimeZone(TimeZone.getDefault());

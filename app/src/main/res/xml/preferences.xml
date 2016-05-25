@@ -11,6 +11,13 @@
             android:key="systemUnit"
             android:title="@string/system"/>
 
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/themeUnit"
+            android:entryValues="@array/themeValue"
+            android:key="themeUnit"
+            android:title="@string/theme"/>
+
     </PreferenceCategory>
 
 
