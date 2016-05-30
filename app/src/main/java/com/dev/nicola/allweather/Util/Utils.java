@@ -56,29 +56,37 @@ public class Utils {
 
         switch (condition) {
             case "clear-day":
-                icon = R.drawable.clear_day;
-//                icon = R.drawable.sun;
+                icon = R.drawable.clear_day_2;
                 break;
             case "clear-night":
-                icon = R.drawable.clear_night;
+                icon = R.drawable.clear_night_2;
                 break;
             case "partly-cloudy-day":
-                icon = R.drawable.cloud_day;
+                icon = R.drawable.cloud_day_2;
                 break;
             case "partly-cloudy-night":
-                icon = R.drawable.cloud_night;
+                icon = R.drawable.cloud_night_2;
                 break;
             case "cloudy":
-                icon = R.drawable.cloud;
+                icon = R.drawable.cloud_2;
                 break;
-//            case "rain":
-//                icon = R.drawable.rain;
-//                break;
+            case "rain":
+                icon = R.drawable.rain_2;
+                break;
             case "snow":
-                icon = R.drawable.snow;
+                icon = R.drawable.snow_2;
                 break;
             case "sleet":
-                icon = R.drawable.sleet;
+                icon = R.drawable.sleet_2;
+                break;
+            case "wind":
+                icon = R.drawable.wind_2;
+                break;
+            case "fog":
+                icon = R.drawable.fog_2;
+                break;
+            default:
+                icon = R.drawable.unknown;
                 break;
         }
 

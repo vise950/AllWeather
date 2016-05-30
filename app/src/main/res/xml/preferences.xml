@@ -2,19 +2,19 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/firstCategory">
+        android:title="@string/first_category">
 
         <ListPreference
             android:defaultValue="1"
-            android:entries="@array/systemUnit"
-            android:entryValues="@array/systemValue"
+            android:entries="@array/system_unit"
+            android:entryValues="@array/system_value"
             android:key="systemUnit"
             android:title="@string/system"/>
 
         <ListPreference
             android:defaultValue="1"
-            android:entries="@array/themeUnit"
-            android:entryValues="@array/themeValue"
+            android:entries="@array/theme_unit"
+            android:entryValues="@array/theme_value"
             android:key="themeUnit"
             android:title="@string/theme"/>
 

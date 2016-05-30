@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIOData;
+import com.dev.nicola.allweather.Util.DividerItemDecoration;
 import com.dev.nicola.allweather.Util.Forecast;
 import com.dev.nicola.allweather.Util.ForecastAdapter;
 import com.dev.nicola.allweather.Util.Utils;
@@ -28,7 +29,7 @@ public class ForecastFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private ForecastAdapter mForecastAdapter;
-    private List<Forecast> mForecastList = new ArrayList<>();
+    private List<Forecast> mForecastList;
 
     private Utils mUtils;
     private ForecastIOData mData;
@@ -60,12 +61,15 @@ public class ForecastFragment extends Fragment {
         View view = inflater.inflate(R.layout.forecast_fragment, container, false);
 
         mData = mGson.fromJson(argument, ForecastIOData.class);
+        mForecastList = new ArrayList<>();
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.forecast_recycle_view);
         mForecastAdapter = new ForecastAdapter(mForecastList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+        mRecyclerView.addItemDecoration(itemDecoration);
         mRecyclerView.setAdapter(mForecastAdapter);
 
         prepareForecastData();

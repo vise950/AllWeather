@@ -3,7 +3,6 @@ package com.dev.nicola.allweather;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -17,7 +16,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -33,9 +31,6 @@ import com.dev.nicola.allweather.Util.GPSTracker;
 import com.dev.nicola.allweather.Util.PlaceAutocomplete;
 import com.dev.nicola.allweather.Util.Preferences;
 import com.dev.nicola.allweather.Util.Utils;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.lapism.searchview.SearchAdapter;
 import com.lapism.searchview.SearchItem;
 import com.lapism.searchview.SearchView;
@@ -45,7 +40,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity /*implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener*/ {
 
     final static String TAG = MainActivity.class.getSimpleName();
 
@@ -67,14 +62,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private Preferences mPreferences;
     private Utils mUtils;
 
-    private SharedPreferences mSharedPreferences;
+    private String theme;
 
     private PlaceAutocomplete mPlaceAutocomplete;
     private List<SearchItem> suggestionsList;
     private SearchAdapter mSearchAdapter;
     private boolean showSuggestion = false;
 
-    private GoogleApiClient mGoogleApiClient;
+    //    private GoogleApiClient mGoogleApiClient;
     private Location mLocation;
     private GPSTracker mGPSTracker;
 
@@ -88,15 +83,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String theme = mSharedPreferences.getString("themeUnit", "1");
+        theme = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1");
         if (theme.equals("1"))
             setTheme(R.style.lightTheme);
         else
             setTheme(R.style.darkTheme);
 
         setContentView(R.layout.activity_main);
-
 
         mUtils = new Utils(getApplicationContext(), getResources());
         mPreferences = new Preferences(getApplicationContext());
@@ -115,6 +108,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             showSnackbar(2);
         else if (!mUtils.checkInternetConnession())
             showSnackbar(3);
+//        else {
+//            initialSetup();
+//            getLocation();
+//        }
     }
 
     @Override
@@ -122,13 +119,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d(TAG, "onStart");
         super.onStart();
 
-        if (firstRun && mUtils.checkPermission() && mUtils.checkGpsEnable() && mUtils.checkInternetConnession()) {
-            buildGoogleApiClient();
-            initialSetup();
-            if (mGoogleApiClient != null)
-                mGoogleApiClient.connect();
+//        if (firstRun && mUtils.checkPermission() && mUtils.checkGpsEnable() && mUtils.checkInternetConnession()) {
+//            buildGoogleApiClient();
+//                initialSetup();
+//                getLocation();
+
+//            if (mGoogleApiClient != null)
+//                mGoogleApiClient.connect();
         }
-    }
+//    }
+
 
     @Override
     protected void onResume() {
@@ -141,7 +141,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             showSnackbar(2);
         else if (!mUtils.checkInternetConnession())
             showSnackbar(3);
-
+        else if (mJSONObject == null) {
+            initialSetup();
+            getLocation();
+        }
     }
 
     @Override
@@ -150,9 +153,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onStop();
 
         if (firstRun && mUtils.checkPermission() && mUtils.checkGpsEnable() && mUtils.checkInternetConnession()) {
-            if (mGoogleApiClient.isConnected()) {
-                mGoogleApiClient.disconnect();
-            }
+//            if (mGoogleApiClient.isConnected()) {
+//                mGoogleApiClient.disconnect();
+//            }
             if (mGPSTracker.isConnected())
                 mGPSTracker.stopUsingGPS();
         }
@@ -162,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onPause() {
         Log.d(TAG, "onPause");
         super.onPause();
-//        stopLocationUpdates();
     }
 
     @Override
@@ -183,16 +185,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
+//    protected synchronized void buildGoogleApiClient() {
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .addApi(LocationServices.API)
+//                .build();
+//    }
 
 
     private void initialSetup() {
+        Log.d(TAG, "initialSetup");
         mProgressDialog = ProgressDialog.show(MainActivity.this, "", "loading...", true);
 
         mPlaceAutocomplete = new PlaceAutocomplete();
@@ -234,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     int id = item.getItemId();
 
                     switch (id) {
-                        case R.id.nav_settings:
+                        case R.id.drawer_item_settings:
                             Intent intent = new Intent(getApplicationContext(), AppPreferences.class);
                             startActivity(intent);
                     }
@@ -279,10 +282,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             mSearchView.setVersion(SearchView.VERSION_TOOLBAR);
             mSearchView.setVersionMargins(SearchView.VERSION_MARGINS_TOOLBAR_BIG);
             mSearchView.setElevation(10);
-//            mSearchView.setTheme();
-            mSearchView.setHint("Non funziona per ora");
+            mSearchView.setHint(R.string.hint_search_view);
             mSearchView.setVoice(false);
             mSearchView.setShadow(false);
+
+            if (theme.equals("1"))
+                mSearchView.setTheme(SearchView.THEME_LIGHT, true);
+            else
+                mSearchView.setTheme(SearchView.THEME_DARK, true);
 
             mSearchView.setOnMenuClickListener(new SearchView.OnMenuClickListener() {
                 @Override
@@ -339,8 +346,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         switch (code) {
             case 1:// ask LOCATION permission
-                mSnackbar = Snackbar.make(mCoordinatorLayout, "Non ho accesso alla posione\nVuoi dare il permesso?", Snackbar.LENGTH_INDEFINITE);
-                mSnackbar.setAction("OK", new View.OnClickListener() {
+                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_1, Snackbar.LENGTH_INDEFINITE);
+                mSnackbar.setAction(R.string.snackbar_action_OK, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         askPermission();
@@ -350,8 +357,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 break;
 
             case 2:// GPS disable
-                mSnackbar = Snackbar.make(mCoordinatorLayout, "Geolocalizzazione non attiva\nVuoi attivarla?", Snackbar.LENGTH_INDEFINITE);
-                mSnackbar.setAction("OK", new View.OnClickListener() {
+                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_2, Snackbar.LENGTH_INDEFINITE);
+                mSnackbar.setAction(R.string.snackbar_action_OK, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent gpsSetting = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -362,20 +369,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 break;
 
             case 3:// No internet connession
-                mSnackbar = Snackbar.make(mCoordinatorLayout, "Nessuna connessione ad internet", Snackbar.LENGTH_LONG);
+                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_3, Snackbar.LENGTH_LONG);
                 break;
 
             case 4:// Impossibile recuperare la posizione
-                mSnackbar = Snackbar.make(mCoordinatorLayout, "Impossibile recuperare la posizione", Snackbar.LENGTH_LONG);
+                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_4, Snackbar.LENGTH_LONG);
                 break;
 
             case 5:// LOCATION permission denied
-                mSnackbar = Snackbar.make(mCoordinatorLayout, "Non sarà possibile recuperare i dati", Snackbar.LENGTH_LONG);
+                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_5, Snackbar.LENGTH_LONG);
                 break;
 
             case 6:// Impossibile contattare il server
-                mSnackbar = Snackbar.make(mCoordinatorLayout, "Impossibile contattare il server in questo momento", Snackbar.LENGTH_INDEFINITE);
-                mSnackbar.setAction("RETRY", new View.OnClickListener() {
+                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_6, Snackbar.LENGTH_INDEFINITE);
+                mSnackbar.setAction(R.string.snackbar_action_retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         new task().execute();
@@ -410,29 +417,38 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
-    @Override
-    public void onConnected(Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
+//    @Override
+//    public void onConnected(Bundle bundle) {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+//                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//
+//        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+//        if (mLocation == null)
+//            mLocation = mGPSTracker.getLocation();
+//
+//        new task().execute();
+//    }
+//
+//    @Override
+//    public void onConnectionSuspended(int i) {
+//        Log.i(TAG, "Connection Suspended");
+//        mGoogleApiClient.connect();
+//    }
+//
+//    @Override
+//    public void onConnectionFailed(ConnectionResult connectionResult) {
+//        Log.i(TAG, "Connection failed. Error: " + connectionResult.getErrorCode());
+//    }
 
-        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLocation == null)
-            mLocation = mGPSTracker.getLocation();
 
-        new task().execute();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i(TAG, "Connection Suspended");
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.i(TAG, "Connection failed. Error: " + connectionResult.getErrorCode());
+    public void getLocation() {
+        mLocation = mGPSTracker.getLocation();
+        if (mLocation != null)
+            new task().execute();
+        else
+            showSnackbar(4);
     }
 
 
@@ -489,7 +505,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             if (mSwipeRefreshLayout.isRefreshing())
                 mSwipeRefreshLayout.setRefreshing(false);
-
         }
     }
 

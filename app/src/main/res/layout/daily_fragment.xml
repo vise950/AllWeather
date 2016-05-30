@@ -5,11 +5,11 @@
     android:layout_height="wrap_content"
     android:scrollbars="vertical">
 
-    <!--<ScrollView-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:scrollbars="vertical">-->
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
 
 
         <RelativeLayout
@@ -101,7 +101,7 @@
                         android:layout_gravity="fill"
                         android:layout_row="1"
                         android:layout_rowWeight="1"
-                        android:src="@drawable/clear_day"/>
+                        android:src="@drawable/clear_day_1"/>
 
                     <TextView
                         android:id="@+id/first_temperature_forecast_daily"
@@ -138,7 +138,7 @@
                         android:layout_gravity="fill"
                         android:layout_row="1"
                         android:layout_rowWeight="1"
-                        android:src="@drawable/cloud_night"/>
+                        android:src="@drawable/cloud_night_1"/>
 
                     <TextView
                         android:id="@+id/second_temperature_forecast_daily"
@@ -175,7 +175,7 @@
                         android:layout_gravity="fill"
                         android:layout_row="1"
                         android:layout_rowWeight="1"
-                        android:src="@drawable/cloud"/>
+                        android:src="@drawable/cloud_1"/>
 
                     <TextView
                         android:id="@+id/third_temperature_forecast_daily"
@@ -213,7 +213,7 @@
                         android:layout_gravity="fill"
                         android:layout_row="1"
                         android:layout_rowWeight="1"
-                        android:src="@drawable/snow"/>
+                        android:src="@drawable/snow_1"/>
 
                     <TextView
                         android:id="@+id/forth_temperature_forecast_daily"
@@ -351,7 +351,7 @@
 
         </RelativeLayout>
 
-    <!--</ScrollView>-->
+    </ScrollView>
 
 
 </RelativeLayout>
