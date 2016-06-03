@@ -7,9 +7,16 @@
         <item name="colorAccent">@color/accent</item>
     </style>
 
+    <style name="AppThemeDark" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
 
     <style name="lightTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
@@ -17,7 +24,6 @@
         <item name="colorAccent">@color/accent</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="darkTheme" parent="Theme.AppCompat.NoActionBar">
@@ -26,7 +32,6 @@
         <item name="colorAccent">@color/accent</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="introFullscreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -36,6 +41,5 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
-
 
 </resources>

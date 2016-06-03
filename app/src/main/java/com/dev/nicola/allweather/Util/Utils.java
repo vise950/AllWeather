@@ -1,11 +1,13 @@
 package com.dev.nicola.allweather.Util;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
@@ -48,6 +50,22 @@ public class Utils {
             Log.d(TAG, "exception " + e);
         }
         return cityName;
+    }
+
+    public Location getCoordinateByName(String cityName) {
+        Location location = null;
+        Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocationName(cityName, 1);
+            location = new Location(LocationManager.PASSIVE_PROVIDER);
+            if (addresses.size() > 0) {
+                location.setLatitude(addresses.get(0).getLatitude());
+                location.setLongitude(addresses.get(0).getLongitude());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return location;
     }
 
 
@@ -149,4 +167,12 @@ public class Utils {
         return connectivityManager.getActiveNetworkInfo() != null &&
                 connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting();
     }
+
+    public void setTheme(Activity activity, String theme) {
+        if (theme.equals("1"))
+            activity.setTheme(R.style.lightTheme);
+        else
+            activity.setTheme(R.style.darkTheme);
+    }
+
 }

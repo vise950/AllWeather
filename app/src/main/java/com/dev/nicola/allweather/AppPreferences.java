@@ -1,7 +1,11 @@
 package com.dev.nicola.allweather;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 /**
@@ -12,6 +16,12 @@ public class AppPreferences extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1").equals("1"))
+            setTheme(R.style.AppTheme);
+        else
+            setTheme(R.style.AppThemeDark);
+
         getFragmentManager().beginTransaction().replace(android.R.id.content, new myPreferenceFragment()).commit();
     }
 
@@ -21,8 +31,34 @@ public class AppPreferences extends AppCompatActivity {
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
+            final PreferenceManager preferenceManager = getPreferenceManager();
+
+//            if(preferenceManager.getSharedPreferences().getBoolean("pres_geolocation",false))
+
+            Preference theme = findPreference("themeUnit");
+            theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                    if (!newValue.equals(preferenceManager.getSharedPreferences().getString("themeUnit", "1"))) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage(R.string.dialog_preference_theme);
+                        builder.setCancelable(false);
+                        builder.setPositiveButton(R.string.dialog_action_reboot, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getActivity().recreate();
+                            }
+                        });
+                        builder.setNegativeButton(R.string.dialog_action_cancel, null);
+                        builder.create().show();
+                    }
+
+                    return true;
+                }
+            });
+
         }
     }
-
 
 }

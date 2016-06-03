@@ -38,6 +38,9 @@
         <item>2</item>
     </string-array>
 
+    <string name="use_geolocation_title">Improve location</string>
+    <string name="use_geolocation_summary">Using gps to improve the position</string>
+
 
     <string-array name="days">
         <item>Monday</item>
@@ -64,7 +67,7 @@
         <item>Dicember</item>
     </string-array>
 
-    <string name="hint_search_view">Search place here</string>
+    <string name="hint_search_view">Search place</string>
 
     <string name="snackbar_1">I don\'t have access to the location\nWould you like to give me permission?</string>
     <string name="snackbar_2">Geolocation is not active\nDo you want to activate it?</string>
@@ -74,5 +77,20 @@
     <string name="snackbar_6">Cannot contact the server at this time</string>
     <string name="snackbar_action_OK">OK</string>
     <string name="snackbar_action_retry">RETRY</string>
+
+
+    <string name="temperature_label">Temperature:</string>
+    <string name="wind_label">Wind:</string>
+    <string name="humidity_laber">Humidity:</string>
+    <string name="sunrise_label">Sunrise:</string>
+    <string name="sunset_label">Sunset:</string>
+    <string name="temperature" translatable="false">%1$s°</string>
+    <string name="wind_metrical" translatable="false">%1$s %2$sm/s</string>
+    <string name="wind_imperial" translatable="false">%1$s %2$smhp</string>
+    <string name="humidity" translatable="false">%1$s%%</string>
+
+    <string name="dialog_preference_theme">Reboot for apply changes</string>
+    <string name="dialog_action_reboot">Reboot</string>
+    <string name="dialog_action_cancel">Cancel</string>
 
 </resources>

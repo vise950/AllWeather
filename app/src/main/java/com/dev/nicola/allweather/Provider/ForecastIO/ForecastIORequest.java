@@ -1,7 +1,6 @@
 package com.dev.nicola.allweather.Provider.ForecastIO;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -28,29 +27,29 @@ public class ForecastIORequest {
     private final String LANGUAGE = "&lang=";
     private final String EXCLUDE = "&exclude=minutely,alerts,flags";
 
-    private SharedPreferences mPreferences;
     private String units;
+    private Context mContext;
 
     private StringBuilder mBuilder;
     private OkHttpClient mClient;
     private Request mRequest;
     private Response mResponse;
 
-    private Context mContext;
-
 
     public ForecastIORequest(Context context) {
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        units = mPreferences.getString("systemUnit", "1");
+//        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+//        units = mPreferences.getString("systemUnit", "1");
         this.mContext = context;
     }
 
 
     public String setUrl(double latitude, double longitude) {
         String url;
+        units = PreferenceManager.getDefaultSharedPreferences(mContext).getString("systemUnit", "1");
 
         mBuilder = new StringBuilder(URL);
         mBuilder.append(API_KEY);
+
         mBuilder.append("/" + latitude + "," + longitude);
 
         mBuilder.append(UNITS);
@@ -72,7 +71,7 @@ public class ForecastIORequest {
 
 
     public JSONObject getData(String url) {
-        JSONObject mObject = null;
+        JSONObject mObject;
 
         mClient = new OkHttpClient();
         mRequest = new Request.Builder()
@@ -88,8 +87,6 @@ public class ForecastIORequest {
             return null;
         }
 
-//        Log.d(TAG, "object:" + mObject);
         return mObject;
     }
-
 }

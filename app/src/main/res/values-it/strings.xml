@@ -35,6 +35,9 @@
         <item>2</item>
     </string-array>
 
+    <string name="use_geolocation_title">Migliora la posizione</string>
+    <string name="use_geolocation_summary">Utilizza il gps per migliorare la posizione</string>
+
 
     <string-array name="days">
         <item>Lunedi</item>
@@ -61,7 +64,7 @@
         <item>Dicembre</item>
     </string-array>
 
-    <string name="hint_search_view">Ricerca luogo qui</string>
+    <string name="hint_search_view">Cerca luogo</string>
 
     <string name="snackbar_1">Non ho accesso alla posizione\nVuoi darmi il permesso?</string>
     <string name="snackbar_2">Geolocalizzazione disattiva\nVuoi attivarla?</string>
@@ -71,5 +74,17 @@
     <string name="snackbar_6">Impossibile contattare il server in questo momento</string>
     <string name="snackbar_action_OK">OK</string>
     <string name="snackbar_action_retry">RIPROVA</string>
+
+
+    <string name="temperature_label">Temperatura:</string>
+    <string name="wind_label">Vento:</string>
+    <string name="humidity_laber">Umidità:</string>
+    <string name="sunrise_label">Alba:</string>
+    <string name="sunset_label">Tramonto:</string>
+
+    <string name="dialog_preference_theme">Riavviare per applicare le modifiche</string>
+    <string name="dialog_action_reboot">Riavvia</string>
+    <string name="dialog_action_cancel">Cancella</string>
+
 
 </resources>

@@ -1,6 +1,8 @@
 package com.dev.nicola.allweather;
 
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +22,11 @@ public class DailyFragment extends Fragment {
 
     private static String TAG = DailyFragment.class.getSimpleName();
 
-    private Utils mUtils;
-
     private TextView location;
     private ImageView weatherIcon;
     private TextView condition;
     private TextView temperature;
     private TextView wind;
-    private TextView windDirection;
     private TextView humidity;
     private TextView sunrise;
     private TextView sunset;
@@ -45,8 +44,10 @@ public class DailyFragment extends Fragment {
     private ImageView forthIcon;
     private TextView forthTemperature;
 
+    private Utils mUtils;
     private ForecastIOData mData;
     private Gson mGson;
+    private Resources mResources;
 
     private String argument;
 
@@ -68,6 +69,7 @@ public class DailyFragment extends Fragment {
         mUtils = new Utils(getContext(), getResources());
         mData = new ForecastIOData();
         mGson = new GsonBuilder().create();
+        mResources = getResources();
 
     }
 
@@ -90,7 +92,6 @@ public class DailyFragment extends Fragment {
         condition = (TextView) v.findViewById(R.id.condition_daily_fragment);
         temperature = (TextView) v.findViewById(R.id.temperature);
         wind = (TextView) v.findViewById(R.id.wind);
-        windDirection = (TextView) v.findViewById(R.id.wind_direction);
         humidity = (TextView) v.findViewById(R.id.humidity);
         sunrise = (TextView) v.findViewById(R.id.sunrise);
         sunset = (TextView) v.findViewById(R.id.sunset);
@@ -117,27 +118,29 @@ public class DailyFragment extends Fragment {
         location.setText(mUtils.getLocationName(mData.getLatitude(), mData.getLongitude()));
 //        weatherIcon.setImageResource(mUtils.getIcon(mOpenWeatherMap.getDailyIcon()));
         condition.setText(String.valueOf(mData.getCurrently().getSummary()));
-        temperature.setText(String.valueOf(mData.getCurrently().getTemperature()) + "°");
-        wind.setText(String.valueOf(mData.getCurrently().getWindSpeed()));
-        windDirection.setText(mUtils.getWindDirection(mData.getCurrently().getWindBearing()));
-        humidity.setText(String.valueOf(mData.getCurrently().getHumidity()));
+        temperature.setText(String.format(mResources.getString(R.string.temperature), mData.getCurrently().getTemperature()));
+        if (PreferenceManager.getDefaultSharedPreferences(getContext()).getString("systemUnit", "1").equals("1"))
+            wind.setText(String.format(mResources.getString(R.string.wind_metrical), mUtils.getWindDirection(mData.getCurrently().getWindBearing()), mData.getCurrently().getWindSpeed()));
+        else
+            wind.setText(String.format(mResources.getString(R.string.wind_imperial), mUtils.getWindDirection(mData.getCurrently().getWindBearing()), mData.getCurrently().getWindSpeed()));
+        humidity.setText(String.format(mResources.getString(R.string.humidity), mData.getCurrently().getHumidity()));
         sunrise.setText(mUtils.getHourFormat(mData.getDaily().getData().get(0).getSunriseTime()));
         sunset.setText(mUtils.getHourFormat(mData.getDaily().getData().get(0).getSunsetTime()));
 
         firstHour.setText(mUtils.getHourFormat(mData.getHourly().getData().get(2).getTime()));
         firstIcon.setImageResource(mUtils.getIcon(mData.getHourly().getData().get(2).getIcon()));
-        firstTemperature.setText(String.valueOf(mData.getHourly().getData().get(2).getTemperature()) + "°");
+        firstTemperature.setText(String.format(mResources.getString(R.string.temperature), mData.getHourly().getData().get(2).getTemperature()));
 
         secondHour.setText(mUtils.getHourFormat(mData.getHourly().getData().get(4).getTime()));
         secondIcon.setImageResource(mUtils.getIcon(mData.getHourly().getData().get(4).getIcon()));
-        secondTemperature.setText(String.valueOf(mData.getHourly().getData().get(4).getTemperature()) + "°");
+        secondTemperature.setText(String.format(mResources.getString(R.string.temperature), mData.getHourly().getData().get(4).getTemperature()));
 
         thirdHour.setText(mUtils.getHourFormat(mData.getHourly().getData().get(6).getTime()));
         thirdIcon.setImageResource(mUtils.getIcon(mData.getHourly().getData().get(6).getIcon()));
-        thirdTemperature.setText(String.valueOf(mData.getHourly().getData().get(6).getTemperature()) + "°");
+        thirdTemperature.setText(String.format(mResources.getString(R.string.temperature), mData.getHourly().getData().get(6).getTemperature()));
 
         forthHour.setText(mUtils.getHourFormat(mData.getHourly().getData().get(8).getTime()));
         forthIcon.setImageResource(mUtils.getIcon(mData.getHourly().getData().get(8).getIcon()));
-        forthTemperature.setText(String.valueOf(mData.getHourly().getData().get(8).getTemperature()) + "°");
+        forthTemperature.setText(String.format(mResources.getString(R.string.temperature), mData.getHourly().getData().get(8).getTemperature()));
     }
 }

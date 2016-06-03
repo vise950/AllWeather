@@ -36,6 +36,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         holder.date.setText(forecast.getDate());
         holder.condition.setText(forecast.getCondition());
         holder.temperature.setText(String.valueOf(forecast.getTemperature()) + "°");
+//        holder.temperature.setText(String.format(Resources.getSystem().getString(R.string.temperature),forecast.getTemperature()));
         holder.icon.setImageResource(forecast.getIcon());
     }
 

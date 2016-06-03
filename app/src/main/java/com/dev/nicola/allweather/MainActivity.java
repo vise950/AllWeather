@@ -24,10 +24,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIORequest;
 import com.dev.nicola.allweather.Util.FragmentAdapter;
-import com.dev.nicola.allweather.Util.GPSTracker;
+import com.dev.nicola.allweather.Util.LocationGPS;
+import com.dev.nicola.allweather.Util.LocationIP;
 import com.dev.nicola.allweather.Util.PlaceAutocomplete;
 import com.dev.nicola.allweather.Util.Preferences;
 import com.dev.nicola.allweather.Util.Utils;
@@ -40,7 +42,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity /*implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener*/ {
+public class MainActivity extends AppCompatActivity {
 
     final static String TAG = MainActivity.class.getSimpleName();
 
@@ -63,15 +65,18 @@ public class MainActivity extends AppCompatActivity /*implements GoogleApiClient
     private Utils mUtils;
 
     private String theme;
+    private String systemUnit;
 
     private PlaceAutocomplete mPlaceAutocomplete;
     private List<SearchItem> suggestionsList;
     private SearchAdapter mSearchAdapter;
-    private boolean showSuggestion = false;
+    private boolean useSuggestion = false;
 
-    //    private GoogleApiClient mGoogleApiClient;
     private Location mLocation;
-    private GPSTracker mGPSTracker;
+    private LocationGPS mLocationGPS;
+    private LocationIP mLocationIP;
+    private Double latitude;
+    private Double longitude;
 
     private Handler mHandler;
     private ForecastIORequest mRequest;
@@ -83,15 +88,13 @@ public class MainActivity extends AppCompatActivity /*implements GoogleApiClient
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
+        mUtils = new Utils(getApplicationContext(), getResources());
+
         theme = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1");
-        if (theme.equals("1"))
-            setTheme(R.style.lightTheme);
-        else
-            setTheme(R.style.darkTheme);
+        mUtils.setTheme(this, theme);
 
         setContentView(R.layout.activity_main);
 
-        mUtils = new Utils(getApplicationContext(), getResources());
         mPreferences = new Preferences(getApplicationContext());
         firstRun = mPreferences.getBoolenaPrefences(PREFERENCES, "firstRun");
 
@@ -104,30 +107,17 @@ public class MainActivity extends AppCompatActivity /*implements GoogleApiClient
 
         if (!mUtils.checkPermission())
             showSnackbar(1);
-        else if (!mUtils.checkGpsEnable())
-            showSnackbar(2);
+//        else if (!mUtils.checkGpsEnable())
+//            showSnackbar(2);
         else if (!mUtils.checkInternetConnession())
             showSnackbar(3);
-//        else {
-//            initialSetup();
-//            getLocation();
-//        }
     }
 
     @Override
     protected void onStart() {
         Log.d(TAG, "onStart");
         super.onStart();
-
-//        if (firstRun && mUtils.checkPermission() && mUtils.checkGpsEnable() && mUtils.checkInternetConnession()) {
-//            buildGoogleApiClient();
-//                initialSetup();
-//                getLocation();
-
-//            if (mGoogleApiClient != null)
-//                mGoogleApiClient.connect();
-        }
-//    }
+    }
 
 
     @Override
@@ -137,13 +127,23 @@ public class MainActivity extends AppCompatActivity /*implements GoogleApiClient
 
         if (!mUtils.checkPermission())
             showSnackbar(1);
-        else if (!mUtils.checkGpsEnable())
-            showSnackbar(2);
+//        else if (!mUtils.checkGpsEnable())
+//            showSnackbar(2);
         else if (!mUtils.checkInternetConnession())
             showSnackbar(3);
         else if (mJSONObject == null) {
             initialSetup();
             getLocation();
+        }
+
+        if (!theme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1")))
+            MainActivity.this.recreate();
+
+        if (!systemUnit.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1"))) {
+            systemUnit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1");
+            if (!mProgressDialog.isShowing())
+                mProgressDialog.show();
+            new task().execute();
         }
     }
 
@@ -153,12 +153,16 @@ public class MainActivity extends AppCompatActivity /*implements GoogleApiClient
         super.onStop();
 
         if (firstRun && mUtils.checkPermission() && mUtils.checkGpsEnable() && mUtils.checkInternetConnession()) {
-//            if (mGoogleApiClient.isConnected()) {
-//                mGoogleApiClient.disconnect();
-//            }
-            if (mGPSTracker.isConnected())
-                mGPSTracker.stopUsingGPS();
+            if (mLocationGPS.isConnected())
+                mLocationGPS.stopUsingGPS();
+
+            if (mProgressDialog.isShowing())
+                mProgressDialog.dismiss();
+
+            if (mSwipeRefreshLayout.isRefreshing())
+                mSwipeRefreshLayout.setRefreshing(false);
         }
+
     }
 
     @Override
@@ -185,26 +189,20 @@ public class MainActivity extends AppCompatActivity /*implements GoogleApiClient
     }
 
 
-//    protected synchronized void buildGoogleApiClient() {
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .addConnectionCallbacks(this)
-//                .addOnConnectionFailedListener(this)
-//                .addApi(LocationServices.API)
-//                .build();
-//    }
-
-
     private void initialSetup() {
         Log.d(TAG, "initialSetup");
         mProgressDialog = ProgressDialog.show(MainActivity.this, "", "loading...", true);
 
         mPlaceAutocomplete = new PlaceAutocomplete();
         mRequest = new ForecastIORequest(getApplicationContext());
-        mGPSTracker = new GPSTracker(getApplicationContext());
+        mLocationGPS = new LocationGPS(getApplicationContext());
+        mLocationIP = new LocationIP();
 
         setDrawer();
         setNavigationView();
         setSearchView();
+
+        systemUnit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1");
     }
 
 
@@ -245,7 +243,6 @@ public class MainActivity extends AppCompatActivity /*implements GoogleApiClient
                     return false;
                 }
             });
-
         }
     }
 
@@ -302,7 +299,7 @@ public class MainActivity extends AppCompatActivity /*implements GoogleApiClient
                 @Override
                 public boolean onQueryTextChange(String newText) {
                     if (newText.length() > 3) {
-                        taskAutoComplete(newText);
+//                        taskAutoComplete(newText);
                     }
                     return false;
                 }
@@ -314,30 +311,25 @@ public class MainActivity extends AppCompatActivity /*implements GoogleApiClient
                 }
             });
 
-//            suggestionsList.add(new SearchItem("search1"));
-//            suggestionsList.add(new SearchItem("search2"));
-//            suggestionsList.add(new SearchItem("search3"));
+            suggestionsList.add(new SearchItem("Milano"));
+            suggestionsList.add(new SearchItem("Madrid"));
+            suggestionsList.add(new SearchItem("Mosca"));
 
 
-//            Log.d(TAG,"bool show sugg "+showSuggestion);
-//            if (showSuggestion) {
-//                suggestionsList = mPlaceAutocomplete.getSuggestionList();
-//                Log.d(TAG, "suggestion list " + suggestionsList.size());
-//
-//                SearchAdapter searchAdapter = new SearchAdapter(this, suggestionsList);
-//                Log.d(TAG, "searchAdapter " + searchAdapter.getItemCount());
-//            Log.d(TAG,"searchAdapter "+searchAdapter.getItemCount());
-//            searchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(View view, int position) {
-//                    mSearchView.close(false);
-//                    TextView textView=(TextView)view.findViewById(R.id.textView_item_text);
-//                    String item=textView.getText().toString();
-//                    Toast.makeText(getApplicationContext(), item, Toast.LENGTH_LONG).show();
-//                }
-//            });
-//                mSearchView.setAdapter(searchAdapter);
-//            }
+            SearchAdapter searchAdapter = new SearchAdapter(this, suggestionsList);
+            searchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    mSearchView.close(false);
+                    TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
+                    String item = textView.getText().toString();
+                    mLocation = mUtils.getCoordinateByName(item);
+                    new task().execute();
+                    if (!mProgressDialog.isShowing())
+                        mProgressDialog.show();
+                }
+            });
+            mSearchView.setAdapter(searchAdapter);
         }
     }
 
@@ -417,38 +409,33 @@ public class MainActivity extends AppCompatActivity /*implements GoogleApiClient
     }
 
 
-//    @Override
-//    public void onConnected(Bundle bundle) {
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-//                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            return;
-//        }
-//
-//        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-//        if (mLocation == null)
-//            mLocation = mGPSTracker.getLocation();
-//
-//        new task().execute();
-//    }
-//
-//    @Override
-//    public void onConnectionSuspended(int i) {
-//        Log.i(TAG, "Connection Suspended");
-//        mGoogleApiClient.connect();
-//    }
-//
-//    @Override
-//    public void onConnectionFailed(ConnectionResult connectionResult) {
-//        Log.i(TAG, "Connection failed. Error: " + connectionResult.getErrorCode());
-//    }
+    private void taskLocationByIP() {
+        mHandler = new Handler();
+        new Thread() {
+            public void run() {
+                final String ip = mLocationIP.getExternalIP();
 
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLocationIP.getLocation(ip);
+                    }
+                });
+            }
+        }.start();
+    }
 
     public void getLocation() {
-        mLocation = mGPSTracker.getLocation();
-        if (mLocation != null)
-            new task().execute();
-        else
-            showSnackbar(4);
+        mLocation = mLocationGPS.getLocation();
+//        if (mLocation != null)
+//            new task().execute();
+//        else
+//            showSnackbar(4);
+
+//        taskLocationByIP();
+        new task().execute();
+
+
     }
 
 
@@ -481,13 +468,19 @@ public class MainActivity extends AppCompatActivity /*implements GoogleApiClient
 
         @Override
         protected void onPreExecute() {
+
+
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-
-            mJSONObject = mRequest.getData(mRequest.setUrl(mLocation.getLatitude(), mLocation.getLongitude()));
-
+            if (mLocation != null)
+                mJSONObject = mRequest.getData(mRequest.setUrl(mLocation.getLatitude(), mLocation.getLongitude()));
+            else {
+                final String ip = mLocationIP.getExternalIP();
+                mLocationIP.getLocation(ip);
+                mJSONObject = mRequest.getData(mRequest.setUrl(mLocationIP.getLatitude(), mLocationIP.getLongitude()));
+            }
             return null;
         }
 

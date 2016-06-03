@@ -17,7 +17,7 @@ import android.util.Log;
 /**
  * Created by Nicola on 25/05/2016.
  */
-public class GPSTracker extends Service implements LocationListener {
+public class LocationGPS extends Service implements LocationListener {
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
@@ -28,7 +28,7 @@ public class GPSTracker extends Service implements LocationListener {
     private boolean isConnected = false; //flag for GPS status
     private Location location;
 
-    public GPSTracker(Context context) {
+    public LocationGPS(Context context) {
         this.mContext = context;
     }
 
@@ -80,7 +80,7 @@ public class GPSTracker extends Service implements LocationListener {
                     ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            locationManager.removeUpdates(GPSTracker.this);
+            locationManager.removeUpdates(LocationGPS.this);
         }
     }
 

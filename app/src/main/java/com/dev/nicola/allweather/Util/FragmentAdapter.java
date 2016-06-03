@@ -2,7 +2,7 @@ package com.dev.nicola.allweather.Util;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.dev.nicola.allweather.DailyFragment;
 import com.dev.nicola.allweather.ForecastFragment;
@@ -10,7 +10,7 @@ import com.dev.nicola.allweather.ForecastFragment;
 /**
  * Created by Nicola on 12/05/2016.
  */
-public class FragmentAdapter extends FragmentPagerAdapter {
+public class FragmentAdapter extends FragmentStatePagerAdapter {
 
     final int PAGE_COUNT = 2;
     private String tabTitles[] = {"NOW", "WEEK"};
