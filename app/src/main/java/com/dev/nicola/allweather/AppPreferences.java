@@ -33,7 +33,6 @@ public class AppPreferences extends AppCompatActivity {
             addPreferencesFromResource(R.xml.preferences);
             final PreferenceManager preferenceManager = getPreferenceManager();
 
-//            if(preferenceManager.getSharedPreferences().getBoolean("pres_geolocation",false))
 
             Preference theme = findPreference("themeUnit");
             theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

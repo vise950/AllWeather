@@ -136,10 +136,15 @@ public class MainActivity extends AppCompatActivity {
             getLocation();
         }
 
-        if (!theme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1")))
+
+        if (!theme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1")) &&
+                !systemUnit.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1")))
             MainActivity.this.recreate();
 
-        if (!systemUnit.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1"))) {
+        else if (!theme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1")))
+            MainActivity.this.recreate();
+
+        else if (!systemUnit.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1"))) {
             systemUnit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1");
             if (!mProgressDialog.isShowing())
                 mProgressDialog.show();
@@ -314,6 +319,8 @@ public class MainActivity extends AppCompatActivity {
             suggestionsList.add(new SearchItem("Milano"));
             suggestionsList.add(new SearchItem("Madrid"));
             suggestionsList.add(new SearchItem("Mosca"));
+            suggestionsList.add(new SearchItem("new York"));
+            suggestionsList.add(new SearchItem("Los Angeles"));
 
 
             SearchAdapter searchAdapter = new SearchAdapter(this, suggestionsList);
