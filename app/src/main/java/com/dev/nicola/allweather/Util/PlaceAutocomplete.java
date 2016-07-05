@@ -24,7 +24,7 @@ public class PlaceAutocomplete {
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
     private static final String OUT_JSON = "/json";
-    private static final String TYPES = "geocode";
+    private static final String TYPES = "(cities)";
     private static final String GOOGLE_API_KEY = "AIzaSyASZMgu_N3JTvHcbLhs57ZEKOEyqrIPF6g";
     private static String TAG = PlaceAutocomplete.class.getSimpleName();
     public List<SearchItem> suggestionsList;
@@ -57,16 +57,16 @@ public class PlaceAutocomplete {
 
             mObject = new JSONObject(responseData);
             JSONArray predsJsonArray = mObject.getJSONArray("predictions");
-            for (int i = 0; i < predsJsonArray.length(); i++) {
+            for (int i = 0; i < 3; i++) {
                 suggestion = predsJsonArray.getJSONObject(i).getString("description");
-                Log.d(TAG, "Suggestion " + suggestion);
+//                Log.d(TAG, "Suggestion " + suggestion);
+//                suggestion = suggestion.substring(suggestion.indexOf(','), suggestion.indexOf(',') - 1);
                 suggestionsList.add(new SearchItem(suggestion));
             }
 
         } catch (IOException | JSONException e) {
             Log.d(TAG, "exception:" + e);
         }
-//        return suggestionsList;
     }
 
 

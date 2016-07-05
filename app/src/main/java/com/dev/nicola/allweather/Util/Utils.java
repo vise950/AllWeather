@@ -73,6 +73,7 @@ public class Utils {
         int icon = 0;
 
         switch (condition) {
+            case "1000":
             case "clear-day":
                 icon = R.drawable.clear_day_2;
                 break;
@@ -85,6 +86,7 @@ public class Utils {
             case "partly-cloudy-night":
                 icon = R.drawable.cloud_night_2;
                 break;
+            case "1006":
             case "cloudy":
                 icon = R.drawable.cloud_2;
                 break;
@@ -120,11 +122,20 @@ public class Utils {
         return direction;
     }
 
-    public String getHourFormat(Integer time) {
+    //type = 0 --> 24h format
+    //type = 1 --> 12h format
+    public String getHourFormat(Integer time, String timezone, int type) {
         String t;
+        SimpleDateFormat format = null;
         Date date = new Date(time * 1000L);
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        if (type == 0)
+            format = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        if (type == 1)
+            format = new SimpleDateFormat("HH:mm a", Locale.getDefault());
+
+        format.setTimeZone(TimeZone.getTimeZone(timezone));
         t = format.format(date);
+
         return t;
     }
 
@@ -141,6 +152,12 @@ public class Utils {
         int month = calendar.get(Calendar.MONTH);
         t = days[dayindex - 1] + " " + day + " " + months[month];
         return t;
+    }
+
+    public int getLocalTime() {
+        Calendar calendar = Calendar.getInstance();
+        int h = calendar.get(Calendar.HOUR_OF_DAY);
+        return h;
     }
 
 

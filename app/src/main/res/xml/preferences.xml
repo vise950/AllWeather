@@ -6,10 +6,29 @@
 
         <ListPreference
             android:defaultValue="1"
-            android:entries="@array/system_unit"
-            android:entryValues="@array/system_value"
-            android:key="systemUnit"
-            android:title="@string/system"/>
+            android:entries="@array/temperature_unit"
+            android:entryValues="@array/temperature_value"
+            android:key="@string/pref_temperature"
+            android:title="@string/pref_temperature"/>
+
+        <ListPreference
+            android:defaultValue="3"
+            android:entries="@array/speed_unit"
+            android:entryValues="@array/speed_value"
+            android:key="@string/pref_speed"
+            android:title="@string/pref_speed"/>
+
+        <ListPreference
+            android:defaultValue="2"
+            android:entries="@array/time_unit"
+            android:entryValues="@array/time_value"
+            android:key="@string/pref_time"
+            android:title="@string/pref_time"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="aaa">
 
         <ListPreference
             android:defaultValue="1"
@@ -23,6 +42,13 @@
             android:key="pref_geolocation"
             android:summary="@string/use_geolocation_summary"
             android:title="@string/use_geolocation_title"/>
+
+        <ListPreference
+            android:defaultValue="ForecastIO"
+            android:entries="@array/provider_unit"
+            android:entryValues="@array/provider_value"
+            android:key="pref_provider"
+            android:title="@string/provider"/>
 
     </PreferenceCategory>
 

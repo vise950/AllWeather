@@ -17,8 +17,42 @@
     <string name="action_settings">Settings</string>
     <string name="action_credits">Credits</string>
 
-    <string name="first_category">General</string>
-    <string name="system">System of Units</string>
+    <string name="first_category">Units</string>
+
+    <string name="pref_temperature">Temperature</string>
+    <string-array name="temperature_unit">
+        <item>Celsius (C)</item>
+        <item>Fahrenheit (F)</item>
+        <item>Kelvin (K)</item>
+    </string-array>
+    <string-array name="temperature_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="pref_speed">Speed</string>
+    <string-array name="speed_unit">
+        <item>Miles per hour (Mph)</item>
+        <item>Kilometer per hour (Km/h)</item>
+        <item>Meter per second (M/s)</item>
+    </string-array>
+    <string-array name="speed_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="pref_time">Time</string>
+    <string-array name="time_unit">
+        <item>0-12</item>
+        <item>0-24</item>
+    </string-array>
+    <string-array name="time_value">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string-array name="system_unit">
         <item>Metric (°C, m/s)</item>
         <item>Imprerial (°F, mhp)</item>
@@ -41,15 +75,25 @@
     <string name="use_geolocation_title">Improve location</string>
     <string name="use_geolocation_summary">Using gps to improve the position</string>
 
+    <string name="provider">Weather provider</string>
+    <string-array name="provider_unit">
+        <item>ForecastIO</item>
+        <!--<item>Apixu</item>-->
+    </string-array>
+    <string-array name="provider_value">
+        <item>ForecastIO</item>
+        <!--<item>Apixu</item>-->
+    </string-array>
+
 
     <string-array name="days">
+        <item>Sunday</item>
         <item>Monday</item>
         <item>Tuesday</item>
         <item>Wendnesday</item>
         <item>Thursday</item>
         <item>Friday</item>
         <item>Saturday</item>
-        <item>Sunday</item>
     </string-array>
 
     <string-array name="months">
@@ -85,12 +129,11 @@
     <string name="sunrise_label">Sunrise:</string>
     <string name="sunset_label">Sunset:</string>
     <string name="temperature" translatable="false">%1$s°</string>
-    <string name="wind_metrical" translatable="false">%1$s %2$sm/s</string>
-    <string name="wind_imperial" translatable="false">%1$s %2$smhp</string>
+    <string name="wind" translatable="false">%1$s %2$s</string>
     <string name="humidity" translatable="false">%1$s%%</string>
 
-    <string name="dialog_preference_theme">Reboot for apply changes</string>
-    <string name="dialog_action_reboot">Reboot</string>
+    <string name="dialog_preference_theme">Reboot application for apply changes</string>
+    <string name="dialog_action_reboot">OK</string>
     <string name="dialog_action_cancel">Cancel</string>
 
 </resources>

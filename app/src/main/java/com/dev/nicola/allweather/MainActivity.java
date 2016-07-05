@@ -26,14 +26,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIORequest;
 import com.dev.nicola.allweather.Util.FragmentAdapter;
 import com.dev.nicola.allweather.Util.LocationGPS;
 import com.dev.nicola.allweather.Util.LocationIP;
 import com.dev.nicola.allweather.Util.PlaceAutocomplete;
 import com.dev.nicola.allweather.Util.Preferences;
+import com.dev.nicola.allweather.Util.ProviderData;
 import com.dev.nicola.allweather.Util.Utils;
 import com.lapism.searchview.SearchAdapter;
+import com.lapism.searchview.SearchHistoryTable;
 import com.lapism.searchview.SearchItem;
 import com.lapism.searchview.SearchView;
 
@@ -69,18 +70,18 @@ public class MainActivity extends AppCompatActivity {
 
     private PlaceAutocomplete mPlaceAutocomplete;
     private List<SearchItem> suggestionsList;
+    private List<SearchItem> list = new ArrayList<>();
     private SearchAdapter mSearchAdapter;
     private boolean useSuggestion = false;
 
     private Location mLocation;
     private LocationGPS mLocationGPS;
     private LocationIP mLocationIP;
-    private Double latitude;
-    private Double longitude;
 
     private Handler mHandler;
-    private ForecastIORequest mRequest;
     private JSONObject mJSONObject;
+    private ProviderData mProviderData;
+    private String prefProvider;
 
 
     @Override
@@ -144,12 +145,18 @@ public class MainActivity extends AppCompatActivity {
         else if (!theme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1")))
             MainActivity.this.recreate();
 
-        else if (!systemUnit.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1"))) {
-            systemUnit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1");
-            if (!mProgressDialog.isShowing())
-                mProgressDialog.show();
-            new task().execute();
-        }
+//        else if (!systemUnit.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1"))) {
+        systemUnit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1");
+//            if (!mProgressDialog.isShowing())
+//                mProgressDialog.show();
+//            new task().execute();
+//        }
+//        else if(!prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider","ForecastIO"))){
+        prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO");
+//            if (!mProgressDialog.isShowing())
+//                mProgressDialog.show();
+//            new task().execute();
+//        }
     }
 
     @Override
@@ -199,15 +206,18 @@ public class MainActivity extends AppCompatActivity {
         mProgressDialog = ProgressDialog.show(MainActivity.this, "", "loading...", true);
 
         mPlaceAutocomplete = new PlaceAutocomplete();
-        mRequest = new ForecastIORequest(getApplicationContext());
+        mProviderData = new ProviderData(getApplicationContext(), getResources());
         mLocationGPS = new LocationGPS(getApplicationContext());
         mLocationIP = new LocationIP();
 
         setDrawer();
         setNavigationView();
         setSearchView();
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        mHandler = new Handler();
 
         systemUnit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1");
+        prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO");
     }
 
 
@@ -266,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
             mTabLayout.setupWithViewPager(mViewPager);
         }
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -279,6 +288,8 @@ public class MainActivity extends AppCompatActivity {
     private void setSearchView() {
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         mSearchView = (SearchView) findViewById(R.id.search_view);
+        mSearchAdapter = new SearchAdapter(getApplicationContext());
+        final SearchHistoryTable historyTable = new SearchHistoryTable(getApplicationContext());
         suggestionsList = new ArrayList<>();
         if (mSearchView != null) {
             mSearchView.setVersion(SearchView.VERSION_TOOLBAR);
@@ -287,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
             mSearchView.setHint(R.string.hint_search_view);
             mSearchView.setVoice(false);
             mSearchView.setShadow(false);
+            mSearchView.setAnimationDuration(SearchView.ANIMATION_DURATION);
 
             if (theme.equals("1"))
                 mSearchView.setTheme(SearchView.THEME_LIGHT, true);
@@ -302,9 +314,29 @@ public class MainActivity extends AppCompatActivity {
 
             mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
-                public boolean onQueryTextChange(String newText) {
+                public boolean onQueryTextChange(final String newText) {
                     if (newText.length() > 3) {
-//                        taskAutoComplete(newText);
+
+                        if (!useSuggestion)
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mPlaceAutocomplete.autocomplete(newText);
+                                    useSuggestion = true;
+
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            suggestionsList = mPlaceAutocomplete.getSuggestionList();
+                                            mSearchAdapter.setSuggestionsList(suggestionsList);
+                                            mSearchView.setAdapter(mSearchAdapter);
+                                            Log.d(TAG, "setSearchAdapter taskAutocomplete");
+                                        }
+                                    });
+                                }
+                            }).start();
+
+                        Log.d(TAG, "onQueryTextChange");
                     }
                     return false;
                 }
@@ -312,31 +344,30 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
                     mSearchView.close(false);
+                    historyTable.clearDatabase();
+                    useSuggestion = false;
                     return false;
                 }
             });
 
-            suggestionsList.add(new SearchItem("Milano"));
-            suggestionsList.add(new SearchItem("Madrid"));
-            suggestionsList.add(new SearchItem("Mosca"));
-            suggestionsList.add(new SearchItem("new York"));
-            suggestionsList.add(new SearchItem("Los Angeles"));
+            SearchAdapter searchAdapter = new SearchAdapter(getApplicationContext(), suggestionsList);
+            mSearchView.setAdapter(searchAdapter);
 
-
-            SearchAdapter searchAdapter = new SearchAdapter(this, suggestionsList);
-            searchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+            mSearchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     mSearchView.close(false);
                     TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
-                    String item = textView.getText().toString();
+                    String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //trocare stringa da 0 al char ','
+                    Log.d(TAG, "ItemClick " + item);
+                    useSuggestion = false;
+                    historyTable.clearDatabase();
                     mLocation = mUtils.getCoordinateByName(item);
                     new task().execute();
                     if (!mProgressDialog.isShowing())
                         mProgressDialog.show();
                 }
             });
-            mSearchView.setAdapter(searchAdapter);
         }
     }
 
@@ -394,8 +425,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void taskAutoComplete(final String query) {
-        mHandler = new Handler();
-
         new Thread() {
             public void run() {
 
@@ -405,44 +434,19 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         suggestionsList = mPlaceAutocomplete.getSuggestionList();
-                        Log.d(TAG, "suggestion list " + suggestionsList.size());
                         mSearchAdapter = new SearchAdapter(getApplicationContext(), suggestionsList);
-                        Log.d(TAG, "searchAdapter " + mSearchAdapter.getItemCount());
                         mSearchView.setAdapter(mSearchAdapter);
+                        Log.d(TAG, "setSearchAdapter taskAutocomplete");
                     }
                 });
             }
         }.start();
     }
 
-
-    private void taskLocationByIP() {
-        mHandler = new Handler();
-        new Thread() {
-            public void run() {
-                final String ip = mLocationIP.getExternalIP();
-
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mLocationIP.getLocation(ip);
-                    }
-                });
-            }
-        }.start();
-    }
 
     public void getLocation() {
         mLocation = mLocationGPS.getLocation();
-//        if (mLocation != null)
-//            new task().execute();
-//        else
-//            showSnackbar(4);
-
-//        taskLocationByIP();
         new task().execute();
-
-
     }
 
 
@@ -475,18 +479,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-
-
+            Log.d(TAG, "prefProvider " + prefProvider);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            if (mLocation != null)
-                mJSONObject = mRequest.getData(mRequest.setUrl(mLocation.getLatitude(), mLocation.getLongitude()));
-            else {
+            if (mLocation != null) {
+                mJSONObject = mProviderData.getProviderCall(prefProvider, mLocation.getLatitude(), mLocation.getLongitude());
+
+            } else {
                 final String ip = mLocationIP.getExternalIP();
                 mLocationIP.getLocation(ip);
-                mJSONObject = mRequest.getData(mRequest.setUrl(mLocationIP.getLatitude(), mLocationIP.getLongitude()));
+                mJSONObject = mProviderData.getProviderCall(prefProvider, mLocationIP.getLatitude(), mLocationIP.getLongitude());
             }
             return null;
         }

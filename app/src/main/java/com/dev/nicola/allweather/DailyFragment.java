@@ -1,6 +1,5 @@
 package com.dev.nicola.allweather;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -10,10 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIOData;
-import com.dev.nicola.allweather.Util.Utils;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.dev.nicola.allweather.Util.ProviderData;
 
 /**
  * Created by Nicola on 24/03/2016.
@@ -44,13 +40,9 @@ public class DailyFragment extends Fragment {
     private ImageView forthIcon;
     private TextView forthTemperature;
 
-    private Utils mUtils;
-    private ForecastIOData mData;
-    private Gson mGson;
-    private Resources mResources;
-
+    private ProviderData mProviderData;
     private String argument;
-
+    private String prefProvider;
 
     public static DailyFragment newInstance(String argument) {
         Bundle bundle = new Bundle();
@@ -65,11 +57,7 @@ public class DailyFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         argument = getArguments().getString("ARGUMENT");
-
-        mUtils = new Utils(getContext(), getResources());
-        mData = new ForecastIOData();
-        mGson = new GsonBuilder().create();
-        mResources = getResources();
+        mProviderData = new ProviderData(getContext(), getResources());
 
     }
 
@@ -77,7 +65,10 @@ public class DailyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.daily_fragment, container, false);
 
-        mData = mGson.fromJson(argument, ForecastIOData.class);
+        prefProvider = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("pref_provider", "ForecastIO");
+
+        mProviderData.elaborateData(prefProvider, argument);
+        mProviderData.pullDailyData(prefProvider);
 
         setUpLayout(view);
         setText();
@@ -115,32 +106,28 @@ public class DailyFragment extends Fragment {
 
 
     private void setText() {
-        location.setText(mUtils.getLocationName(mData.getLatitude(), mData.getLongitude()));
-//        weatherIcon.setImageResource(mUtils.getIcon(mOpenWeatherMap.getDailyIcon()));
-        condition.setText(String.valueOf(mData.getCurrently().getSummary()));
-        temperature.setText(String.format(mResources.getString(R.string.temperature), mData.getCurrently().getTemperature()));
-        if (PreferenceManager.getDefaultSharedPreferences(getContext()).getString("systemUnit", "1").equals("1"))
-            wind.setText(String.format(mResources.getString(R.string.wind_metrical), mUtils.getWindDirection(mData.getCurrently().getWindBearing()), mData.getCurrently().getWindSpeed()));
-        else
-            wind.setText(String.format(mResources.getString(R.string.wind_imperial), mUtils.getWindDirection(mData.getCurrently().getWindBearing()), mData.getCurrently().getWindSpeed()));
-        humidity.setText(String.format(mResources.getString(R.string.humidity), mData.getCurrently().getHumidity()));
-        sunrise.setText(mUtils.getHourFormat(mData.getDaily().getData().get(0).getSunriseTime()));
-        sunset.setText(mUtils.getHourFormat(mData.getDaily().getData().get(0).getSunsetTime()));
+        location.setText(mProviderData.getLocation());
+        condition.setText(mProviderData.getCondition());
+        temperature.setText(mProviderData.getTemperature());
+        wind.setText(mProviderData.getWind());
+        humidity.setText(mProviderData.getHumidity());
+        sunrise.setText(mProviderData.getSunrise());
+        sunset.setText(mProviderData.getSunset());
 
-        firstHour.setText(mUtils.getHourFormat(mData.getHourly().getData().get(2).getTime()));
-        firstIcon.setImageResource(mUtils.getIcon(mData.getHourly().getData().get(2).getIcon()));
-        firstTemperature.setText(String.format(mResources.getString(R.string.temperature), mData.getHourly().getData().get(2).getTemperature()));
+        firstHour.setText(mProviderData.getFirstHour());
+        firstIcon.setImageResource(mProviderData.getFirstIcon());
+        firstTemperature.setText(mProviderData.getFirstTemperature());
 
-        secondHour.setText(mUtils.getHourFormat(mData.getHourly().getData().get(4).getTime()));
-        secondIcon.setImageResource(mUtils.getIcon(mData.getHourly().getData().get(4).getIcon()));
-        secondTemperature.setText(String.format(mResources.getString(R.string.temperature), mData.getHourly().getData().get(4).getTemperature()));
+        secondHour.setText(mProviderData.getSecondHour());
+        secondIcon.setImageResource(mProviderData.getSecondIcon());
+        secondTemperature.setText(mProviderData.getSecondTemperature());
 
-        thirdHour.setText(mUtils.getHourFormat(mData.getHourly().getData().get(6).getTime()));
-        thirdIcon.setImageResource(mUtils.getIcon(mData.getHourly().getData().get(6).getIcon()));
-        thirdTemperature.setText(String.format(mResources.getString(R.string.temperature), mData.getHourly().getData().get(6).getTemperature()));
+        thirdHour.setText(mProviderData.getThirdHour());
+        thirdIcon.setImageResource(mProviderData.getThirdIcon());
+        thirdTemperature.setText(mProviderData.getThirdTemperature());
 
-        forthHour.setText(mUtils.getHourFormat(mData.getHourly().getData().get(8).getTime()));
-        forthIcon.setImageResource(mUtils.getIcon(mData.getHourly().getData().get(8).getIcon()));
-        forthTemperature.setText(String.format(mResources.getString(R.string.temperature), mData.getHourly().getData().get(8).getTemperature()));
+        forthHour.setText(mProviderData.getForthHour());
+        forthIcon.setImageResource(mProviderData.getForthIcon());
+        forthTemperature.setText(mProviderData.getForthTemperature());
     }
 }

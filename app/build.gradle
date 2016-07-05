@@ -10,6 +10,8 @@ android {
         targetSdkVersion 23
         versionCode 8
         versionName "0.1.8"
+
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -17,6 +19,10 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
     }
 
 }
@@ -33,5 +39,5 @@ dependencies {
     compile 'com.github.paolorotolo:appintro:3.4.0'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.google.code.gson:gson:2.4'
-    compile 'com.lapism:searchview:3.0.2'
+    compile 'com.lapism:searchview:3.3.1'
 }

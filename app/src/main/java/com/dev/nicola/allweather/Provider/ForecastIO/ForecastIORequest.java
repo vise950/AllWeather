@@ -37,8 +37,6 @@ public class ForecastIORequest {
 
 
     public ForecastIORequest(Context context) {
-//        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-//        units = mPreferences.getString("systemUnit", "1");
         this.mContext = context;
     }
 
