@@ -70,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
     private PlaceAutocomplete mPlaceAutocomplete;
     private List<SearchItem> suggestionsList;
-    private List<SearchItem> list = new ArrayList<>();
     private SearchAdapter mSearchAdapter;
-    private boolean useSuggestion = false;
+    private SearchHistoryTable mHistoryTable;
+    private String firstSuggestion = "";
 
     private Location mLocation;
     private LocationGPS mLocationGPS;
@@ -145,18 +145,17 @@ public class MainActivity extends AppCompatActivity {
         else if (!theme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1")))
             MainActivity.this.recreate();
 
-//        else if (!systemUnit.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1"))) {
+        else if (!systemUnit.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1"))) {
         systemUnit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1");
-//            if (!mProgressDialog.isShowing())
-//                mProgressDialog.show();
-//            new task().execute();
-//        }
-//        else if(!prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider","ForecastIO"))){
+            if (!mProgressDialog.isShowing())
+                mProgressDialog.show();
+            new task().execute();
+        } else if (!prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO"))) {
         prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO");
-//            if (!mProgressDialog.isShowing())
-//                mProgressDialog.show();
-//            new task().execute();
-//        }
+            if (!mProgressDialog.isShowing())
+                mProgressDialog.show();
+            new task().execute();
+        }
     }
 
     @Override
@@ -289,7 +288,8 @@ public class MainActivity extends AppCompatActivity {
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         mSearchView = (SearchView) findViewById(R.id.search_view);
         mSearchAdapter = new SearchAdapter(getApplicationContext());
-        final SearchHistoryTable historyTable = new SearchHistoryTable(getApplicationContext());
+        mHistoryTable = new SearchHistoryTable(getApplicationContext());
+        mHistoryTable.setHistorySize(4);
         suggestionsList = new ArrayList<>();
         if (mSearchView != null) {
             mSearchView.setVersion(SearchView.VERSION_TOOLBAR);
@@ -315,28 +315,25 @@ public class MainActivity extends AppCompatActivity {
             mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextChange(final String newText) {
-                    if (newText.length() > 3) {
-
-                        if (!useSuggestion)
+                    mHistoryTable.open();
+                    if (newText.length() > 2) {
+                        if (!firstSuggestion.contains(newText))
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
                                     mPlaceAutocomplete.autocomplete(newText);
-                                    useSuggestion = true;
 
                                     mHandler.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             suggestionsList = mPlaceAutocomplete.getSuggestionList();
+                                            firstSuggestion = suggestionsList.get(0).get_text().toString();
                                             mSearchAdapter.setSuggestionsList(suggestionsList);
                                             mSearchView.setAdapter(mSearchAdapter);
-                                            Log.d(TAG, "setSearchAdapter taskAutocomplete");
                                         }
                                     });
                                 }
                             }).start();
-
-                        Log.d(TAG, "onQueryTextChange");
                     }
                     return false;
                 }
@@ -344,8 +341,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
                     mSearchView.close(false);
-                    historyTable.clearDatabase();
-                    useSuggestion = false;
                     return false;
                 }
             });
@@ -359,9 +354,7 @@ public class MainActivity extends AppCompatActivity {
                     mSearchView.close(false);
                     TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
                     String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //trocare stringa da 0 al char ','
-                    Log.d(TAG, "ItemClick " + item);
-                    useSuggestion = false;
-                    historyTable.clearDatabase();
+                    mHistoryTable.addItem(new SearchItem(item));
                     mLocation = mUtils.getCoordinateByName(item);
                     new task().execute();
                     if (!mProgressDialog.isShowing())
