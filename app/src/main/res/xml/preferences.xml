@@ -28,7 +28,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="aaa">
+        android:title="@string/second_ategory">
 
         <ListPreference
             android:defaultValue="1"

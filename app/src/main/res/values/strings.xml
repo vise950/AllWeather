@@ -62,6 +62,7 @@
         <item>2</item>
     </string-array>
 
+    <string name="second_ategory">General</string>
     <string name="theme">Theme</string>
     <string-array name="theme_unit">
         <item>Light</item>

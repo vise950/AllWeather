@@ -59,8 +59,11 @@ public class PlaceAutocomplete {
             JSONArray predsJsonArray = mObject.getJSONArray("predictions");
             for (int i = 0; i < 3; i++) {
                 suggestion = predsJsonArray.getJSONObject(i).getString("description");
-//                Log.d(TAG, "Suggestion " + suggestion);
-//                suggestion = suggestion.substring(suggestion.indexOf(','), suggestion.indexOf(',') - 1);
+                int index = suggestion.indexOf(',');
+                int lastIndex = suggestion.lastIndexOf(',');
+                if (index != lastIndex)
+                    suggestion = suggestion.substring(0, index) + suggestion.substring(lastIndex, suggestion.length());
+
                 suggestionsList.add(new SearchItem(suggestion));
             }
 

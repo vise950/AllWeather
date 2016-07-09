@@ -8,10 +8,13 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.android.gms.ads.AdView;
+
 /**
  * Created by Nicola on 07/04/2016.
  */
 public class AppPreferences extends AppCompatActivity {
+    private AdView mAdView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,7 @@ public class AppPreferences extends AppCompatActivity {
 
 
     public static class myPreferenceFragment extends PreferenceFragment {
+
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -56,7 +60,6 @@ public class AppPreferences extends AppCompatActivity {
                     return true;
                 }
             });
-
         }
     }
 

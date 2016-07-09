@@ -51,13 +51,15 @@
     </string-array>
 
     <string-array name="system_unit">
-        <item>Metric (°C, m/s)</item>
-        <item>Imprerial (°F, mhp)</item>
+        <item>Metrico (°C, m/s)</item>
+        <item>Impreriale (°F, mhp)</item>
     </string-array>
     <string-array name="system_value">
         <item>1</item>
         <item>2</item>
     </string-array>
+
+    <string name="second_ategory">Generale</string>
 
     <string name="theme">Tema</string>
     <string-array name="theme_unit">

@@ -65,8 +65,10 @@ public class MainActivity extends AppCompatActivity {
     private Preferences mPreferences;
     private Utils mUtils;
 
-    private String theme;
-    private String systemUnit;
+    private String prefTheme;
+    private String prefTemperature;
+    private String prefSpeed;
+    private String prefTime;
 
     private PlaceAutocomplete mPlaceAutocomplete;
     private List<SearchItem> suggestionsList;
@@ -91,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
         mUtils = new Utils(getApplicationContext(), getResources());
 
-        theme = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1");
-        mUtils.setTheme(this, theme);
+        prefTheme = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1");
+        mUtils.setTheme(this, prefTheme);
 
         setContentView(R.layout.activity_main);
 
@@ -137,25 +139,20 @@ public class MainActivity extends AppCompatActivity {
             getLocation();
         }
 
-
-        if (!theme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1")) &&
-                !systemUnit.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1")))
+        if (!prefTheme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1")))
             MainActivity.this.recreate();
 
-        else if (!theme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1")))
-            MainActivity.this.recreate();
-
-        else if (!systemUnit.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1"))) {
-        systemUnit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1");
-            if (!mProgressDialog.isShowing())
-                mProgressDialog.show();
-            new task().execute();
-        } else if (!prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO"))) {
-        prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO");
-            if (!mProgressDialog.isShowing())
-                mProgressDialog.show();
-            new task().execute();
-        }
+//        else if (!systemUnit.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1"))) {
+//        systemUnit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1");
+//            if (!mProgressDialog.isShowing())
+//                mProgressDialog.show();
+//            new task().execute();
+//        } else if (!prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO"))) {
+//        prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO");
+//            if (!mProgressDialog.isShowing())
+//                mProgressDialog.show();
+//            new task().execute();
+//        }
     }
 
     @Override
@@ -215,8 +212,8 @@ public class MainActivity extends AppCompatActivity {
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         mHandler = new Handler();
 
-        systemUnit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1");
         prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO");
+
     }
 
 
@@ -300,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
             mSearchView.setShadow(false);
             mSearchView.setAnimationDuration(SearchView.ANIMATION_DURATION);
 
-            if (theme.equals("1"))
+            if (prefTheme.equals("1"))
                 mSearchView.setTheme(SearchView.THEME_LIGHT, true);
             else
                 mSearchView.setTheme(SearchView.THEME_DARK, true);
