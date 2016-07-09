@@ -14,6 +14,9 @@ import com.dev.nicola.allweather.Util.DividerItemDecoration;
 import com.dev.nicola.allweather.Util.Forecast;
 import com.dev.nicola.allweather.Util.ForecastAdapter;
 import com.dev.nicola.allweather.Util.ProviderData;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +50,7 @@ public class ForecastFragment extends Fragment {
 
         argument = getArguments().getString("ARGUMENT");
         mProviderData = new ProviderData(getContext(), getResources());
+        MobileAds.initialize(getContext(), "ca-app-pub-5053914526798733~3075057204");
     }
 
     @Override
@@ -67,6 +71,10 @@ public class ForecastFragment extends Fragment {
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
         mRecyclerView.setAdapter(mForecastAdapter);
+
+        AdView mAdView = (AdView) view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         return view;
     }
