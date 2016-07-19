@@ -19,7 +19,7 @@ public class DailyFragment extends Fragment {
     private static String TAG = DailyFragment.class.getSimpleName();
 
     private TextView location;
-    private ImageView weatherIcon;
+    private ImageView image;
     private TextView condition;
     private TextView temperature;
     private TextView wind;
@@ -79,7 +79,7 @@ public class DailyFragment extends Fragment {
 
     private void setUpLayout(View v) {
         location = (TextView) v.findViewById(R.id.location_daily_fragment);
-//        weatherIcon = (ImageView) v.findViewById(R.id.imageDaily);
+        image = (ImageView) v.findViewById(R.id.image_daily_fragment);
         condition = (TextView) v.findViewById(R.id.condition_daily_fragment);
         temperature = (TextView) v.findViewById(R.id.temperature);
         wind = (TextView) v.findViewById(R.id.wind);
@@ -107,6 +107,7 @@ public class DailyFragment extends Fragment {
 
     private void setText() {
         location.setText(mProviderData.getLocation());
+        image.setImageResource(mProviderData.getImage());
         condition.setText(mProviderData.getCondition());
         temperature.setText(mProviderData.getTemperature());
         wind.setText(mProviderData.getWind());

@@ -69,8 +69,8 @@ public class Utils {
     }
 
 
-    public int getIcon(String condition) {
-        int icon = 0;
+    public int getWeatherIcon(String condition) {
+        int icon;
 
         switch (condition) {
             case "1000":
@@ -113,6 +113,21 @@ public class Utils {
         return icon;
     }
 
+    public int getImage(long sunrise, long sunset, long time) {
+        int wall;
+
+        if (time >= sunrise - 1800 && time <= sunrise + 1800)
+            wall = R.drawable.sunrise_wall;
+        else if (time > sunrise + 1800 && time < sunset - 1800)
+            wall = R.drawable.day_wall;
+        else if (time >= sunset - 1800 && time <= sunset + 1800)
+            wall = R.drawable.sunset_wall;
+        else
+            wall = R.drawable.night_wall;
+
+        return wall;
+    }
+
 
     public String getWindDirection(int degrees) {
         String direction;
@@ -126,15 +141,21 @@ public class Utils {
     //type = 1 --> 12h format
     public String getHourFormat(Integer time, String timezone, int type) {
         String t;
-        SimpleDateFormat format = null;
+        SimpleDateFormat hour = null;
         Date date = new Date(time * 1000L);
-        if (type == 0)
-            format = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        if (type == 1)
-            format = new SimpleDateFormat("HH:mm a", Locale.getDefault());
 
-        format.setTimeZone(TimeZone.getTimeZone(timezone));
-        t = format.format(date);
+        /*  h is used for AM/PM times (1-12).
+            H is used for 24 hour times (1-24).
+            a is the AM/PM marker
+            m is minute in hour
+            Two h's will print a leading zero: 01:13 PM. One h will print without the leading zero: 1:13 PM.
+        */
+        if (type == 0)
+            hour = new SimpleDateFormat("H:mm", Locale.getDefault());
+        if (type == 1)
+            hour = new SimpleDateFormat("h:mm a", Locale.getDefault());
+
+        t = hour.format(date);
 
         return t;
     }

@@ -33,16 +33,11 @@ public class MainIntro extends AppIntro2 {
 
     }
 
-
-    private void loadMainActivity() {
+    @Override
+    public void onDonePressed() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    @Override
-    public void onDonePressed() {
-        loadMainActivity();
     }
 
     @Override

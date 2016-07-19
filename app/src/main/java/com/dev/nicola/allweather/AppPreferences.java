@@ -20,7 +20,7 @@ public class AppPreferences extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1").equals("1"))
+        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), "1").equals("1"))
             setTheme(R.style.AppTheme);
         else
             setTheme(R.style.AppThemeDark);
@@ -38,12 +38,12 @@ public class AppPreferences extends AppCompatActivity {
             final PreferenceManager preferenceManager = getPreferenceManager();
 
 
-            Preference theme = findPreference("themeUnit");
+            Preference theme = findPreference(getResources().getString(R.string.key_pref_theme));
             theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
 
-                    if (!newValue.equals(preferenceManager.getSharedPreferences().getString("themeUnit", "1"))) {
+                    if (!newValue.equals(preferenceManager.getSharedPreferences().getString(getResources().getString(R.string.key_pref_theme), "1"))) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setMessage(R.string.dialog_preference_theme);
                         builder.setCancelable(false);

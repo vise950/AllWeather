@@ -39,6 +39,7 @@ public class ProviderData {
     private UnitsConverter mConverter;
 
     private String location;
+    private int image;
     private String condition;
     private String temperature;
     private String wind;
@@ -121,28 +122,21 @@ public class ProviderData {
     }
 
     public void pullDailyData(String provider) {
-        String tempUnits = PreferenceManager.getDefaultSharedPreferences(mContext).getString(mResources.getString(R.string.pref_temperature), "1");
-        String windUnits = PreferenceManager.getDefaultSharedPreferences(mContext).getString(mResources.getString(R.string.pref_speed), "3");
-        String timeUnits = PreferenceManager.getDefaultSharedPreferences(mContext).getString(mResources.getString(R.string.pref_time), "2");
+        String tempUnits = PreferenceManager.getDefaultSharedPreferences(mContext).getString(mResources.getString(R.string.key_pref_temperature), "1");
+        String windUnits = PreferenceManager.getDefaultSharedPreferences(mContext).getString(mResources.getString(R.string.key_pref_speed), "3");
+        String timeUnits = PreferenceManager.getDefaultSharedPreferences(mContext).getString(mResources.getString(R.string.key_pref_time), "2");
         switch (provider) {
 
             case "ForecastIO":
                 location = mUtils.getLocationName(mForecastIOData.getLatitude(), mForecastIOData.getLongitude());
+                image = mUtils.getImage(mForecastIOData.getDaily().getData().get(0).getSunriseTime(), mForecastIOData.getDaily().getData().get(0).getSunsetTime(), mForecastIOData.getCurrently().getTime());
                 condition = mForecastIOData.getCurrently().getSummary();
                 humidity = String.format(mResources.getString(R.string.humidity), mForecastIOData.getCurrently().getHumidity());
 
-
-                firstIcon = mUtils.getIcon(mForecastIOData.getHourly().getData().get(2).getIcon());
-
-
-                secondIcon = mUtils.getIcon(mForecastIOData.getHourly().getData().get(4).getIcon());
-
-
-                thirdIcon = mUtils.getIcon(mForecastIOData.getHourly().getData().get(6).getIcon());
-
-
-                forthIcon = mUtils.getIcon(mForecastIOData.getHourly().getData().get(8).getIcon());
-
+                firstIcon = mUtils.getWeatherIcon(mForecastIOData.getHourly().getData().get(2).getIcon());
+                secondIcon = mUtils.getWeatherIcon(mForecastIOData.getHourly().getData().get(4).getIcon());
+                thirdIcon = mUtils.getWeatherIcon(mForecastIOData.getHourly().getData().get(6).getIcon());
+                forthIcon = mUtils.getWeatherIcon(mForecastIOData.getHourly().getData().get(8).getIcon());
 
                 switch (tempUnits) {
                     case "2":
@@ -218,13 +212,13 @@ public class ProviderData {
                 int index = mUtils.getLocalTime();
                 Log.d(TAG, "index " + mUtils.getLocalTime());
                 firstHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
-                firstIcon = mUtils.getIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getCondition().getCode()));
+                firstIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getCondition().getCode()));
                 firstTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTempC());
 
                 index += 2;
                 if (index <= 23) {
                     secondHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
-                    secondIcon = mUtils.getIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getCondition().getCode()));
+                    secondIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getCondition().getCode()));
                     secondTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTempC());
                 } else {
                     if (index >= 24)
@@ -232,14 +226,14 @@ public class ProviderData {
                     else
                         index = 0;
                     secondHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
-                    secondIcon = mUtils.getIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getCondition().getCode()));
+                    secondIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getCondition().getCode()));
                     secondTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTempC());
                 }
 
                 index += 2;
                 if (index <= 23) {
                     thirdHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
-                    thirdIcon = mUtils.getIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getCondition().getCode()));
+                    thirdIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getCondition().getCode()));
                     thirdTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTempC());
                 } else {
                     if (index >= 24)
@@ -247,14 +241,14 @@ public class ProviderData {
                     else
                         index = 0;
                     thirdHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
-                    thirdIcon = mUtils.getIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getCondition().getCode()));
+                    thirdIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getCondition().getCode()));
                     thirdTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTempC());
                 }
 
                 index += 2;
                 if (index <= 23) {
                     forthHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
-                    forthIcon = mUtils.getIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getCondition().getCode()));
+                    forthIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getCondition().getCode()));
                     forthTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTempC());
                 } else {
                     if (index >= 24)
@@ -262,7 +256,7 @@ public class ProviderData {
                     else
                         index = 0;
                     forthHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
-                    forthIcon = mUtils.getIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getCondition().getCode()));
+                    forthIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getCondition().getCode()));
                     forthTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTempC());
                 }
 
@@ -283,7 +277,7 @@ public class ProviderData {
                     forecast = new Forecast(mUtils.getDayFormat(mForecastIOData.getDaily().getData().get(i).getTime())
                             , mForecastIOData.getDaily().getData().get(i).getSummary()
                             , (int) (mForecastIOData.getDaily().getData().get(i).getTemperatureMin() + mForecastIOData.getDaily().getData().get(i).getTemperatureMax()) / 2
-                            , mUtils.getIcon(mForecastIOData.getDaily().getData().get(i).getIcon()));
+                            , mUtils.getWeatherIcon(mForecastIOData.getDaily().getData().get(i).getIcon()));
                     ForecastList.add(forecast);
                 }
                 break;
@@ -294,7 +288,7 @@ public class ProviderData {
                     forecast = new Forecast(mUtils.getDayFormat(mApixuData.getForecast().getForecastday().get(i).getDateEpoch())
                             , mApixuData.getForecast().getForecastday().get(i).getDay().getCondition().getText()
                             , mApixuData.getForecast().getForecastday().get(i).getDay().getAvgtempC()
-                            , mUtils.getIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(i).getDay().getCondition().getCode())));
+                            , mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(i).getDay().getCondition().getCode())));
                     ForecastList.add(forecast);
                 }
                 break;
@@ -304,6 +298,10 @@ public class ProviderData {
 
     public String getLocation() {
         return location;
+    }
+
+    public int getImage() {
+        return image;
     }
 
     public String getCondition() {

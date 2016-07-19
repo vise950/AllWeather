@@ -8,34 +8,34 @@
             android:defaultValue="1"
             android:entries="@array/temperature_unit"
             android:entryValues="@array/temperature_value"
-            android:key="@string/pref_temperature"
+            android:key="@string/key_pref_temperature"
             android:title="@string/pref_temperature"/>
 
         <ListPreference
             android:defaultValue="3"
             android:entries="@array/speed_unit"
             android:entryValues="@array/speed_value"
-            android:key="@string/pref_speed"
+            android:key="@string/key_pref_speed"
             android:title="@string/pref_speed"/>
 
         <ListPreference
             android:defaultValue="2"
             android:entries="@array/time_unit"
             android:entryValues="@array/time_value"
-            android:key="@string/pref_time"
+            android:key="@string/key_pref_time"
             android:title="@string/pref_time"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/second_ategory">
+        android:title="@string/second_category">
 
         <ListPreference
             android:defaultValue="1"
             android:entries="@array/theme_unit"
             android:entryValues="@array/theme_value"
-            android:key="themeUnit"
-            android:title="@string/theme"/>
+            android:key="@string/key_pref_theme"
+            android:title="@string/pref_theme"/>
 
         <!--<SwitchPreference-->
         <!--android:defaultValue="false"-->
@@ -47,7 +47,7 @@
             android:defaultValue="ForecastIO"
             android:entries="@array/provider_unit"
             android:entryValues="@array/provider_value"
-            android:key="pref_provider"
+            android:key="@string/key_pref_provider"
             android:title="@string/provider"/>
 
     </PreferenceCategory>

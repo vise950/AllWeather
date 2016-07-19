@@ -64,8 +64,8 @@
         <item>2</item>
     </string-array>
 
-    <string name="second_ategory">General</string>
-    <string name="theme">Theme</string>
+    <string name="second_category">General</string>
+    <string name="pref_theme">Theme</string>
     <string-array name="theme_unit">
         <item>Light</item>
         <item>Dark</item>
@@ -87,6 +87,12 @@
         <item>ForecastIO</item>
         <!--<item>Apixu</item>-->
     </string-array>
+
+    <string name="key_pref_temperature" translatable="false">temperature</string>
+    <string name="key_pref_speed" translatable="false">speed</string>
+    <string name="key_pref_time" translatable="false">time</string>
+    <string name="key_pref_theme" translatable="false">theme</string>
+    <string name="key_pref_provider" translatable="false">provider</string>
 
 
     <string-array name="days">

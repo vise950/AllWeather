@@ -3,6 +3,7 @@ package com.dev.nicola.allweather;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -13,6 +14,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -30,7 +32,6 @@ import com.dev.nicola.allweather.Util.FragmentAdapter;
 import com.dev.nicola.allweather.Util.LocationGPS;
 import com.dev.nicola.allweather.Util.LocationIP;
 import com.dev.nicola.allweather.Util.PlaceAutocomplete;
-import com.dev.nicola.allweather.Util.Preferences;
 import com.dev.nicola.allweather.Util.ProviderData;
 import com.dev.nicola.allweather.Util.Utils;
 import com.lapism.searchview.SearchAdapter;
@@ -47,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
     final static String TAG = MainActivity.class.getSimpleName();
 
-    final String PREFERENCES = MainActivity.class.getName();
-
     final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
+
+    private SharedPreferences mPreferences;
 
     private DrawerLayout mDrawer;
     private NavigationView mNavigationView;
@@ -60,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Snackbar mSnackbar;
+    private FloatingActionButton mFloatingActionButton;
 
     private boolean firstRun;
-    private Preferences mPreferences;
     private Utils mUtils;
 
     private String prefTheme;
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private PlaceAutocomplete mPlaceAutocomplete;
     private List<SearchItem> suggestionsList;
     private SearchAdapter mSearchAdapter;
-    private SearchHistoryTable mHistoryTable;
+    private SearchHistoryTable mHistoryDatabase;
     private String firstSuggestion = "";
 
     private Location mLocation;
@@ -92,28 +93,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mUtils = new Utils(getApplicationContext(), getResources());
-
-        prefTheme = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1");
+        prefTheme = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), "1");
         mUtils.setTheme(this, prefTheme);
 
         setContentView(R.layout.activity_main);
 
-        mPreferences = new Preferences(getApplicationContext());
-        firstRun = mPreferences.getBoolenaPrefences(PREFERENCES, "firstRun");
+        mPreferences = getSharedPreferences(MainActivity.class.getName(), MODE_PRIVATE);
+        firstRun = mPreferences.getBoolean("firstRun", true);
 
-        if (!firstRun) {
+        if (firstRun) {
             Intent intent = new Intent(getApplicationContext(), MainIntro.class);
             startActivity(intent);
-            mPreferences.setBooleanPrefences(PREFERENCES, "firstRun", true);
+            mPreferences.edit().putBoolean("firstRun", false).apply();
+            finish();
         }
-
-
-        if (!mUtils.checkPermission())
-            showSnackbar(1);
-//        else if (!mUtils.checkGpsEnable())
-//            showSnackbar(2);
-        else if (!mUtils.checkInternetConnession())
-            showSnackbar(3);
     }
 
     @Override
@@ -128,31 +121,38 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onResume");
         super.onResume();
 
-        if (!mUtils.checkPermission())
-            showSnackbar(1);
-//        else if (!mUtils.checkGpsEnable())
-//            showSnackbar(2);
-        else if (!mUtils.checkInternetConnession())
-            showSnackbar(3);
-        else if (mJSONObject == null) {
-            initialSetup();
-            getLocation();
-        }
+        if (!firstRun) {
+            if (!mUtils.checkPermission())
+                showSnackbar(1);
+            else if (!mUtils.checkInternetConnession())
+                showSnackbar(3);
+            else if (mJSONObject == null) {
+                initialSetup();
+                getLocation();
+            }
 
-        if (!prefTheme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("themeUnit", "1")))
-            MainActivity.this.recreate();
+            if (!prefTheme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), "1")))
+                MainActivity.this.recreate();
 
-//        else if (!systemUnit.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1"))) {
-//        systemUnit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("systemUnit", "1");
-//            if (!mProgressDialog.isShowing())
-//                mProgressDialog.show();
-//            new task().execute();
+            else if (!prefTemperature.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1")) ||
+                    !prefSpeed.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3")) ||
+                    !prefTime.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2"))) {
+
+                prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1");
+                prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3");
+                prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2");
+                if (!mProgressDialog.isShowing())
+                    mProgressDialog.show();
+                new task().execute();
+            }
+
 //        } else if (!prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO"))) {
 //        prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO");
 //            if (!mProgressDialog.isShowing())
 //                mProgressDialog.show();
 //            new task().execute();
 //        }
+        }
 
     }
 
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onStop");
         super.onStop();
 
-        if (firstRun && mUtils.checkPermission() && mUtils.checkGpsEnable() && mUtils.checkInternetConnession()) {
+        if (!firstRun && mUtils.checkPermission() && mUtils.checkGpsEnable() && mUtils.checkInternetConnession()) {
             if (mLocationGPS.isConnected())
                 mLocationGPS.stopUsingGPS();
 
@@ -210,10 +210,12 @@ public class MainActivity extends AppCompatActivity {
         setDrawer();
         setNavigationView();
         setSearchView();
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         mHandler = new Handler();
 
-        prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO");
+        prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
+        prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.pref_temperature), "1");
+        prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.pref_speed), "3");
+        prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.pref_time), "2");
 
     }
 
@@ -261,6 +263,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setViewPager(String argument) {
         Log.d(TAG, "setViewPager");
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+//        mFloatingActionButton=(FloatingActionButton)findViewById(R.id.fab);
         FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), argument);
 
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -286,8 +290,8 @@ public class MainActivity extends AppCompatActivity {
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         mSearchView = (SearchView) findViewById(R.id.search_view);
         mSearchAdapter = new SearchAdapter(getApplicationContext());
-        mHistoryTable = new SearchHistoryTable(getApplicationContext());
-        mHistoryTable.setHistorySize(4);
+        mHistoryDatabase = new SearchHistoryTable(getApplicationContext());
+        mHistoryDatabase.setHistorySize(4);
         suggestionsList = new ArrayList<>();
         if (mSearchView != null) {
             mSearchView.setVersion(SearchView.VERSION_TOOLBAR);
@@ -310,10 +314,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            mSearchView.setOnOpenCloseListener(new SearchView.OnOpenCloseListener() {
+                @Override
+                public void onClose() {
+//                    mFloatingActionButton.show();
+                }
+
+                @Override
+                public void onOpen() {
+//                    mFloatingActionButton.hide();
+                }
+            });
+
             mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextChange(final String newText) {
-                    mHistoryTable.open();
+                    mHistoryDatabase.open();
                     if (newText.length() > 2) {
                         if (!firstSuggestion.contains(newText))
                             new Thread(new Runnable() {
@@ -346,13 +362,14 @@ public class MainActivity extends AppCompatActivity {
             SearchAdapter searchAdapter = new SearchAdapter(getApplicationContext(), suggestionsList);
             mSearchView.setAdapter(searchAdapter);
 
+
             mSearchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     mSearchView.close(false);
                     TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
-                    String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //trocare stringa da 0 al char ','
-                    mHistoryTable.addItem(new SearchItem(item));
+                    String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //troncare stringa da 0 al char ','
+                    mHistoryDatabase.addItem(new SearchItem(item));
                     mLocation = mUtils.getCoordinateByName(item);
                     new task().execute();
                     if (!mProgressDialog.isShowing())
@@ -413,25 +430,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         mSnackbar.show();
-    }
-
-    private void taskAutoComplete(final String query) {
-        new Thread() {
-            public void run() {
-
-                mPlaceAutocomplete.autocomplete(query);
-
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        suggestionsList = mPlaceAutocomplete.getSuggestionList();
-                        mSearchAdapter = new SearchAdapter(getApplicationContext(), suggestionsList);
-                        mSearchView.setAdapter(mSearchAdapter);
-                        Log.d(TAG, "setSearchAdapter taskAutocomplete");
-                    }
-                });
-            }
-        }.start();
     }
 
 

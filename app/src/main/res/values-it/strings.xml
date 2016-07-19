@@ -61,7 +61,7 @@
 
     <string name="second_ategory">Generale</string>
 
-    <string name="theme">Tema</string>
+    <string name="pref_theme">Tema</string>
     <string-array name="theme_unit">
         <item>Chiaro</item>
         <item>Scuro</item>
