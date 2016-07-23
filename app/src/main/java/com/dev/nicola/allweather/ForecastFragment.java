@@ -57,7 +57,7 @@ public class ForecastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.forecast_fragment, container, false);
 
-        prefProvider = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("pref_provider", "ForecastIO");
+        prefProvider = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
         mProviderData.elaborateData(prefProvider, argument);
         mProviderData.pullForecastData(prefProvider);
 

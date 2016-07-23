@@ -80,28 +80,51 @@ public class Utils {
             case "clear-night":
                 icon = R.drawable.clear_night_2;
                 break;
+            case "1003":
             case "partly-cloudy-day":
                 icon = R.drawable.cloud_day_2;
                 break;
             case "partly-cloudy-night":
                 icon = R.drawable.cloud_night_2;
                 break;
+            case "1087":
+            case "1009":
             case "1006":
             case "cloudy":
                 icon = R.drawable.cloud_2;
                 break;
+            case "1195":
+            case "1192":
+            case "1189":
+            case "1186":
+            case "1183":
+            case "1063":
             case "rain":
                 icon = R.drawable.rain_2;
                 break;
+            case "1225":
+            case "1222":
+            case "1219":
+            case "1216":
+            case "1213":
+            case "1210":
+            case "1114":
+            case "1066":
             case "snow":
                 icon = R.drawable.snow_2;
                 break;
+            case "1072":
+            case "1069":
             case "sleet":
                 icon = R.drawable.sleet_2;
                 break;
+            case "1117":
             case "wind":
                 icon = R.drawable.wind_2;
                 break;
+            case "1147":
+            case "1135":
+            case "1030":
             case "fog":
                 icon = R.drawable.fog_2;
                 break;
@@ -117,11 +140,11 @@ public class Utils {
         int wall;
 
         if (time >= sunrise - 1800 && time <= sunrise + 1800)
-            wall = R.drawable.sunrise_wall;
+            wall = R.drawable.sunset_wall;
         else if (time > sunrise + 1800 && time < sunset - 1800)
             wall = R.drawable.day_wall;
         else if (time >= sunset - 1800 && time <= sunset + 1800)
-            wall = R.drawable.sunset_wall;
+            wall = R.drawable.sunrise_wall;
         else
             wall = R.drawable.night_wall;
 

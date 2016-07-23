@@ -1,7 +1,5 @@
 package com.dev.nicola.allweather.Provider.ForecastIO;
 
-import android.content.Context;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -23,12 +21,9 @@ public class ForecastIORequest {
 
     private final String URL = "https://api.forecast.io/forecast/";
     private final String API_KEY = "dfdabe66b08f57ce02d697bb9fe2b5d1";
-    private final String UNITS = "?units=";
+    private final String UNITS = "?units=si";
     private final String LANGUAGE = "&lang=";
     private final String EXCLUDE = "&exclude=minutely,alerts,flags";
-
-    private String units;
-    private Context mContext;
 
     private StringBuilder mBuilder;
     private OkHttpClient mClient;
@@ -36,30 +31,22 @@ public class ForecastIORequest {
     private Response mResponse;
 
 
-    public ForecastIORequest(Context context) {
-        this.mContext = context;
+    public ForecastIORequest() {
     }
 
 
     public String setUrl(double latitude, double longitude) {
         String url;
-        units = PreferenceManager.getDefaultSharedPreferences(mContext).getString("systemUnit", "1");
 
         mBuilder = new StringBuilder(URL);
         mBuilder.append(API_KEY);
-
-        mBuilder.append("/" + latitude + "," + longitude);
-
+        mBuilder.append("/");
+        mBuilder.append(latitude);
+        mBuilder.append(",");
+        mBuilder.append(longitude);
         mBuilder.append(UNITS);
-        switch (units) {
-            case "1":
-                mBuilder.append("si");
-                break;
-            case "2":
-                mBuilder.append("us");
-                break;
-        }
-        mBuilder.append(LANGUAGE + Locale.getDefault().getLanguage());
+        mBuilder.append(LANGUAGE);
+        mBuilder.append(Locale.getDefault().getLanguage());
         mBuilder.append(EXCLUDE);
 
         url = mBuilder.toString();

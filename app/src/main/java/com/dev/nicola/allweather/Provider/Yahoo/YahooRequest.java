@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.Provider.Apixu;
+package com.dev.nicola.allweather.Provider.Yahoo;
 
 import android.util.Log;
 
@@ -12,36 +12,36 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Nicola on 04/06/2016.
+ * Created by Nicola on 21/07/2016.
  */
-public class ApixuRequest {
+public class YahooRequest {
 
-    private static String TAG = ApixuRequest.class.getSimpleName();
+    private static String TAG = YahooRequest.class.getSimpleName();
 
-    private final String URL = "https://api.apixu.com/v1/forecast.json";
-    private final String API_KEY = "f6583f8fe8854178a36175631163003";
+    private final String URL = "https://query.yahooapis.com/v1/public/yql?q=";
+    private final String QUERY = "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"%s\")";
+    private final String FORMAT = "&format=json";
 
     private StringBuilder mBuilder;
     private OkHttpClient mClient;
     private Request mRequest;
     private Response mResponse;
 
-    public ApixuRequest() {
+    public YahooRequest() {
     }
 
-    public String setUrl(double latitude, double longitide) {
+    public String setUrl(String location) {
         String url;
 
         mBuilder = new StringBuilder(URL);
-        mBuilder.append("?key=" + API_KEY);
-        mBuilder.append("&q=" + latitude + "," + longitide);
-        mBuilder.append("&days=8");
+        mBuilder.append(String.format(QUERY, location));
+        mBuilder.append(FORMAT);
 
         url = mBuilder.toString();
-        Log.d(TAG, "url " + url);
-
+        Log.d(TAG, "url:" + url);
         return url;
     }
+
 
     public JSONObject getData(String url) {
         JSONObject mObject;

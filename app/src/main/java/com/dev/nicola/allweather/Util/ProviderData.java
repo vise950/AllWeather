@@ -9,6 +9,7 @@ import com.dev.nicola.allweather.Provider.Apixu.ApixuData;
 import com.dev.nicola.allweather.Provider.Apixu.ApixuRequest;
 import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIOData;
 import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIORequest;
+import com.dev.nicola.allweather.Provider.Yahoo.YahooRequest;
 import com.dev.nicola.allweather.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,6 +34,8 @@ public class ProviderData {
 
     private ForecastIOData mForecastIOData;
     private ApixuData mApixuData;
+
+    private YahooRequest mYahooRequest;
 
     private Gson mGson;
     private Utils mUtils;
@@ -67,9 +70,9 @@ public class ProviderData {
         mConverter = new UnitsConverter(context);
     }
 
-    public JSONObject getProviderCall(String provider, double latitude, double longitude) {
+    public JSONObject getProviderCall(String provider, double latitude, double longitude, String location) {
         JSONObject jsonObject = null;
-        String url = setUrl(provider, latitude, longitude);
+        String url = setUrl(provider, latitude, longitude, location);
 
         switch (provider) {
 
@@ -80,24 +83,34 @@ public class ProviderData {
             case "Apixu":
                 jsonObject = mApixuRequest.getData(url);
                 break;
+
+            case "Yahoo":
+                jsonObject = mYahooRequest.getData(url);
+                break;
+
         }
         return jsonObject;
     }
 
 
-    private String setUrl(String provider, double latitude, double longitude) {
+    private String setUrl(String provider, double latitude, double longitude, String location) {
         String url = null;
 
         switch (provider) {
 
             case "ForecastIO":
-                mForecastIORequest = new ForecastIORequest(mContext);
+                mForecastIORequest = new ForecastIORequest();
                 url = mForecastIORequest.setUrl(latitude, longitude);
                 break;
 
             case "Apixu":
-                mApixuRequest = new ApixuRequest(mContext);
+                mApixuRequest = new ApixuRequest();
                 url = mApixuRequest.setUrl(latitude, longitude);
+                break;
+
+            case "Yahoo":
+                mYahooRequest = new YahooRequest();
+                url = mYahooRequest.setUrl(location);
                 break;
         }
         return url;
@@ -202,6 +215,7 @@ public class ProviderData {
 
             case "Apixu":
                 location = mUtils.getLocationName(mApixuData.getLocation().getLat(), mApixuData.getLocation().getLon());
+//                image=mUtils.getImage(mApixuData.getForecast().getForecastday().get(0).getAstro().getSunrise(),mApixuData.getForecast().getForecastday().get(0).getAstro().getSunset(),mApixuData.getLocation().getLocaltimeEpoch());
                 condition = mApixuData.getCurrent().getCurrentCondition().getText();
                 temperature = String.format(mResources.getString(R.string.temperature), mApixuData.getCurrent().getTempC());
                 wind = String.format(mResources.getString(R.string.wind), mApixuData.getCurrent().getWindDir(), mApixuData.getCurrent().getWindKph());

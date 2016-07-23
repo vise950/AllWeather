@@ -136,22 +136,23 @@ public class MainActivity extends AppCompatActivity {
 
             else if (!prefTemperature.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1")) ||
                     !prefSpeed.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3")) ||
-                    !prefTime.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2"))) {
+                    !prefTime.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2")) ||
+                    !prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO"))) {
 
                 prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1");
                 prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3");
                 prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2");
+                prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
                 if (!mProgressDialog.isShowing())
                     mProgressDialog.show();
                 new task().execute();
             }
 
-//        } else if (!prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO"))) {
-//        prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("pref_provider", "ForecastIO");
+//        } else if (!prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO"))) {
+//            prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
 //            if (!mProgressDialog.isShowing())
 //                mProgressDialog.show();
 //            new task().execute();
-//        }
         }
 
     }
@@ -213,9 +214,9 @@ public class MainActivity extends AppCompatActivity {
         mHandler = new Handler();
 
         prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
-        prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.pref_temperature), "1");
-        prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.pref_speed), "3");
-        prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.pref_time), "2");
+        prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1");
+        prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3");
+        prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2");
 
     }
 
@@ -474,12 +475,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             if (mLocation != null) {
-                mJSONObject = mProviderData.getProviderCall(prefProvider, mLocation.getLatitude(), mLocation.getLongitude());
+                mJSONObject = mProviderData.getProviderCall(prefProvider, mLocation.getLatitude(), mLocation.getLongitude(), mUtils.getLocationName(mLocation.getLatitude(), mLocation.getLongitude()));
 
             } else {
                 final String ip = mLocationIP.getExternalIP();
                 mLocationIP.getLocation(ip);
-                mJSONObject = mProviderData.getProviderCall(prefProvider, mLocationIP.getLatitude(), mLocationIP.getLongitude());
+                mJSONObject = mProviderData.getProviderCall(prefProvider, mLocationIP.getLatitude(), mLocationIP.getLongitude(), mUtils.getLocationName(mLocationIP.getLatitude(), mLocationIP.getLongitude()));
             }
             return null;
         }
