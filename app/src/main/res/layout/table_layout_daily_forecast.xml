@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout
+    android:id="@+id/daily_forecast_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -15,28 +16,28 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="12:00"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/second_hour_forecast_daily"
             android:layout_weight="1"
             android:gravity="center"
             android:text="15:00"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/third_hour_forecast_daily"
             android:layout_weight="1"
             android:gravity="center"
             android:text="18:00"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/forth_hour_forecast_daily"
             android:layout_weight="1"
             android:gravity="center"
             android:text="21:00"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
     </TableRow>
 
 
@@ -48,32 +49,32 @@
 
         <ImageView
             android:id="@+id/first_icon_forecast_daily"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
             android:src="@drawable/clear_day_2"/>
 
         <ImageView
             android:id="@+id/second_icon_forecast_daily"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
             android:src="@drawable/cloud_night_2"/>
 
         <ImageView
             android:id="@+id/third_icon_forecast_daily"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
             android:src="@drawable/cloud_2"/>
 
         <ImageView
             android:id="@+id/forth_icon_forecast_daily"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
             android:src="@drawable/snow_2"/>

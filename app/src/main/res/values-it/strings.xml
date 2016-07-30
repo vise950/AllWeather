@@ -78,12 +78,12 @@
     <string-array name="provider_unit">
         <item>ForecastIO</item>
         <item>Apixu</item>
-        <item>Yahoo</item>
+        <!--<item>Yahoo</item>-->
     </string-array>
     <string-array name="provider_value">
         <item>ForecastIO</item>
         <item>Apixu</item>
-        <item>Yahoo</item>
+        <!--<item>Yahoo</item>-->
     </string-array>
 
 

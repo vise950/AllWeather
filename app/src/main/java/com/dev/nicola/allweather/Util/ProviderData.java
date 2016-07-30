@@ -3,12 +3,12 @@ package com.dev.nicola.allweather.Util;
 import android.content.Context;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import com.dev.nicola.allweather.Provider.Apixu.ApixuData;
 import com.dev.nicola.allweather.Provider.Apixu.ApixuRequest;
-import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIOData;
+import com.dev.nicola.allweather.Provider.Apixu.model.ApixuData;
 import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIORequest;
+import com.dev.nicola.allweather.Provider.ForecastIO.model.ForecastIOData;
+import com.dev.nicola.allweather.Provider.Yahoo.YahooData;
 import com.dev.nicola.allweather.Provider.Yahoo.YahooRequest;
 import com.dev.nicola.allweather.R;
 import com.google.gson.Gson;
@@ -26,7 +26,6 @@ public class ProviderData {
 
     private static String TAG = ProviderData.class.getSimpleName();
 
-    private Context mContext;
     private Resources mResources;
 
     private ForecastIORequest mForecastIORequest;
@@ -36,6 +35,7 @@ public class ProviderData {
     private ApixuData mApixuData;
 
     private YahooRequest mYahooRequest;
+    private YahooData mYahooData;
 
     private Gson mGson;
     private Utils mUtils;
@@ -63,11 +63,17 @@ public class ProviderData {
     private String forthTemperature;
     private List<Forecast> ForecastList;
 
+    private String tempUnits;
+    private String windUnits;
+    private String timeUnits;
+
     public ProviderData(Context context, Resources resources) {
-        this.mContext = context;
         this.mResources = resources;
         mUtils = new Utils(context, resources);
         mConverter = new UnitsConverter(context);
+        tempUnits = PreferenceManager.getDefaultSharedPreferences(context).getString(resources.getString(R.string.key_pref_temperature), "1");
+        windUnits = PreferenceManager.getDefaultSharedPreferences(context).getString(resources.getString(R.string.key_pref_speed), "3");
+        timeUnits = PreferenceManager.getDefaultSharedPreferences(context).getString(resources.getString(R.string.key_pref_time), "2");
     }
 
     public JSONObject getProviderCall(String provider, double latitude, double longitude, String location) {
@@ -131,150 +137,114 @@ public class ProviderData {
                 mApixuData = new ApixuData();
                 mApixuData = mGson.fromJson(argument, ApixuData.class);
                 break;
+
+            case "Yahoo":
+                mYahooData = new YahooData();
+                mYahooData = mGson.fromJson(argument, YahooData.class);
         }
     }
 
     public void pullDailyData(String provider) {
-        String tempUnits = PreferenceManager.getDefaultSharedPreferences(mContext).getString(mResources.getString(R.string.key_pref_temperature), "1");
-        String windUnits = PreferenceManager.getDefaultSharedPreferences(mContext).getString(mResources.getString(R.string.key_pref_speed), "3");
-        String timeUnits = PreferenceManager.getDefaultSharedPreferences(mContext).getString(mResources.getString(R.string.key_pref_time), "2");
+
         switch (provider) {
 
             case "ForecastIO":
                 location = mUtils.getLocationName(mForecastIOData.getLatitude(), mForecastIOData.getLongitude());
-                image = mUtils.getImage(mForecastIOData.getDaily().getData().get(0).getSunriseTime(), mForecastIOData.getDaily().getData().get(0).getSunsetTime(), mForecastIOData.getCurrently().getTime());
+                image = mUtils.getImage(mForecastIOData.getDaily().getData().get(0).getSunriseTime(), mForecastIOData.getDaily().getData().get(0).getSunsetTime(), mForecastIOData.getCurrently().getTime(), "", "");
                 condition = mForecastIOData.getCurrently().getSummary();
+                temperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mForecastIOData.getCurrently().getTemperature(), tempUnits));
+                wind = String.format(mResources.getString(R.string.wind), mUtils.getWindDirection(mForecastIOData.getCurrently().getWindBearing()), mConverter.MsToKmhOrKph(mForecastIOData.getCurrently().getWindSpeed(), windUnits));
                 humidity = String.format(mResources.getString(R.string.humidity), mForecastIOData.getCurrently().getHumidity());
+                sunrise = mUtils.getHourFormat(mForecastIOData.getDaily().getData().get(0).getSunriseTime(), null, timeUnits);
+                sunset = mUtils.getHourFormat(mForecastIOData.getDaily().getData().get(0).getSunsetTime(), null, timeUnits);
+
+                firstHour = mUtils.getHourFormat(mForecastIOData.getHourly().getData().get(2).getTime(), null, timeUnits);
+                secondHour = mUtils.getHourFormat(mForecastIOData.getHourly().getData().get(4).getTime(), null, timeUnits);
+                thirdHour = mUtils.getHourFormat(mForecastIOData.getHourly().getData().get(6).getTime(), null, timeUnits);
+                forthHour = mUtils.getHourFormat(mForecastIOData.getHourly().getData().get(8).getTime(), null, timeUnits);
 
                 firstIcon = mUtils.getWeatherIcon(mForecastIOData.getHourly().getData().get(2).getIcon());
                 secondIcon = mUtils.getWeatherIcon(mForecastIOData.getHourly().getData().get(4).getIcon());
                 thirdIcon = mUtils.getWeatherIcon(mForecastIOData.getHourly().getData().get(6).getIcon());
                 forthIcon = mUtils.getWeatherIcon(mForecastIOData.getHourly().getData().get(8).getIcon());
 
-                switch (tempUnits) {
-                    case "2":
-                        temperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheit(mForecastIOData.getCurrently().getTemperature()));
-                        firstTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheit(mForecastIOData.getHourly().getData().get(2).getTemperature()));
-                        secondTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheit(mForecastIOData.getHourly().getData().get(4).getTemperature()));
-                        thirdTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheit(mForecastIOData.getHourly().getData().get(6).getTemperature()));
-                        forthTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheit(mForecastIOData.getHourly().getData().get(8).getTemperature()));
-                        break;
+                firstTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mForecastIOData.getHourly().getData().get(2).getTemperature(), tempUnits));
+                secondTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mForecastIOData.getHourly().getData().get(4).getTemperature(), tempUnits));
+                thirdTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mForecastIOData.getHourly().getData().get(6).getTemperature(), tempUnits));
+                forthTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mForecastIOData.getHourly().getData().get(8).getTemperature(), tempUnits));
 
-                    case "3":
-                        temperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToKelvin(mForecastIOData.getCurrently().getTemperature()));
-                        firstTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToKelvin(mForecastIOData.getHourly().getData().get(2).getTemperature()));
-                        secondTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToKelvin(mForecastIOData.getHourly().getData().get(4).getTemperature()));
-                        thirdTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToKelvin(mForecastIOData.getHourly().getData().get(6).getTemperature()));
-                        forthTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToKelvin(mForecastIOData.getHourly().getData().get(8).getTemperature()));
-                        break;
-
-                    default:
-                        temperature = String.format(mResources.getString(R.string.temperature), mForecastIOData.getCurrently().getTemperature());
-                        firstTemperature = String.format(mResources.getString(R.string.temperature), mForecastIOData.getHourly().getData().get(2).getTemperature());
-                        secondTemperature = String.format(mResources.getString(R.string.temperature), mForecastIOData.getHourly().getData().get(4).getTemperature());
-                        thirdTemperature = String.format(mResources.getString(R.string.temperature), mForecastIOData.getHourly().getData().get(6).getTemperature());
-                        forthTemperature = String.format(mResources.getString(R.string.temperature), mForecastIOData.getHourly().getData().get(8).getTemperature());
-                        break;
-                }
-
-                switch (windUnits) {
-                    case "1":
-                        wind = String.format(mResources.getString(R.string.wind), mUtils.getWindDirection(mForecastIOData.getCurrently().getWindBearing()), mConverter.MsToKph(mForecastIOData.getCurrently().getWindSpeed()));
-                        break;
-
-                    case "2":
-                        wind = String.format(mResources.getString(R.string.wind), mUtils.getWindDirection(mForecastIOData.getCurrently().getWindBearing()), mConverter.MsToKmh(mForecastIOData.getCurrently().getWindSpeed()));
-                        break;
-
-                    default:
-                        wind = String.format(mResources.getString(R.string.wind), mUtils.getWindDirection(mForecastIOData.getCurrently().getWindBearing()), mForecastIOData.getCurrently().getWindSpeed() + " m/s");
-                        break;
-                }
-
-                switch (timeUnits) {
-                    case "1":
-                        sunrise = mUtils.getHourFormat(mForecastIOData.getDaily().getData().get(0).getSunriseTime(), mForecastIOData.getTimezone(), 1);
-                        sunset = mUtils.getHourFormat(mForecastIOData.getDaily().getData().get(0).getSunsetTime(), mForecastIOData.getTimezone(), 1);
-                        firstHour = mUtils.getHourFormat(mForecastIOData.getHourly().getData().get(2).getTime(), mForecastIOData.getTimezone(), 1);
-                        secondHour = mUtils.getHourFormat(mForecastIOData.getHourly().getData().get(4).getTime(), mForecastIOData.getTimezone(), 1);
-                        thirdHour = mUtils.getHourFormat(mForecastIOData.getHourly().getData().get(6).getTime(), mForecastIOData.getTimezone(), 1);
-                        forthHour = mUtils.getHourFormat(mForecastIOData.getHourly().getData().get(8).getTime(), mForecastIOData.getTimezone(), 1);
-                        break;
-
-                    default:
-                        sunrise = mUtils.getHourFormat(mForecastIOData.getDaily().getData().get(0).getSunriseTime(), mForecastIOData.getTimezone(), 0);
-                        sunset = mUtils.getHourFormat(mForecastIOData.getDaily().getData().get(0).getSunsetTime(), mForecastIOData.getTimezone(), 0);
-                        firstHour = mUtils.getHourFormat(mForecastIOData.getHourly().getData().get(2).getTime(), mForecastIOData.getTimezone(), 0);
-                        secondHour = mUtils.getHourFormat(mForecastIOData.getHourly().getData().get(4).getTime(), mForecastIOData.getTimezone(), 0);
-                        thirdHour = mUtils.getHourFormat(mForecastIOData.getHourly().getData().get(6).getTime(), mForecastIOData.getTimezone(), 0);
-                        forthHour = mUtils.getHourFormat(mForecastIOData.getHourly().getData().get(8).getTime(), mForecastIOData.getTimezone(), 0);
-                        break;
-                }
 
                 break;
 
             case "Apixu":
                 location = mUtils.getLocationName(mApixuData.getLocation().getLat(), mApixuData.getLocation().getLon());
-//                image=mUtils.getImage(mApixuData.getForecast().getForecastday().get(0).getAstro().getSunrise(),mApixuData.getForecast().getForecastday().get(0).getAstro().getSunset(),mApixuData.getLocation().getLocaltimeEpoch());
+                image = mUtils.getImage(0, 0, mApixuData.getLocation().getLocaltimeEpoch(), mApixuData.getForecast().getForecastday().get(0).getAstro().getSunrise(), mApixuData.getForecast().getForecastday().get(0).getAstro().getSunset());
                 condition = mApixuData.getCurrent().getCurrentCondition().getText();
-                temperature = String.format(mResources.getString(R.string.temperature), mApixuData.getCurrent().getTempC());
-                wind = String.format(mResources.getString(R.string.wind), mApixuData.getCurrent().getWindDir(), mApixuData.getCurrent().getWindKph());
-                humidity = String.valueOf(mApixuData.getCurrent().getHumidity());
-                sunrise = mApixuData.getForecast().getForecastday().get(0).getAstro().getSunrise();
-                sunset = mApixuData.getForecast().getForecastday().get(0).getAstro().getSunset();
+                temperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mApixuData.getCurrent().getTempC(), tempUnits));
+                wind = String.format(mResources.getString(R.string.wind), mApixuData.getCurrent().getWindDir(), mConverter.MsToKmhOrKph(mApixuData.getCurrent().getWindKph(), windUnits));
+                humidity = String.format(mResources.getString(R.string.humidity), String.valueOf(mApixuData.getCurrent().getHumidity()));
+                sunrise = mUtils.getHourFormat(0, mApixuData.getForecast().getForecastday().get(0).getAstro().getSunrise(), timeUnits);
+                sunset = mUtils.getHourFormat(0, mApixuData.getForecast().getForecastday().get(0).getAstro().getSunset(), timeUnits);
 
                 int index = mUtils.getLocalTime();
-                Log.d(TAG, "index " + mUtils.getLocalTime());
-                firstHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
+                firstHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTimeEpoch(), null, timeUnits);
                 firstIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getCondition().getCode()));
-                firstTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTempC());
+                firstTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTempC().intValue(), tempUnits));
 
                 index += 2;
                 if (index <= 23) {
-                    secondHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
+                    secondHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTimeEpoch(), null, timeUnits);
                     secondIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getCondition().getCode()));
-                    secondTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTempC());
+                    secondTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTempC().intValue(), tempUnits));
                 } else {
                     if (index >= 24)
                         index = 1;
                     else
                         index = 0;
-                    secondHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
+                    secondHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTimeEpoch(), null, timeUnits);
                     secondIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getCondition().getCode()));
-                    secondTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTempC());
+                    secondTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTempC().intValue(), tempUnits));
                 }
 
                 index += 2;
                 if (index <= 23) {
-                    thirdHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
+                    thirdHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTimeEpoch(), null, timeUnits);
                     thirdIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getCondition().getCode()));
-                    thirdTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTempC());
+                    thirdTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTempC().intValue(), tempUnits));
                 } else {
                     if (index >= 24)
                         index = 1;
                     else
                         index = 0;
-                    thirdHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
+                    thirdHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTimeEpoch(), null, timeUnits);
                     thirdIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getCondition().getCode()));
-                    thirdTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTempC());
+                    thirdTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTempC().intValue(), tempUnits));
                 }
 
                 index += 2;
                 if (index <= 23) {
-                    forthHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
+                    forthHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTimeEpoch(), null, timeUnits);
                     forthIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getCondition().getCode()));
-                    forthTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTempC());
+                    forthTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mApixuData.getForecast().getForecastday().get(0).getHour().get(index).getTempC().intValue(), tempUnits));
                 } else {
                     if (index >= 24)
                         index = 1;
                     else
                         index = 0;
-                    forthHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTimeEpoch(), mApixuData.getLocation().getTzId(), 0);
+                    forthHour = mUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTimeEpoch(), null, timeUnits);
                     forthIcon = mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getCondition().getCode()));
-                    forthTemperature = String.format(mResources.getString(R.string.temperature), mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTempC());
+                    forthTemperature = String.format(mResources.getString(R.string.temperature), mConverter.CelsiusToFahrenheitOrKelvin(mApixuData.getForecast().getForecastday().get(1).getHour().get(index).getTempC().intValue(), tempUnits));
                 }
 
                 break;
+
+//            case "Yahoo":
+//                location = mYahooData.getQuery().getResults().getChannel().getLocation().getCity();
+//                condition = mYahooData.getQuery().getResults().getChannel().getItem().getCondition().getText();
+////                temperature = String.format(mResources.getString(R.string.temperature),mConverter.CelsiusToFahrenheitOrKelvin(mYahooData.getQuery().getResults().getChannel().getItem().getCondition().getTemp(),tempUnits));
+//                humidity = String.format(mResources.getString(R.string.humidity), mYahooData.getQuery().getResults().getChannel().getAtmosphere().getHumidity());
+//                break;
+
         }
     }
 
@@ -290,7 +260,7 @@ public class ProviderData {
                 for (int i = 1; i < days; i++) {
                     forecast = new Forecast(mUtils.getDayFormat(mForecastIOData.getDaily().getData().get(i).getTime())
                             , mForecastIOData.getDaily().getData().get(i).getSummary()
-                            , (int) (mForecastIOData.getDaily().getData().get(i).getTemperatureMin() + mForecastIOData.getDaily().getData().get(i).getTemperatureMax()) / 2
+                            , mConverter.CelsiusToFahrenheitOrKelvin((int) (mForecastIOData.getDaily().getData().get(i).getTemperatureMin() + mForecastIOData.getDaily().getData().get(i).getTemperatureMax()) / 2, tempUnits)
                             , mUtils.getWeatherIcon(mForecastIOData.getDaily().getData().get(i).getIcon()));
                     ForecastList.add(forecast);
                 }
@@ -306,6 +276,17 @@ public class ProviderData {
                     ForecastList.add(forecast);
                 }
                 break;
+
+//            case "Yahoo":
+//                days = mYahooData.getQuery().getResults().getChannel().getItem().getForecast().size();
+//                for (int i = 1; i < days; i++) {
+//                    forecast = new Forecast(mYahooData.getQuery().getResults().getChannel().getItem().getForecast().get(i).getDate()
+//                            , mYahooData.getQuery().getResults().getChannel().getItem().getForecast().get(i).getText()
+//                            , ((int) (mYahooData.getQuery().getResults().getChannel().getItem().getForecast().get(i).getHigh() + mYahooData.getQuery().getResults().getChannel().getItem().getForecast().get(i).getLow()) / 2)
+//                            , R.drawable.clear_day_2);
+//                    ForecastList.add(forecast);
+//                }
+//            break;
         }
     }
 

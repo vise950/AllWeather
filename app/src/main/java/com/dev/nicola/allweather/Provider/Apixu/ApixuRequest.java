@@ -20,6 +20,7 @@ public class ApixuRequest {
 
     private final String URL = "https://api.apixu.com/v1/forecast.json";
     private final String API_KEY = "f6583f8fe8854178a36175631163003";
+    private final String DAYS = "&days=10";
 
     private StringBuilder mBuilder;
     private OkHttpClient mClient;
@@ -29,17 +30,19 @@ public class ApixuRequest {
     public ApixuRequest() {
     }
 
-    public String setUrl(double latitude, double longitide) {
+    public String setUrl(double latitude, double longitude) {
         String url;
 
         mBuilder = new StringBuilder(URL);
-        mBuilder.append("?key=" + API_KEY);
-        mBuilder.append("&q=" + latitude + "," + longitide);
-        mBuilder.append("&days=8");
+        mBuilder.append("?key=");
+        mBuilder.append(API_KEY);
+        mBuilder.append("&q=");
+        mBuilder.append(latitude);
+        mBuilder.append(",");
+        mBuilder.append(longitude);
+        mBuilder.append(DAYS);
 
         url = mBuilder.toString();
-        Log.d(TAG, "url " + url);
-
         return url;
     }
 
@@ -59,7 +62,6 @@ public class ApixuRequest {
             Log.d(TAG, "exception:" + e);
             return null;
         }
-
         return mObject;
     }
 }

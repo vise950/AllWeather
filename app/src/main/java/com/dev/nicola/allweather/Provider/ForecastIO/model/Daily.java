@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.Provider.ForecastIO;
+package com.dev.nicola.allweather.Provider.ForecastIO.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Hourly {
+public class Daily {
 
     @SerializedName("summary")
     @Expose
@@ -16,7 +16,7 @@ public class Hourly {
     private String icon;
     @SerializedName("data")
     @Expose
-    private List<HourlyData> data = new ArrayList<>();
+    private List<DailyData> data = new ArrayList<>();
 
     /**
      * @return The summary
@@ -49,14 +49,14 @@ public class Hourly {
     /**
      * @return The data
      */
-    public List<HourlyData> getData() {
+    public List<DailyData> getData() {
         return data;
     }
 
     /**
      * @param data The data
      */
-    public void setData(List<HourlyData> data) {
+    public void setData(List<DailyData> data) {
         this.data = data;
     }
 

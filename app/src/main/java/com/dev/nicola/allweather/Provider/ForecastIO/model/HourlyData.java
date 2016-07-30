@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.Provider.ForecastIO;
+package com.dev.nicola.allweather.Provider.ForecastIO.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

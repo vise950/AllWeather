@@ -10,18 +10,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_margin="6dp"
+        android:layout_margin="4dp"
         android:text="Venerdi 6 Maggio "
-        android:textSize="20sp"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/condition_forecast_fragment"
         android:layout_width="190dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/date_forecast_fragment"
-        android:layout_margin="6dp"
+        android:layout_margin="4dp"
         android:text="Nuvoloso"
-        android:textSize="16sp"/>
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/temperature_forecast_fragment"
@@ -31,13 +31,13 @@
         android:layout_margin="6dp"
         android:layout_toStartOf="@+id/icon_forecast_fragment"
         android:text="25°"
-        android:textSize="28sp"
+        android:textSize="26sp"
         android:textStyle="bold"/>
 
     <ImageView
         android:id="@+id/icon_forecast_fragment"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_margin="6dp"

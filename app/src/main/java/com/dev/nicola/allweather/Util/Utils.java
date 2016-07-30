@@ -17,6 +17,7 @@ import android.util.Log;
 import com.dev.nicola.allweather.R;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -136,14 +137,36 @@ public class Utils {
         return icon;
     }
 
-    public int getImage(long sunrise, long sunset, long time) {
+    public int getImage(long sunrise, long sunset, long time, String sSunrise, String sSunset) {
         int wall;
 
-        if (time >= sunrise - 1800 && time <= sunrise + 1800)
+        if (sSunrise != null && sSunset != null) {
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+            String date = df.format(c.getTime());
+            SimpleDateFormat dt = new SimpleDateFormat("dd-MMM-yyyy h:mm a", Locale.getDefault());
+            try {
+                Date d = dt.parse(date + " " + sSunrise);
+//                Log.d(TAG,"date "+d.toString());
+                sunrise = d.getTime();
+                Date d1 = dt.parse(date + " " + sSunset);
+//                Log.d(TAG,"date1 "+d1.toString());
+                sunset = d1.getTime();
+                time = time * 1000L;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+//        Log.d(TAG,"sunrise " +sunrise);
+//        Log.d(TAG,"sunset " +sunset);
+//        Log.d(TAG,"time "+time);
+
+        if (time >= sunrise - 1800L && time <= sunrise + 1800L)
             wall = R.drawable.sunset_wall;
-        else if (time > sunrise + 1800 && time < sunset - 1800)
+        else if (time > sunrise + 1800L && time < sunset - 1800L)
             wall = R.drawable.day_wall;
-        else if (time >= sunset - 1800 && time <= sunset + 1800)
+        else if (time >= sunset - 1800L && time <= sunset + 1800L)
             wall = R.drawable.sunrise_wall;
         else
             wall = R.drawable.night_wall;
@@ -160,12 +183,27 @@ public class Utils {
         return direction;
     }
 
-    //type = 0 --> 24h format
-    //type = 1 --> 12h format
-    public String getHourFormat(Integer time, String timezone, int type) {
-        String t;
+
+    public String getHourFormat(long time, String sTime, String units) {
+        Date date = null;
+        if (sTime != null) {
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+            String d = df.format(c.getTime());
+            SimpleDateFormat dt = new SimpleDateFormat("dd-MMM-yyyy h:mm a", Locale.getDefault());
+            try {
+                date = dt.parse(d + " " + sTime);
+                Log.d(TAG, "date " + date);
+                time = date.getTime();
+                Log.d(TAG, "time " + time);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            date = new Date(time * 1000L);
+        }
+
         SimpleDateFormat hour = null;
-        Date date = new Date(time * 1000L);
 
         /*  h is used for AM/PM times (1-12).
             H is used for 24 hour times (1-24).
@@ -173,14 +211,16 @@ public class Utils {
             m is minute in hour
             Two h's will print a leading zero: 01:13 PM. One h will print without the leading zero: 1:13 PM.
         */
-        if (type == 0)
-            hour = new SimpleDateFormat("H:mm", Locale.getDefault());
-        if (type == 1)
-            hour = new SimpleDateFormat("h:mm a", Locale.getDefault());
-
-        t = hour.format(date);
-
-        return t;
+        switch (units) {
+            case "1":
+                hour = new SimpleDateFormat("h:mm a", Locale.getDefault());
+                break;
+            case "2":
+                hour = new SimpleDateFormat("H:mm", Locale.getDefault());
+                break;
+        }
+        assert hour != null;
+        return hour.format(date);
     }
 
     public String getDayFormat(Integer time) {
@@ -200,8 +240,7 @@ public class Utils {
 
     public int getLocalTime() {
         Calendar calendar = Calendar.getInstance();
-        int h = calendar.get(Calendar.HOUR_OF_DAY);
-        return h;
+        return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
 

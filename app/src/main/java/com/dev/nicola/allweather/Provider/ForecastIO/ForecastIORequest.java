@@ -50,7 +50,6 @@ public class ForecastIORequest {
         mBuilder.append(EXCLUDE);
 
         url = mBuilder.toString();
-        Log.d(TAG, "url:" + url);
         return url;
     }
 
@@ -71,7 +70,6 @@ public class ForecastIORequest {
             Log.d(TAG, "exception:" + e);
             return null;
         }
-
         return mObject;
     }
 }

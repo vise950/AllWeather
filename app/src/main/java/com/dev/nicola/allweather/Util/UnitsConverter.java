@@ -9,33 +9,47 @@ import java.text.DecimalFormat;
  */
 public class UnitsConverter {
 
-    private static String TAG = Utils.class.getSimpleName();
     private Context mContext;
 
     public UnitsConverter(Context context) {
         this.mContext = context;
     }
 
-    public int CelsiusToFahrenheit(int temperature) {
-        return (temperature * 9 / 5) + 32;
-    }
+    public int CelsiusToFahrenheitOrKelvin(int temperature, String units) {
+        int temp;
+        switch (units) {
+            case "2":
+                temp = (temperature * 9 / 5) + 32;
+                break;
+            case "3":
+                temp = (int) (temperature + 273.15);
+                break;
+            default:
+                temp = temperature;
+        }
+        return temp;
 
-    public int CelsiusToKelvin(int temperature) {
-        return (int) (temperature + 273.15);
     }
 
     //coverter meter per second to kilometer per hour
-    public String MsToKmh(double speed) {
-        double n = speed * 3.6;
-        String s = new DecimalFormat("#.##").format(n);
-        return s + " Km/h";
-    }
+    public String MsToKmhOrKph(double speed, String units) {
+        String s;
+        double n;
+        switch (units) {
+            case "1":
+                n = speed / 0.44704;
+                s = new DecimalFormat("#.##").format(n);
+                s = s + " mph";
+                break;
+            case "2":
+                n = speed * 3.6;
+                s = new DecimalFormat("#.##").format(n);
+                s = s + " Km/h";
+                break;
+            default:
+                s = speed + " m/s";
 
-    // converter meter per second to miles per hour
-    public String MsToKph(double speed) {
-        double n = speed / 0.44704;
-        String s = new DecimalFormat("#.##").format(n);
-        return s + " mph";
+        }
+        return s;
     }
-
 }

@@ -74,6 +74,7 @@ public class DailyFragment extends Fragment {
         setText();
 
         return view;
+
     }
 
 
