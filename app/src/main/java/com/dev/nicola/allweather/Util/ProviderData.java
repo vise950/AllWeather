@@ -8,8 +8,6 @@ import com.dev.nicola.allweather.Provider.Apixu.ApixuRequest;
 import com.dev.nicola.allweather.Provider.Apixu.model.ApixuData;
 import com.dev.nicola.allweather.Provider.ForecastIO.ForecastIORequest;
 import com.dev.nicola.allweather.Provider.ForecastIO.model.ForecastIOData;
-import com.dev.nicola.allweather.Provider.Yahoo.YahooData;
-import com.dev.nicola.allweather.Provider.Yahoo.YahooRequest;
 import com.dev.nicola.allweather.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,9 +31,6 @@ public class ProviderData {
 
     private ForecastIOData mForecastIOData;
     private ApixuData mApixuData;
-
-    private YahooRequest mYahooRequest;
-    private YahooData mYahooData;
 
     private Gson mGson;
     private Utils mUtils;
@@ -89,11 +84,6 @@ public class ProviderData {
             case "Apixu":
                 jsonObject = mApixuRequest.getData(url);
                 break;
-
-            case "Yahoo":
-                jsonObject = mYahooRequest.getData(url);
-                break;
-
         }
         return jsonObject;
     }
@@ -112,11 +102,6 @@ public class ProviderData {
             case "Apixu":
                 mApixuRequest = new ApixuRequest();
                 url = mApixuRequest.setUrl(latitude, longitude);
-                break;
-
-            case "Yahoo":
-                mYahooRequest = new YahooRequest();
-                url = mYahooRequest.setUrl(location);
                 break;
         }
         return url;
@@ -137,10 +122,6 @@ public class ProviderData {
                 mApixuData = new ApixuData();
                 mApixuData = mGson.fromJson(argument, ApixuData.class);
                 break;
-
-            case "Yahoo":
-                mYahooData = new YahooData();
-                mYahooData = mGson.fromJson(argument, YahooData.class);
         }
     }
 
@@ -237,14 +218,6 @@ public class ProviderData {
                 }
 
                 break;
-
-//            case "Yahoo":
-//                location = mYahooData.getQuery().getResults().getChannel().getLocation().getCity();
-//                condition = mYahooData.getQuery().getResults().getChannel().getItem().getCondition().getText();
-////                temperature = String.format(mResources.getString(R.string.temperature),mConverter.CelsiusToFahrenheitOrKelvin(mYahooData.getQuery().getResults().getChannel().getItem().getCondition().getTemp(),tempUnits));
-//                humidity = String.format(mResources.getString(R.string.humidity), mYahooData.getQuery().getResults().getChannel().getAtmosphere().getHumidity());
-//                break;
-
         }
     }
 
@@ -276,17 +249,6 @@ public class ProviderData {
                     ForecastList.add(forecast);
                 }
                 break;
-
-//            case "Yahoo":
-//                days = mYahooData.getQuery().getResults().getChannel().getItem().getForecast().size();
-//                for (int i = 1; i < days; i++) {
-//                    forecast = new Forecast(mYahooData.getQuery().getResults().getChannel().getItem().getForecast().get(i).getDate()
-//                            , mYahooData.getQuery().getResults().getChannel().getItem().getForecast().get(i).getText()
-//                            , ((int) (mYahooData.getQuery().getResults().getChannel().getItem().getForecast().get(i).getHigh() + mYahooData.getQuery().getResults().getChannel().getItem().getForecast().get(i).getLow()) / 2)
-//                            , R.drawable.clear_day_2);
-//                    ForecastList.add(forecast);
-//                }
-//            break;
         }
     }
 
