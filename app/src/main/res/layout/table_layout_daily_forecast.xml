@@ -53,7 +53,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:src="@drawable/clear_day_2"/>
+            android:src="@drawable/clear_day"/>
 
         <ImageView
             android:id="@+id/second_icon_forecast_daily"
@@ -61,7 +61,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:src="@drawable/cloud_night_2"/>
+            android:src="@drawable/cloud_night"/>
 
         <ImageView
             android:id="@+id/third_icon_forecast_daily"
@@ -69,7 +69,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:src="@drawable/cloud_2"/>
+            android:src="@drawable/cloud"/>
 
         <ImageView
             android:id="@+id/forth_icon_forecast_daily"
@@ -77,7 +77,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:src="@drawable/snow_2"/>
+            android:src="@drawable/snow"/>
 
     </TableRow>
 

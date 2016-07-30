@@ -19,16 +19,16 @@ public class MainIntro extends AppIntro2 {
     public void init(Bundle savedInstanceState) {
 
 
-        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.intro_title_1), getResources().getString(R.string.intro_description_1), R.drawable.clear_day_2, Color.parseColor("#2196F3")));
+        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.intro_title_1), getResources().getString(R.string.intro_description_1), R.drawable.clear_day, Color.parseColor("#2196F3")));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.intro_title_2), getResources().getString(R.string.intro_description_permission_2), R.drawable.snow_2, Color.parseColor("#00BCD4")));
+            addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.intro_title_2), getResources().getString(R.string.intro_description_permission_2), R.drawable.snow, Color.parseColor("#00BCD4")));
             askForPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2);
         } else {
-            addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.intro_title_2), getResources().getString(R.string.intro_description_2), R.drawable.snow_2, Color.parseColor("#00BCD4")));
+            addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.intro_title_2), getResources().getString(R.string.intro_description_2), R.drawable.snow, Color.parseColor("#00BCD4")));
         }
 
-        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.intro_title_3), getResources().getString(R.string.intro_description_3), R.drawable.cloud_2, Color.parseColor("#4CAF50")));
+        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.intro_title_3), getResources().getString(R.string.intro_description_3), R.drawable.cloud, Color.parseColor("#4CAF50")));
 
 
     }

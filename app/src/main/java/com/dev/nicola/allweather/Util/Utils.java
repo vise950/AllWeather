@@ -76,23 +76,23 @@ public class Utils {
         switch (condition) {
             case "1000":
             case "clear-day":
-                icon = R.drawable.clear_day_2;
+                icon = R.drawable.clear_day;
                 break;
             case "clear-night":
-                icon = R.drawable.clear_night_2;
+                icon = R.drawable.clear_night;
                 break;
             case "1003":
             case "partly-cloudy-day":
-                icon = R.drawable.cloud_day_2;
+                icon = R.drawable.partly_cloudy_day;
                 break;
             case "partly-cloudy-night":
-                icon = R.drawable.cloud_night_2;
+                icon = R.drawable.partly_cloudy_night;
                 break;
             case "1087":
             case "1009":
             case "1006":
             case "cloudy":
-                icon = R.drawable.cloud_2;
+                icon = R.drawable.cloud;
                 break;
             case "1195":
             case "1192":
@@ -101,7 +101,7 @@ public class Utils {
             case "1183":
             case "1063":
             case "rain":
-                icon = R.drawable.rain_2;
+                icon = R.drawable.rain;
                 break;
             case "1225":
             case "1222":
@@ -112,22 +112,28 @@ public class Utils {
             case "1114":
             case "1066":
             case "snow":
-                icon = R.drawable.snow_2;
+                icon = R.drawable.snow;
                 break;
             case "1072":
             case "1069":
             case "sleet":
-                icon = R.drawable.sleet_2;
+                icon = R.drawable.sleet;
                 break;
             case "1117":
             case "wind":
-                icon = R.drawable.wind_2;
+                icon = R.drawable.wind;
                 break;
             case "1147":
             case "1135":
             case "1030":
             case "fog":
-                icon = R.drawable.fog_2;
+                icon = R.drawable.fog;
+                break;
+            case "1273":
+            case "1276":
+            case "1279":
+            case "1282":
+                icon=R.drawable.storm;
                 break;
             default:
                 icon = R.drawable.unknown;

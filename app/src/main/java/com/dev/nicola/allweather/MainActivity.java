@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Snackbar mSnackbar;
-    private FloatingActionButton mFloatingActionButton;
 
     private boolean firstRun;
     private Utils mUtils;
@@ -147,12 +145,6 @@ public class MainActivity extends AppCompatActivity {
                     mProgressDialog.show();
                 new task().execute();
             }
-
-//        } else if (!prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO"))) {
-//            prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
-//            if (!mProgressDialog.isShowing())
-//                mProgressDialog.show();
-//            new task().execute();
         }
 
     }
@@ -265,7 +257,6 @@ public class MainActivity extends AppCompatActivity {
     private void setViewPager(String argument) {
         Log.d(TAG, "setViewPager");
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
-//        mFloatingActionButton=(FloatingActionButton)findViewById(R.id.fab);
         FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), argument);
 
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -318,12 +309,10 @@ public class MainActivity extends AppCompatActivity {
             mSearchView.setOnOpenCloseListener(new SearchView.OnOpenCloseListener() {
                 @Override
                 public void onClose() {
-//                    mFloatingActionButton.show();
                 }
 
                 @Override
                 public void onOpen() {
-//                    mFloatingActionButton.hide();
                 }
             });
 
