@@ -92,24 +92,10 @@ public class DailyData {
     }
 
     /**
-     * @param time The time
-     */
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    /**
      * @return The summary
      */
     public String getSummary() {
         return summary;
-    }
-
-    /**
-     * @param summary The summary
-     */
-    public void setSummary(String summary) {
-        this.summary = summary;
     }
 
     /**
@@ -120,24 +106,10 @@ public class DailyData {
     }
 
     /**
-     * @param icon The icon
-     */
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    /**
      * @return The sunriseTime
      */
     public Integer getSunriseTime() {
         return sunriseTime;
-    }
-
-    /**
-     * @param sunriseTime The sunriseTime
-     */
-    public void setSunriseTime(Integer sunriseTime) {
-        this.sunriseTime = sunriseTime;
     }
 
     /**
@@ -148,24 +120,10 @@ public class DailyData {
     }
 
     /**
-     * @param sunsetTime The sunsetTime
-     */
-    public void setSunsetTime(Integer sunsetTime) {
-        this.sunsetTime = sunsetTime;
-    }
-
-    /**
      * @return The moonPhase
      */
     public Double getMoonPhase() {
         return moonPhase;
-    }
-
-    /**
-     * @param moonPhase The moonPhase
-     */
-    public void setMoonPhase(Double moonPhase) {
-        this.moonPhase = moonPhase;
     }
 
     /**
@@ -176,24 +134,10 @@ public class DailyData {
     }
 
     /**
-     * @param precipIntensity The precipIntensity
-     */
-    public void setPrecipIntensity(Double precipIntensity) {
-        this.precipIntensity = precipIntensity;
-    }
-
-    /**
      * @return The precipIntensityMax
      */
     public Double getPrecipIntensityMax() {
         return precipIntensityMax;
-    }
-
-    /**
-     * @param precipIntensityMax The precipIntensityMax
-     */
-    public void setPrecipIntensityMax(Double precipIntensityMax) {
-        this.precipIntensityMax = precipIntensityMax;
     }
 
     /**
@@ -204,24 +148,10 @@ public class DailyData {
     }
 
     /**
-     * @param precipIntensityMaxTime The precipIntensityMaxTime
-     */
-    public void setPrecipIntensityMaxTime(Double precipIntensityMaxTime) {
-        this.precipIntensityMaxTime = precipIntensityMaxTime;
-    }
-
-    /**
      * @return The precipProbability
      */
     public Double getPrecipProbability() {
         return precipProbability;
-    }
-
-    /**
-     * @param precipProbability The precipProbability
-     */
-    public void setPrecipProbability(Double precipProbability) {
-        this.precipProbability = precipProbability;
     }
 
     /**
@@ -232,24 +162,10 @@ public class DailyData {
     }
 
     /**
-     * @param precipType The precipType
-     */
-    public void setPrecipType(String precipType) {
-        this.precipType = precipType;
-    }
-
-    /**
      * @return The temperatureMin
      */
     public Integer getTemperatureMin() {
         return temperatureMin.intValue();
-    }
-
-    /**
-     * @param temperatureMin The temperatureMin
-     */
-    public void setTemperatureMin(Double temperatureMin) {
-        this.temperatureMin = temperatureMin;
     }
 
     /**
@@ -260,24 +176,10 @@ public class DailyData {
     }
 
     /**
-     * @param temperatureMinTime The temperatureMinTime
-     */
-    public void setTemperatureMinTime(Double temperatureMinTime) {
-        this.temperatureMinTime = temperatureMinTime;
-    }
-
-    /**
      * @return The temperatureMax
      */
-    public Double getTemperatureMax() {
-        return temperatureMax;
-    }
-
-    /**
-     * @param temperatureMax The temperatureMax
-     */
-    public void setTemperatureMax(Double temperatureMax) {
-        this.temperatureMax = temperatureMax;
+    public Integer getTemperatureMax() {
+        return temperatureMax.intValue();
     }
 
     /**
@@ -288,24 +190,10 @@ public class DailyData {
     }
 
     /**
-     * @param temperatureMaxTime The temperatureMaxTime
-     */
-    public void setTemperatureMaxTime(Double temperatureMaxTime) {
-        this.temperatureMaxTime = temperatureMaxTime;
-    }
-
-    /**
      * @return The apparentTemperatureMin
      */
     public Double getApparentTemperatureMin() {
         return apparentTemperatureMin;
-    }
-
-    /**
-     * @param apparentTemperatureMin The apparentTemperatureMin
-     */
-    public void setApparentTemperatureMin(Double apparentTemperatureMin) {
-        this.apparentTemperatureMin = apparentTemperatureMin;
     }
 
     /**
@@ -316,24 +204,10 @@ public class DailyData {
     }
 
     /**
-     * @param apparentTemperatureMinTime The apparentTemperatureMinTime
-     */
-    public void setApparentTemperatureMinTime(Double apparentTemperatureMinTime) {
-        this.apparentTemperatureMinTime = apparentTemperatureMinTime;
-    }
-
-    /**
      * @return The apparentTemperatureMax
      */
     public Double getApparentTemperatureMax() {
         return apparentTemperatureMax;
-    }
-
-    /**
-     * @param apparentTemperatureMax The apparentTemperatureMax
-     */
-    public void setApparentTemperatureMax(Double apparentTemperatureMax) {
-        this.apparentTemperatureMax = apparentTemperatureMax;
     }
 
     /**
@@ -344,24 +218,10 @@ public class DailyData {
     }
 
     /**
-     * @param apparentTemperatureMaxTime The apparentTemperatureMaxTime
-     */
-    public void setApparentTemperatureMaxTime(Double apparentTemperatureMaxTime) {
-        this.apparentTemperatureMaxTime = apparentTemperatureMaxTime;
-    }
-
-    /**
      * @return The dewPoint
      */
     public Double getDewPoint() {
         return dewPoint;
-    }
-
-    /**
-     * @param dewPoint The dewPoint
-     */
-    public void setDewPoint(Double dewPoint) {
-        this.dewPoint = dewPoint;
     }
 
     /**
@@ -372,24 +232,10 @@ public class DailyData {
     }
 
     /**
-     * @param humidity The humidity
-     */
-    public void setHumidity(Double humidity) {
-        this.humidity = humidity;
-    }
-
-    /**
      * @return The windSpeed
      */
     public Double getWindSpeed() {
         return windSpeed;
-    }
-
-    /**
-     * @param windSpeed The windSpeed
-     */
-    public void setWindSpeed(Double windSpeed) {
-        this.windSpeed = windSpeed;
     }
 
     /**
@@ -400,24 +246,10 @@ public class DailyData {
     }
 
     /**
-     * @param windBearing The windBearing
-     */
-    public void setWindBearing(Integer windBearing) {
-        this.windBearing = windBearing;
-    }
-
-    /**
      * @return The cloudCover
      */
     public Double getCloudCover() {
         return cloudCover;
-    }
-
-    /**
-     * @param cloudCover The cloudCover
-     */
-    public void setCloudCover(Double cloudCover) {
-        this.cloudCover = cloudCover;
     }
 
     /**
@@ -428,24 +260,9 @@ public class DailyData {
     }
 
     /**
-     * @param pressure The pressure
-     */
-    public void setPressure(Double pressure) {
-        this.pressure = pressure;
-    }
-
-    /**
      * @return The ozone
      */
     public Double getOzone() {
         return ozone;
     }
-
-    /**
-     * @param ozone The ozone
-     */
-    public void setOzone(Double ozone) {
-        this.ozone = ozone;
-    }
-
 }

@@ -233,7 +233,7 @@ public class ProviderData {
                 for (int i = 1; i < days; i++) {
                     forecast = new Forecast(mUtils.getDayFormat(mForecastIOData.getDaily().getData().get(i).getTime())
                             , mForecastIOData.getDaily().getData().get(i).getSummary()
-                            , mConverter.CelsiusToFahrenheitOrKelvin((int) (mForecastIOData.getDaily().getData().get(i).getTemperatureMin() + mForecastIOData.getDaily().getData().get(i).getTemperatureMax()) / 2, tempUnits)
+                            , mConverter.CelsiusToFahrenheitOrKelvin((mForecastIOData.getDaily().getData().get(i).getTemperatureMin() + mForecastIOData.getDaily().getData().get(i).getTemperatureMax()) / 2, tempUnits)
                             , mUtils.getWeatherIcon(mForecastIOData.getDaily().getData().get(i).getIcon()));
                     ForecastList.add(forecast);
                 }
@@ -244,7 +244,7 @@ public class ProviderData {
                 for (int i = 1; i < days; i++) {
                     forecast = new Forecast(mUtils.getDayFormat(mApixuData.getForecast().getForecastday().get(i).getDateEpoch())
                             , mApixuData.getForecast().getForecastday().get(i).getDay().getCondition().getText()
-                            , mApixuData.getForecast().getForecastday().get(i).getDay().getAvgtempC()
+                            , mConverter.CelsiusToFahrenheitOrKelvin(mApixuData.getForecast().getForecastday().get(i).getDay().getAvgtempC(), tempUnits)
                             , mUtils.getWeatherIcon(String.valueOf(mApixuData.getForecast().getForecastday().get(i).getDay().getCondition().getCode())));
                     ForecastList.add(forecast);
                 }

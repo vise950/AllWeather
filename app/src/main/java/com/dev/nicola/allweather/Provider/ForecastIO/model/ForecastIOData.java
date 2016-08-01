@@ -35,24 +35,10 @@ public class ForecastIOData {
     }
 
     /**
-     * @param latitude The latitude
-     */
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    /**
      * @return The longitude
      */
     public Double getLongitude() {
         return longitude;
-    }
-
-    /**
-     * @param longitude The longitude
-     */
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
     }
 
     /**
@@ -63,24 +49,10 @@ public class ForecastIOData {
     }
 
     /**
-     * @param timezone The timezone
-     */
-    public void setTimezone(String timezone) {
-        this.timezone = timezone;
-    }
-
-    /**
      * @return The offset
      */
     public Integer getOffset() {
         return offset;
-    }
-
-    /**
-     * @param offset The offset
-     */
-    public void setOffset(Integer offset) {
-        this.offset = offset;
     }
 
     /**
@@ -91,24 +63,10 @@ public class ForecastIOData {
     }
 
     /**
-     * @param currently The currently
-     */
-    public void setCurrently(Currently currently) {
-        this.currently = currently;
-    }
-
-    /**
      * @return The hourly
      */
     public Hourly getHourly() {
         return hourly;
-    }
-
-    /**
-     * @param hourly The hourly
-     */
-    public void setHourly(Hourly hourly) {
-        this.hourly = hourly;
     }
 
     /**
@@ -117,12 +75,4 @@ public class ForecastIOData {
     public Daily getDaily() {
         return daily;
     }
-
-    /**
-     * @param daily The daily
-     */
-    public void setDaily(Daily daily) {
-        this.daily = daily;
-    }
-
 }

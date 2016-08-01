@@ -26,24 +26,10 @@ public class Daily {
     }
 
     /**
-     * @param summary The summary
-     */
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    /**
      * @return The icon
      */
     public String getIcon() {
         return icon;
-    }
-
-    /**
-     * @param icon The icon
-     */
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     /**
@@ -52,12 +38,4 @@ public class Daily {
     public List<DailyData> getData() {
         return data;
     }
-
-    /**
-     * @param data The data
-     */
-    public void setData(List<DailyData> data) {
-        this.data = data;
-    }
-
 }

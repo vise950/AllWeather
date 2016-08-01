@@ -56,24 +56,10 @@ public class Currently {
     }
 
     /**
-     * @param time The time
-     */
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    /**
      * @return The summary
      */
     public String getSummary() {
         return summary;
-    }
-
-    /**
-     * @param summary The summary
-     */
-    public void setSummary(String summary) {
-        this.summary = summary;
     }
 
     /**
@@ -84,24 +70,10 @@ public class Currently {
     }
 
     /**
-     * @param icon The icon
-     */
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    /**
      * @return The precipIntensity
      */
     public Double getPrecipIntensity() {
         return precipIntensity;
-    }
-
-    /**
-     * @param precipIntensity The precipIntensity
-     */
-    public void setPrecipIntensity(Double precipIntensity) {
-        this.precipIntensity = precipIntensity;
     }
 
     /**
@@ -112,24 +84,10 @@ public class Currently {
     }
 
     /**
-     * @param precipProbability The precipProbability
-     */
-    public void setPrecipProbability(Double precipProbability) {
-        this.precipProbability = precipProbability;
-    }
-
-    /**
      * @return The temperature
      */
     public Integer getTemperature() {
         return temperature.intValue();
-    }
-
-    /**
-     * @param temperature The temperature
-     */
-    public void setTemperature(Double temperature) {
-        this.temperature = temperature;
     }
 
     /**
@@ -140,24 +98,10 @@ public class Currently {
     }
 
     /**
-     * @param apparentTemperature The apparentTemperature
-     */
-    public void setApparentTemperature(Double apparentTemperature) {
-        this.apparentTemperature = apparentTemperature;
-    }
-
-    /**
      * @return The dewPoint
      */
     public Double getDewPoint() {
         return dewPoint;
-    }
-
-    /**
-     * @param dewPoint The dewPoint
-     */
-    public void setDewPoint(Double dewPoint) {
-        this.dewPoint = dewPoint;
     }
 
     /**
@@ -168,24 +112,10 @@ public class Currently {
     }
 
     /**
-     * @param humidity The humidity
-     */
-    public void setHumidity(Double humidity) {
-        this.humidity = humidity;
-    }
-
-    /**
      * @return The windSpeed
      */
     public Double getWindSpeed() {
         return windSpeed;
-    }
-
-    /**
-     * @param windSpeed The windSpeed
-     */
-    public void setWindSpeed(Double windSpeed) {
-        this.windSpeed = windSpeed;
     }
 
     /**
@@ -196,24 +126,10 @@ public class Currently {
     }
 
     /**
-     * @param windBearing The windBearing
-     */
-    public void setWindBearing(Integer windBearing) {
-        this.windBearing = windBearing;
-    }
-
-    /**
      * @return The cloudCover
      */
     public Double getCloudCover() {
         return cloudCover;
-    }
-
-    /**
-     * @param cloudCover The cloudCover
-     */
-    public void setCloudCover(Double cloudCover) {
-        this.cloudCover = cloudCover;
     }
 
     /**
@@ -224,24 +140,10 @@ public class Currently {
     }
 
     /**
-     * @param pressure The pressure
-     */
-    public void setPressure(Double pressure) {
-        this.pressure = pressure;
-    }
-
-    /**
      * @return The ozone
      */
     public Double getOzone() {
         return ozone;
-    }
-
-    /**
-     * @param ozone The ozone
-     */
-    public void setOzone(Double ozone) {
-        this.ozone = ozone;
     }
 
 }

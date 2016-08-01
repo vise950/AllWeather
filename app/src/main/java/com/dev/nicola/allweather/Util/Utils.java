@@ -153,20 +153,14 @@ public class Utils {
             SimpleDateFormat dt = new SimpleDateFormat("dd-MMM-yyyy h:mm a", Locale.getDefault());
             try {
                 Date d = dt.parse(date + " " + sSunrise);
-//                Log.d(TAG,"date "+d.toString());
                 sunrise = d.getTime();
                 Date d1 = dt.parse(date + " " + sSunset);
-//                Log.d(TAG,"date1 "+d1.toString());
                 sunset = d1.getTime();
                 time = time * 1000L;
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-
-//        Log.d(TAG,"sunrise " +sunrise);
-//        Log.d(TAG,"sunset " +sunset);
-//        Log.d(TAG,"time "+time);
 
         if (time >= sunrise - 1800L && time <= sunrise + 1800L)
             wall = R.drawable.sunset_wall;

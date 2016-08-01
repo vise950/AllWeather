@@ -8,8 +8,8 @@ android {
         applicationId "com.dev.nicola.allweather"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 22
-        versionName "0.2.2"
+        versionCode 23
+        versionName "0.2.3"
 
         multiDexEnabled true
     }
@@ -40,7 +40,7 @@ dependencies {
     compile 'com.github.paolorotolo:appintro:3.4.0'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.google.code.gson:gson:2.4'
-    compile 'com.lapism:searchview:3.4'
+    compile 'com.lapism:searchview:3.4.1'
     compile 'com.android.support:multidex:1.0.1'
 }
 

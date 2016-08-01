@@ -10,6 +10,8 @@
     <string name="intro_description_3">Sono pronto a mostrarti le informazioni</string>
     <string name="intro_description_permission_2">Ho bisogno di accedere alla tua posizione per migliorare le informazioni</string>
 
+    <string name="activity_dialog">Caricamento...</string>
+
     <string name="action_my_places">I miei luoghi</string>
     <string name="action_settings">Impostazioni</string>
     <string name="action_credits">Crediti</string>
@@ -120,6 +122,7 @@
     <string name="snackbar_4">Impossibile recuperare la posizione</string>
     <string name="snackbar_5">Non sarà possible visualizzare i dati</string>
     <string name="snackbar_6">Impossibile contattare il server in questo momento</string>
+    <string name="snackbar_7">Dati sono già stati aggiornati</string>
     <string name="snackbar_action_OK">OK</string>
     <string name="snackbar_action_retry">RIPROVA</string>
 

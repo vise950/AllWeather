@@ -59,24 +59,10 @@ public class HourlyData {
     }
 
     /**
-     * @param time The time
-     */
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    /**
      * @return The summary
      */
     public String getSummary() {
         return summary;
-    }
-
-    /**
-     * @param summary The summary
-     */
-    public void setSummary(String summary) {
-        this.summary = summary;
     }
 
     /**
@@ -87,24 +73,10 @@ public class HourlyData {
     }
 
     /**
-     * @param icon The icon
-     */
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    /**
      * @return The precipIntensity
      */
     public Double getPrecipIntensity() {
         return precipIntensity;
-    }
-
-    /**
-     * @param precipIntensity The precipIntensity
-     */
-    public void setPrecipIntensity(Double precipIntensity) {
-        this.precipIntensity = precipIntensity;
     }
 
     /**
@@ -115,24 +87,10 @@ public class HourlyData {
     }
 
     /**
-     * @param precipProbability The precipProbability
-     */
-    public void setPrecipProbability(Double precipProbability) {
-        this.precipProbability = precipProbability;
-    }
-
-    /**
      * @return The temperature
      */
     public Integer getTemperature() {
         return temperature.intValue();
-    }
-
-    /**
-     * @param temperature The temperature
-     */
-    public void setTemperature(Double temperature) {
-        this.temperature = temperature;
     }
 
     /**
@@ -143,24 +101,10 @@ public class HourlyData {
     }
 
     /**
-     * @param apparentTemperature The apparentTemperature
-     */
-    public void setApparentTemperature(Double apparentTemperature) {
-        this.apparentTemperature = apparentTemperature;
-    }
-
-    /**
      * @return The dewPoint
      */
     public Double getDewPoint() {
         return dewPoint;
-    }
-
-    /**
-     * @param dewPoint The dewPoint
-     */
-    public void setDewPoint(Double dewPoint) {
-        this.dewPoint = dewPoint;
     }
 
     /**
@@ -171,24 +115,10 @@ public class HourlyData {
     }
 
     /**
-     * @param humidity The humidity
-     */
-    public void setHumidity(Double humidity) {
-        this.humidity = humidity;
-    }
-
-    /**
      * @return The windSpeed
      */
     public Double getWindSpeed() {
         return windSpeed;
-    }
-
-    /**
-     * @param windSpeed The windSpeed
-     */
-    public void setWindSpeed(Double windSpeed) {
-        this.windSpeed = windSpeed;
     }
 
     /**
@@ -199,24 +129,10 @@ public class HourlyData {
     }
 
     /**
-     * @param windBearing The windBearing
-     */
-    public void setWindBearing(Integer windBearing) {
-        this.windBearing = windBearing;
-    }
-
-    /**
      * @return The cloudCover
      */
     public Double getCloudCover() {
         return cloudCover;
-    }
-
-    /**
-     * @param cloudCover The cloudCover
-     */
-    public void setCloudCover(Double cloudCover) {
-        this.cloudCover = cloudCover;
     }
 
     /**
@@ -227,24 +143,10 @@ public class HourlyData {
     }
 
     /**
-     * @param pressure The pressure
-     */
-    public void setPressure(Double pressure) {
-        this.pressure = pressure;
-    }
-
-    /**
      * @return The ozone
      */
     public Double getOzone() {
         return ozone;
-    }
-
-    /**
-     * @param ozone The ozone
-     */
-    public void setOzone(Double ozone) {
-        this.ozone = ozone;
     }
 
     /**
@@ -253,12 +155,4 @@ public class HourlyData {
     public String getPrecipType() {
         return precipType;
     }
-
-    /**
-     * @param precipType The precipType
-     */
-    public void setPrecipType(String precipType) {
-        this.precipType = precipType;
-    }
-
 }

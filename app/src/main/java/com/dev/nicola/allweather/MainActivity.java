@@ -25,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dev.nicola.allweather.Util.FragmentAdapter;
@@ -62,12 +63,14 @@ public class MainActivity extends AppCompatActivity {
     private Snackbar mSnackbar;
 
     private boolean firstRun;
+    private long lastRefresh;
     private Utils mUtils;
 
     private String prefTheme;
     private String prefTemperature;
     private String prefSpeed;
     private String prefTime;
+    private boolean ok = false;
 
     private PlaceAutocomplete mPlaceAutocomplete;
     private List<SearchItem> suggestionsList;
@@ -87,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
         mUtils = new Utils(getApplicationContext(), getResources());
@@ -97,61 +99,63 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mPreferences = getSharedPreferences(MainActivity.class.getName(), MODE_PRIVATE);
-        firstRun = mPreferences.getBoolean("firstRun", true);
-
-        if (firstRun) {
-            Intent intent = new Intent(getApplicationContext(), MainIntro.class);
-            startActivity(intent);
-            mPreferences.edit().putBoolean("firstRun", false).apply();
-            finish();
-        }
+//        firstRun = mPreferences.getBoolean("firstRun", true);
+//
+//        if (firstRun) {
+//            Intent intent = new Intent(getApplicationContext(), MainIntro.class);
+//            startActivity(intent);
+//            mPreferences.edit().putBoolean("firstRun", false).apply();
+//            finish();
+//        }
+        initialCheckIn();
     }
 
     @Override
     protected void onStart() {
-        Log.d(TAG, "onStart");
         super.onStart();
     }
 
 
     @Override
     protected void onResume() {
-        Log.d(TAG, "onResume");
         super.onResume();
 
-        if (!firstRun) {
-            if (!mUtils.checkPermission())
-                showSnackbar(1);
-            else if (!mUtils.checkInternetConnession())
-                showSnackbar(3);
-            else if (mJSONObject == null) {
-                initialSetup();
-                getLocation();
-            }
+//        if (!firstRun) {
+//            if (!mUtils.checkPermission())
+//                showSnackbar(1);
+//            else if (!mUtils.checkInternetConnession()) {
+//                showSnackbar(3);
+////                setContentView(R.layout.placeholder);
+//            } else if (mJSONObject == null) {
+//                initialSetup();
+//                getLocation();
+//            }
 
-            if (!prefTheme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), "1")))
-                MainActivity.this.recreate();
+//            if (!prefTheme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), "1")))
+//                MainActivity.this.recreate();
+//
+//            else if (!prefTemperature.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1")) ||
+//                    !prefSpeed.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3")) ||
+//                    !prefTime.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2")) ||
+//                    !prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO"))) {
+//
+//                prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1");
+//                prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3");
+//                prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2");
+//                prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
+//                if (!mProgressDialog.isShowing())
+//                    mProgressDialog.show();
+//                new task().execute();
+//            }
+//        }
+        if (ok)
+            checkPreferences();
 
-            else if (!prefTemperature.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1")) ||
-                    !prefSpeed.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3")) ||
-                    !prefTime.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2")) ||
-                    !prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO"))) {
-
-                prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1");
-                prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3");
-                prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2");
-                prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
-                if (!mProgressDialog.isShowing())
-                    mProgressDialog.show();
-                new task().execute();
-            }
-        }
 
     }
 
     @Override
     protected void onStop() {
-        Log.d(TAG, "onStop");
         super.onStop();
 
         if (!firstRun && mUtils.checkPermission() && mUtils.checkGpsEnable() && mUtils.checkInternetConnession()) {
@@ -169,13 +173,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        Log.d(TAG, "onPause");
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        Log.d(TAG, "onDestroy");
         super.onDestroy();
     }
 
@@ -190,10 +192,53 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void checkPreferences() {
+//        prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
+//        prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1");
+//        prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3");
+//        prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2");
+
+        if (!prefTheme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), "1")))
+            MainActivity.this.recreate();
+
+        else if (!prefTemperature.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1")) ||
+                !prefSpeed.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3")) ||
+                !prefTime.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2")) ||
+                !prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO"))) {
+
+            prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1");
+            prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3");
+            prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2");
+            prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
+            if (!mProgressDialog.isShowing())
+                mProgressDialog.show();
+            new task().execute();
+        }
+    }
+
+    private void initialCheckIn() {
+        firstRun = mPreferences.getBoolean("firstRun", true);
+
+        if (firstRun) {
+            Intent intent = new Intent(getApplicationContext(), MainIntro.class);
+            startActivity(intent);
+            mPreferences.edit().putBoolean("firstRun", false).apply();
+            finish();
+        } else {
+            if (!mUtils.checkPermission())
+                showSnackbar(1);
+            else if (!mUtils.checkInternetConnession()) {
+                showSnackbar(3);
+            } else if (mJSONObject == null) {
+                initialSetup();
+                getLocation();
+            }
+        }
+    }
+
 
     private void initialSetup() {
-        Log.d(TAG, "initialSetup");
-        mProgressDialog = ProgressDialog.show(MainActivity.this, "", "loading...", true);
+        mProgressDialog = ProgressDialog.show(MainActivity.this, "", getString(R.string.activity_dialog), true);
 
         mPlaceAutocomplete = new PlaceAutocomplete();
         mProviderData = new ProviderData(getApplicationContext(), getResources());
@@ -203,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
         setDrawer();
         setNavigationView();
         setSearchView();
+        setPlaceHolder();
         mHandler = new Handler();
 
         prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
@@ -210,8 +256,18 @@ public class MainActivity extends AppCompatActivity {
         prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3");
         prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2");
 
+        ok = true;
+
     }
 
+
+    private void setPlaceHolder() {
+        RelativeLayout placeholderLayout = (RelativeLayout) findViewById(R.id.placeholder_layout);
+        if (!mUtils.checkInternetConnession())
+            placeholderLayout.setVisibility(View.VISIBLE);
+        else
+            placeholderLayout.setVisibility(View.INVISIBLE);
+    }
 
     private void setDrawer() {
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -272,7 +328,14 @@ public class MainActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new task().execute();
+                lastRefresh = mPreferences.getLong("lastRefresh", 0);
+                if (System.currentTimeMillis() - lastRefresh >= 1000 * 60 * 5)
+                    new task().execute();
+                else {
+                    showSnackbar(7);
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+
             }
         });
     }
@@ -418,6 +481,9 @@ public class MainActivity extends AppCompatActivity {
                 });
                 mSnackbar.setActionTextColor(Color.YELLOW);
                 break;
+            case 7:// dati già aggiornati
+                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_7, Snackbar.LENGTH_LONG);
+                break;
         }
         mSnackbar.show();
     }
@@ -458,7 +524,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            Log.d(TAG, "prefProvider " + prefProvider);
         }
 
         @Override
@@ -488,6 +553,8 @@ public class MainActivity extends AppCompatActivity {
 
             if (mSwipeRefreshLayout.isRefreshing())
                 mSwipeRefreshLayout.setRefreshing(false);
+
+            mPreferences.edit().putLong("lastRefresh", System.currentTimeMillis()).apply();
         }
     }
 
