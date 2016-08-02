@@ -8,8 +8,8 @@ android {
         applicationId "com.dev.nicola.allweather"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 23
-        versionName "0.2.3"
+        versionCode 26
+        versionName "0.2.6"
 
         multiDexEnabled true
     }

@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private SearchView mSearchView;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+    private FragmentAdapter mFragmentAdapter;
     private CoordinatorLayout mCoordinatorLayout;
     private ProgressDialog mProgressDialog;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -99,14 +100,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mPreferences = getSharedPreferences(MainActivity.class.getName(), MODE_PRIVATE);
-//        firstRun = mPreferences.getBoolean("firstRun", true);
-//
-//        if (firstRun) {
-//            Intent intent = new Intent(getApplicationContext(), MainIntro.class);
-//            startActivity(intent);
-//            mPreferences.edit().putBoolean("firstRun", false).apply();
-//            finish();
-//        }
         initialCheckIn();
     }
 
@@ -119,39 +112,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-//        if (!firstRun) {
-//            if (!mUtils.checkPermission())
-//                showSnackbar(1);
-//            else if (!mUtils.checkInternetConnession()) {
-//                showSnackbar(3);
-////                setContentView(R.layout.placeholder);
-//            } else if (mJSONObject == null) {
-//                initialSetup();
-//                getLocation();
-//            }
-
-//            if (!prefTheme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), "1")))
-//                MainActivity.this.recreate();
-//
-//            else if (!prefTemperature.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1")) ||
-//                    !prefSpeed.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3")) ||
-//                    !prefTime.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2")) ||
-//                    !prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO"))) {
-//
-//                prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1");
-//                prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3");
-//                prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2");
-//                prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
-//                if (!mProgressDialog.isShowing())
-//                    mProgressDialog.show();
-//                new task().execute();
-//            }
-//        }
         if (ok)
             checkPreferences();
-
-
     }
 
     @Override
@@ -168,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
             if (mSwipeRefreshLayout.isRefreshing())
                 mSwipeRefreshLayout.setRefreshing(false);
         }
-
     }
 
     @Override
@@ -193,11 +154,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkPreferences() {
-//        prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
-//        prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1");
-//        prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3");
-//        prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2");
-
         if (!prefTheme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), "1")))
             MainActivity.this.recreate();
 
@@ -216,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void initialCheckIn() {
         firstRun = mPreferences.getBoolean("firstRun", true);
 
@@ -231,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 showSnackbar(3);
             } else if (mJSONObject == null) {
                 initialSetup();
-                getLocation();
+//                getLocation();
             }
         }
     }
@@ -249,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
         setNavigationView();
         setSearchView();
         setPlaceHolder();
+        setSwipeRefreshLayout();
         mHandler = new Handler();
 
         prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
@@ -258,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
 
         ok = true;
 
+        getLocation();
     }
 
 
@@ -310,21 +269,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setViewPager(String argument) {
-        Log.d(TAG, "setViewPager");
+    private void setSwipeRefreshLayout() {
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
-        FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), argument);
-
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
-        if (mViewPager != null) {
-            mViewPager.setAdapter(fragmentAdapter);
-        }
-
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        if (mTabLayout != null) {
-            mTabLayout.setupWithViewPager(mViewPager);
-        }
-
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -335,9 +281,24 @@ public class MainActivity extends AppCompatActivity {
                     showSnackbar(7);
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
-
             }
         });
+    }
+
+    private void setViewPager(String argument) {
+        Log.d(TAG, "setViewPager");
+
+        mFragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), argument);
+
+        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        if (mViewPager != null) {
+            mViewPager.setAdapter(mFragmentAdapter);
+        }
+
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        if (mTabLayout != null) {
+            mTabLayout.setupWithViewPager(mViewPager);
+        }
     }
 
 
