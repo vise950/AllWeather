@@ -17,6 +17,7 @@ import android.util.Log;
 import com.dev.nicola.allweather.R;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -146,17 +147,25 @@ public class Utils {
     public int getImage(long sunrise, long sunset, long time, String sSunrise, String sSunset) {
         int wall;
 
+//        Log.d(TAG,"date time "+time);
         if (sSunrise != null && sSunset != null) {
+//            Log.d(TAG,"string sunrise "+sSunrise);
+//            Log.d(TAG,"string sunset "+sSunset);
             Calendar c = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
             String date = df.format(c.getTime());
             SimpleDateFormat dt = new SimpleDateFormat("dd-MMM-yyyy h:mm a", Locale.getDefault());
             try {
                 Date d = dt.parse(date + " " + sSunrise);
+//                Log.d(TAG,"date "+d);
                 sunrise = d.getTime();
+//                Log.d(TAG,"date millisecond "+sunrise);
                 Date d1 = dt.parse(date + " " + sSunset);
+//                Log.d(TAG,"date1 "+d1);
                 sunset = d1.getTime();
+//                Log.d(TAG,"date1 millisecond "+sunset);
                 time = time * 1000L;
+//                Log.d(TAG,"date time in millisecond "+time);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -193,9 +202,9 @@ public class Utils {
             SimpleDateFormat dt = new SimpleDateFormat("dd-MMM-yyyy h:mm a", Locale.getDefault());
             try {
                 date = dt.parse(d + " " + sTime);
-                Log.d(TAG, "date " + date);
+//                Log.d(TAG, "date " + date);
                 time = date.getTime();
-                Log.d(TAG, "time " + time);
+//                Log.d(TAG, "time " + time);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -273,6 +282,45 @@ public class Utils {
             activity.setTheme(R.style.lightTheme);
         else
             activity.setTheme(R.style.darkTheme);
+    }
+
+
+    public int CelsiusToFahrenheitOrKelvin(int temperature, String units) {
+        int temp;
+        switch (units) {
+            case "2":
+                temp = (temperature * 9 / 5) + 32;
+                break;
+            case "3":
+                temp = (int) (temperature + 273.15);
+                break;
+            default:
+                temp = temperature;
+        }
+        return temp;
+
+    }
+
+    //coverter meter per second to kilometer per hour
+    public String MsToKmhOrKph(double speed, String units) {
+        String s;
+        double n;
+        switch (units) {
+            case "1":
+                n = speed / 0.44704;
+                s = new DecimalFormat("#.##").format(n);
+                s = s + " mph";
+                break;
+            case "2":
+                n = speed * 3.6;
+                s = new DecimalFormat("#.##").format(n);
+                s = s + " Km/h";
+                break;
+            default:
+                s = speed + " m/s";
+
+        }
+        return s;
     }
 
 }

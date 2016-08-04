@@ -10,10 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dev.nicola.allweather.Adapter.ForecastAdapter;
+import com.dev.nicola.allweather.Model.Forecast;
 import com.dev.nicola.allweather.Util.DividerItemDecoration;
-import com.dev.nicola.allweather.Util.Forecast;
-import com.dev.nicola.allweather.Util.ForecastAdapter;
 import com.dev.nicola.allweather.Util.ProviderData;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +50,7 @@ public class ForecastFragment extends Fragment {
 
         argument = getArguments().getString("ARGUMENT");
         mProviderData = new ProviderData(getContext(), getResources());
-//        MobileAds.initialize(getContext(), "ca-app-pub-5053914526798733~3075057204");
+        MobileAds.initialize(getContext(), "ca-app-pub-5053914526798733~3075057204");
     }
 
 
@@ -70,9 +73,9 @@ public class ForecastFragment extends Fragment {
         mRecyclerView.addItemDecoration(itemDecoration);
         mRecyclerView.setAdapter(mForecastAdapter);
 
-//        AdView mAdView = (AdView) view.findViewById(R.id.adView);
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//        mAdView.loadAd(adRequest);
+        AdView mAdView = (AdView) view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         return view;
     }

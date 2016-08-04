@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.Util;
+package com.dev.nicola.allweather.Adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dev.nicola.allweather.Model.Forecast;
 import com.dev.nicola.allweather.R;
 
 import java.util.List;

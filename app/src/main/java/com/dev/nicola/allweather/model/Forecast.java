@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.Util;
+package com.dev.nicola.allweather.Model;
 
 /**
  * Created by Nicola on 09/05/2016.

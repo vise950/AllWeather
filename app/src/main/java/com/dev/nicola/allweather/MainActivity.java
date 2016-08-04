@@ -28,7 +28,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dev.nicola.allweather.Util.FragmentAdapter;
+import com.dev.nicola.allweather.Adapter.FragmentAdapter;
 import com.dev.nicola.allweather.Util.LocationGPS;
 import com.dev.nicola.allweather.Util.LocationIP;
 import com.dev.nicola.allweather.Util.PlaceAutocomplete;
@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
                 showSnackbar(3);
             } else if (mJSONObject == null) {
                 initialSetup();
-//                getLocation();
             }
         }
     }
@@ -490,12 +489,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             if (mLocation != null) {
-                mJSONObject = mProviderData.getProviderCall(prefProvider, mLocation.getLatitude(), mLocation.getLongitude(), mUtils.getLocationName(mLocation.getLatitude(), mLocation.getLongitude()));
+                mJSONObject = mProviderData.getProviderData(prefProvider, mLocation.getLatitude(), mLocation.getLongitude(), mUtils.getLocationName(mLocation.getLatitude(), mLocation.getLongitude()));
 
             } else {
                 final String ip = mLocationIP.getExternalIP();
                 mLocationIP.getLocation(ip);
-                mJSONObject = mProviderData.getProviderCall(prefProvider, mLocationIP.getLatitude(), mLocationIP.getLongitude(), mUtils.getLocationName(mLocationIP.getLatitude(), mLocationIP.getLongitude()));
+                mJSONObject = mProviderData.getProviderData(prefProvider, mLocationIP.getLatitude(), mLocationIP.getLongitude(), mUtils.getLocationName(mLocationIP.getLatitude(), mLocationIP.getLongitude()));
             }
             return null;
         }

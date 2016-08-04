@@ -44,7 +44,7 @@ public class PlaceAutocomplete {
         mBuilder.append("&types=" + TYPES);
         mBuilder.append("&key=" + GOOGLE_API_KEY);
         url = mBuilder.toString();
-        Log.d(TAG, "autocomplete url " + url);
+//        Log.d(TAG, "autocomplete url " + url);
 
         mClient = new OkHttpClient();
         mRequest = new Request.Builder()
