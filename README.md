@@ -1,4 +1,4 @@
 # AllWeather
 android weather app
 
-![screenshot](AllWeather/screenshot/daily.png)
+![screenshot](https://github.com/vise950/AllWeather/blob/master/screenshot/daily.png)
