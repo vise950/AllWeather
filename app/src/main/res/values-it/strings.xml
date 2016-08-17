@@ -79,11 +79,11 @@
     <string name="provider">Provider meteo</string>
     <string-array name="provider_unit">
         <item>ForecastIO</item>
-        <item>Apixu</item>
+        <!--<item>Apixu</item>-->
     </string-array>
     <string-array name="provider_value">
         <item>ForecastIO</item>
-        <item>Apixu</item>
+        <!--<item>Apixu</item>-->
     </string-array>
 
 
@@ -134,6 +134,58 @@
     <string name="dialog_preference_theme">Riavviare per applicare le modifiche</string>
     <string name="dialog_action_reboot">Riavvia</string>
     <string name="dialog_action_cancel">Cancella</string>
+
+
+    <string-array name="weather_condition">
+        <item>Sereno</item>
+        <item>Parzialmente nuvoloso</item>
+        <item>Nuvoloso</item>
+        <item>Coperto</item>
+        <item>Foschia</item>
+        <item>Pioggia a tratti nelle vicinanze</item>
+        <item>Neve a tratti nelle vicinanze</item>
+        <item>Nevischio a tratti nelle vicinanze</item>
+        <item>Pioviggine congelantesi a tratti nelle vicinanze</item>
+        <item>Precipitazioni temporalesche nelle vicinanze</item>
+        <item>Turbinio di neve</item>
+        <item>Blizzard</item>
+        <item>Nebbia</item>
+        <item>Nebbia congelantesi</item>
+        <item>Pioviggine debole a tratti</item>
+        <item>Pioviggine debole</item>
+        <item>Pioviggine congelantesi</item>
+        <item>Pioviggine congelantesi forte</item>
+        <item>Pioggia debole a tratti</item>
+        <item>Pioggia debole</item>
+        <item>Pioggia moderata a tratti</item>
+        <item>Pioggia moderata</item>
+        <item>Pioggia forte a tratti</item>
+        <item>Pioggia forte</item>
+        <item>Pioggia congelantesi debole</item>
+        <item>Pioggia congelantesi moderata o forte</item>
+        <item>Nevischio debole</item>
+        <item>Nevischio moderato o forte</item>
+        <item>Neve debole a tratti</item>
+        <item>Neve debole</item>
+        <item>Neve moderata a tratti</item>
+        <item>Neve moderata</item>
+        <item>Neve forte a tratti</item>
+        <item>Neve forte</item>
+        <item>Pioggia gelata</item>
+        <item>Precipitazioni piovose deboli</item>
+        <item>Precipitazioni piovose moderate o forti</item>
+        <item>Precipitazioni piovose torrenziali</item>
+        <item>Precipitazioni deboli di nevischio</item>
+        <item>Precipitazioni di nevischio moderate o forti</item>
+        <item>Precipitazioni nevose leggere</item>
+        <item>Precipitazioni nevose moderate o leggere</item>
+        <item>Precipitazioni deboli di pioggia gelata</item>
+        <item>Precipitazioni moderate o forti di pioggia gelata</item>
+        <item>Pioggia debole a tratti in zona e tuoni</item>
+        <item>Pioggia moderata o forte in zona e tuoni</item>
+        <item>Neve debole a tratti in zona e tuoni</item>
+        <item>Neve moderata o forte in zona e tuoni</item>
+    </string-array>
 
 
 </resources>

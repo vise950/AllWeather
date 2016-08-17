@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:scrollbars="vertical">
 
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:scrollbars="vertical">
 
 
@@ -65,8 +65,13 @@
                 android:layout_margin="10dp"
                 android:elevation="12dp">
 
-                <include
-                    layout="@layout/table_layout_daily_forecast"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/forecast_hour_recycle_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbarSize="4dp"
+                    android:scrollbars="horizontal"/>
+
             </android.support.v7.widget.CardView>
 
 
@@ -78,7 +83,7 @@
                 android:layout_margin="24dp">
 
                 <TextView
-                    android:id="@+id/temperature_label"
+                    android:id="@+id/temperature_label_daily_fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -87,7 +92,7 @@
                     android:textSize="18sp"/>
 
                 <TextView
-                    android:id="@+id/temperature"
+                    android:id="@+id/temperature_daily_fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -97,81 +102,81 @@
 
 
                 <TextView
-                    android:id="@+id/wind_label"
+                    android:id="@+id/wind_label_daily_fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/temperature_label"
+                    android:layout_below="@id/temperature_label_daily_fragment"
                     android:layout_margin="6dp"
                     android:text="@string/wind_label"
                     android:textSize="18sp"/>
 
 
                 <TextView
-                    android:id="@+id/wind"
+                    android:id="@+id/wind_daily_fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_below="@id/temperature_label"
+                    android:layout_below="@id/temperature_label_daily_fragment"
                     android:layout_margin="6dp"
                     android:text="4.3m/s"
                     android:textSize="18sp"/>
 
 
                 <TextView
-                    android:id="@+id/humidity_label"
+                    android:id="@+id/humidity_label_daily_fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/wind_label"
+                    android:layout_below="@id/wind_label_daily_fragment"
                     android:layout_margin="6dp"
                     android:text="@string/humidity_laber"
                     android:textSize="18sp"/>
 
                 <TextView
-                    android:id="@+id/humidity"
+                    android:id="@+id/humidity_daily_fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_below="@id/wind_label"
+                    android:layout_below="@id/wind_label_daily_fragment"
                     android:layout_margin="6dp"
                     android:text="75%"
                     android:textSize="18sp"/>
 
 
                 <TextView
-                    android:id="@+id/sunrise_label"
+                    android:id="@+id/sunrise_label_daily_fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/humidity_label"
+                    android:layout_below="@id/humidity_label_daily_fragment"
                     android:layout_margin="6dp"
                     android:text="@string/sunrise_label"
                     android:textSize="18sp"/>
 
                 <TextView
-                    android:id="@+id/sunrise"
+                    android:id="@+id/sunrise_daily_fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_below="@id/humidity_label"
+                    android:layout_below="@id/humidity_label_daily_fragment"
                     android:layout_margin="6dp"
                     android:text="7:54"
                     android:textSize="18sp"/>
 
 
                 <TextView
-                    android:id="@+id/sunset_label"
+                    android:id="@+id/sunset_label_daily_fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/sunrise_label"
+                    android:layout_below="@id/sunrise_label_daily_fragment"
                     android:layout_margin="6dp"
                     android:text="@string/sunset_label"
                     android:textSize="18sp"/>
 
                 <TextView
-                    android:id="@+id/sunset"
+                    android:id="@+id/sunset_daily_fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_below="@id/sunrise_label"
+                    android:layout_below="@id/sunrise_label_daily_fragment"
                     android:layout_margin="6dp"
                     android:text="21:54"
                     android:textSize="18sp"/>

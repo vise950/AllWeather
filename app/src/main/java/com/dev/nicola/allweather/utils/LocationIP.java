@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.Util;
+package com.dev.nicola.allweather.utils;
 
 import android.util.Log;
 
@@ -59,7 +59,6 @@ public class LocationIP {
         try {
             mResponse = mClient.newCall(mRequest).execute();
             ip = mResponse.body().string();
-            Log.d(TAG, "external IP " + ip);
         } catch (IOException e) {
             Log.d(TAG, "exception " + e);
         }
@@ -69,11 +68,13 @@ public class LocationIP {
     public void getLocation(String IP) {
         String url;
 
-        mBuilder = new StringBuilder(BASE + FORMAT);
-        mBuilder.append("&key=" + API_KEY);
-        mBuilder.append("&ip=" + IP);
+        mBuilder = new StringBuilder(BASE);
+        mBuilder.append(FORMAT);
+        mBuilder.append("&key=");
+        mBuilder.append(API_KEY);
+        mBuilder.append("&ip=");
+        mBuilder.append(IP);
         url = mBuilder.toString();
-        Log.d(TAG, "ip url " + url);
 
         mClient = new OkHttpClient();
         mRequest = new Request.Builder()
@@ -87,9 +88,6 @@ public class LocationIP {
             mObject = new JSONObject(responseData);
             latitude = mObject.getDouble("latitude");
             longitude = mObject.getDouble("longitude");
-            Log.d(TAG, "latitude " + latitude);
-            Log.d(TAG, "longitude " + longitude);
-
         } catch (IOException | JSONException e) {
             Log.d(TAG, "exception:" + e);
         }

@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.Util;
+package com.dev.nicola.allweather.utils;
 
 import android.util.Log;
 
@@ -26,6 +26,7 @@ public class PlaceAutocomplete {
     private static final String OUT_JSON = "/json";
     private static final String TYPES = "(cities)";
     private static final String GOOGLE_API_KEY = "AIzaSyASZMgu_N3JTvHcbLhs57ZEKOEyqrIPF6g";
+
     private static String TAG = PlaceAutocomplete.class.getSimpleName();
     public List<SearchItem> suggestionsList;
     private StringBuilder mBuilder;
@@ -39,12 +40,16 @@ public class PlaceAutocomplete {
         suggestionsList = new ArrayList<>();
         String suggestion;
 
-        mBuilder = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
-        mBuilder.append("?input=" + query);
-        mBuilder.append("&types=" + TYPES);
-        mBuilder.append("&key=" + GOOGLE_API_KEY);
+        mBuilder = new StringBuilder(PLACES_API_BASE);
+        mBuilder.append(TYPE_AUTOCOMPLETE);
+        mBuilder.append(OUT_JSON);
+        mBuilder.append("?input=");
+        mBuilder.append(query);
+        mBuilder.append("&types=");
+        mBuilder.append(TYPES);
+        mBuilder.append("&key=");
+        mBuilder.append(GOOGLE_API_KEY);
         url = mBuilder.toString();
-//        Log.d(TAG, "autocomplete url " + url);
 
         mClient = new OkHttpClient();
         mRequest = new Request.Builder()

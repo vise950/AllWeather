@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.Util;
+package com.dev.nicola.allweather.utils;
 
 import android.Manifest;
 import android.app.Activity;
@@ -134,7 +134,7 @@ public class Utils {
             case "1276":
             case "1279":
             case "1282":
-                icon=R.drawable.storm;
+                icon = R.drawable.storm;
                 break;
             default:
                 icon = R.drawable.unknown;

@@ -11,8 +11,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -20,7 +20,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,12 +27,12 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dev.nicola.allweather.Adapter.FragmentAdapter;
-import com.dev.nicola.allweather.Util.LocationGPS;
-import com.dev.nicola.allweather.Util.LocationIP;
-import com.dev.nicola.allweather.Util.PlaceAutocomplete;
-import com.dev.nicola.allweather.Util.ProviderData;
-import com.dev.nicola.allweather.Util.Utils;
+import com.dev.nicola.allweather.adapter.FragmentAdapter;
+import com.dev.nicola.allweather.utils.LocationGPS;
+import com.dev.nicola.allweather.utils.LocationIP;
+import com.dev.nicola.allweather.utils.PlaceAutocomplete;
+import com.dev.nicola.allweather.utils.PreferencesUtils;
+import com.dev.nicola.allweather.utils.Utils;
 import com.lapism.searchview.SearchAdapter;
 import com.lapism.searchview.SearchHistoryTable;
 import com.lapism.searchview.SearchItem;
@@ -44,28 +43,34 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
 
     final static String TAG = MainActivity.class.getSimpleName();
 
     final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
-
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawer;
+    @BindView(R.id.navigation_view)
+    NavigationView mNavigationView;
+    @BindView(R.id.search_view)
+    SearchView mSearchView;
+    @BindView(R.id.view_pager)
+    ViewPager mViewPager;
+    @BindView(R.id.tab_layout)
+    TabLayout mTabLayout;
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout mCoordinatorLayout;
     private SharedPreferences mPreferences;
-
-    private DrawerLayout mDrawer;
-    private NavigationView mNavigationView;
-    private SearchView mSearchView;
-    private ViewPager mViewPager;
-    private TabLayout mTabLayout;
-    private FragmentAdapter mFragmentAdapter;
-    private CoordinatorLayout mCoordinatorLayout;
     private ProgressDialog mProgressDialog;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private Snackbar mSnackbar;
 
     private boolean firstRun;
-    private long lastRefresh;
+    //    private long lastRefresh;
     private Utils mUtils;
+    private PreferencesUtils mPreferencesUtils;
 
     private String prefTheme;
     private String prefTemperature;
@@ -94,13 +99,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mUtils = new Utils(getApplicationContext(), getResources());
-        prefTheme = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), "1");
+        mPreferencesUtils = new PreferencesUtils();
+
+        prefTheme = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_theme), "1");
         mUtils.setTheme(this, prefTheme);
 
         setContentView(R.layout.activity_main);
 
+        ButterKnife.bind(this);
+
         mPreferences = getSharedPreferences(MainActivity.class.getName(), MODE_PRIVATE);
         initialCheckIn();
+
+
     }
 
     @Override
@@ -114,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         if (ok)
             checkPreferences();
+
+//        lastRefresh = mPreferences.getLong("lastRefresh", 0);
+//        if (System.currentTimeMillis() - lastRefresh >= 1000 * 60 * 5)
+//            new task().execute();
     }
 
     @Override
@@ -126,9 +141,6 @@ public class MainActivity extends AppCompatActivity {
 
             if (mProgressDialog.isShowing())
                 mProgressDialog.dismiss();
-
-            if (mSwipeRefreshLayout.isRefreshing())
-                mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -140,6 +152,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (mViewPager != null)
+            mViewPager.removeAllViews();
     }
 
     @Override
@@ -154,18 +169,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkPreferences() {
-        if (!prefTheme.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), "1")))
+        if (!prefTheme.equals(mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_theme), "1")))
             MainActivity.this.recreate();
 
-        else if (!prefTemperature.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1")) ||
-                !prefSpeed.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3")) ||
-                !prefTime.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2")) ||
-                !prefProvider.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO"))) {
+        else if (!prefTemperature.equals(mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_temperature), "1")) ||
+                !prefSpeed.equals(mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_speed), "3")) ||
+                !prefTime.equals(mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_time), "2")) ||
+                !prefProvider.equals(mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_provider), "ForecastIO"))) {
 
-            prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1");
-            prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3");
-            prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2");
-            prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
+            prefProvider = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_provider), "ForecastIO");
+            prefTemperature = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_temperature), "1");
+            prefSpeed = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_speed), "3");
+            prefTime = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_time), "2");
+
             if (!mProgressDialog.isShowing())
                 mProgressDialog.show();
             new task().execute();
@@ -201,54 +217,46 @@ public class MainActivity extends AppCompatActivity {
         mLocationGPS = new LocationGPS(getApplicationContext());
         mLocationIP = new LocationIP();
 
-        setDrawer();
-        setNavigationView();
-        setSearchView();
-        setPlaceHolder();
-        setSwipeRefreshLayout();
         mHandler = new Handler();
 
-        prefProvider = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_provider), "ForecastIO");
-        prefTemperature = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_temperature), "1");
-        prefSpeed = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_speed), "3");
-        prefTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_time), "2");
+        prefProvider = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_provider), "ForecastIO");
+        prefTemperature = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_temperature), "1");
+        prefSpeed = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_speed), "3");
+        prefTime = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_time), "2");
 
         ok = true;
 
         getLocation();
     }
 
-
-    private void setPlaceHolder() {
-        RelativeLayout placeholderLayout = (RelativeLayout) findViewById(R.id.placeholder_layout);
-        if (!mUtils.checkInternetConnession())
-            placeholderLayout.setVisibility(View.VISIBLE);
-        else
-            placeholderLayout.setVisibility(View.INVISIBLE);
+    public void getLocation() {
+        mLocation = mLocationGPS.getLocation();
+        new task().execute();
     }
 
-    private void setDrawer() {
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu();
-                if (mSearchView != null && mSearchView.isSearchOpen()) {
-                    mSearchView.close(true);
-                }
-            }
 
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                invalidateOptionsMenu();
-            }
-        });
+    private void setDrawer() {
+        if (mDrawer != null) {
+            mDrawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    invalidateOptionsMenu();
+                    if (mSearchView != null && mSearchView.isSearchOpen()) {
+                        mSearchView.close(true);
+                    }
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    super.onDrawerClosed(drawerView);
+                    invalidateOptionsMenu();
+                }
+            });
+        }
     }
 
     private void setNavigationView() {
-        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         if (mNavigationView != null) {
             mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -268,33 +276,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setSwipeRefreshLayout() {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                lastRefresh = mPreferences.getLong("lastRefresh", 0);
-                if (System.currentTimeMillis() - lastRefresh >= 1000 * 60 * 5)
-                    new task().execute();
-                else {
-                    showSnackbar(7);
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
-    }
-
     private void setViewPager(String argument) {
-        Log.d(TAG, "setViewPager");
-
-        mFragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), argument);
-
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), argument);
         if (mViewPager != null) {
-            mViewPager.setAdapter(mFragmentAdapter);
+            Log.d(TAG, "viewPager not null");
+            mViewPager.setAdapter(fragmentAdapter);
         }
 
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         if (mTabLayout != null) {
             mTabLayout.setupWithViewPager(mViewPager);
         }
@@ -302,8 +290,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setSearchView() {
-        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
-        mSearchView = (SearchView) findViewById(R.id.search_view);
         mSearchAdapter = new SearchAdapter(getApplicationContext());
         mHistoryDatabase = new SearchHistoryTable(getApplicationContext());
         mHistoryDatabase.setHistorySize(4);
@@ -394,7 +380,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showSnackbar(int code) {
-        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         switch (code) {
             case 1:// ask LOCATION permission
                 mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_1, Snackbar.LENGTH_INDEFINITE);
@@ -449,19 +434,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getLocation() {
-        mLocation = mLocationGPS.getLocation();
-        new task().execute();
-    }
-
-
     private void askPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_ASK_PERMISSIONS:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -480,10 +459,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     public class task extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
+            setDrawer();
+            setNavigationView();
+            setSearchView();
         }
 
         @Override
@@ -502,17 +485,20 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void v) {
 
+            RelativeLayout placeholderLayout = (RelativeLayout) findViewById(R.id.placeholder_layout);
+
             if (mJSONObject != null) {
+                Log.d(TAG, "jsonObject not null");
                 setViewPager(mJSONObject.toString());
+                mJSONObject = null;
+                placeholderLayout.setVisibility(View.INVISIBLE);
             } else {
                 showSnackbar(6);
+                placeholderLayout.setVisibility(View.VISIBLE);
             }
 
             if (mProgressDialog.isShowing())
                 mProgressDialog.dismiss();
-
-            if (mSwipeRefreshLayout.isRefreshing())
-                mSwipeRefreshLayout.setRefreshing(false);
 
             mPreferences.edit().putLong("lastRefresh", System.currentTimeMillis()).apply();
         }

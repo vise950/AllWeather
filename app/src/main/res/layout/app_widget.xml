@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/widget_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/widget_background"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/image_widget"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/rain"/>
+
+    <TextView
+        android:id="@+id/location_widget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/image_widget"
+        android:layout_marginStart="24dp"
+        android:layout_toEndOf="@+id/image_widget"
+        android:text="Sossano"
+        android:textColor="@color/primary_text"
+        android:textSize="22sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/condition_widget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/location_widget"
+        android:layout_below="@+id/location_widget"
+        android:text="Parzialmente nuvoloso"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/temperature_widget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:text="30°"
+        android:textColor="@color/primary_text"
+        android:textSize="32sp"/>
+
+</RelativeLayout>

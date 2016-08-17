@@ -83,11 +83,11 @@
     <string name="provider">Weather provider</string>
     <string-array name="provider_unit">
         <item>ForecastIO</item>
-        <item>Apixu</item>
+        <!--<item>Apixu</item>-->
     </string-array>
     <string-array name="provider_value">
         <item>ForecastIO</item>
-        <item>Apixu</item>
+        <!--<item>Apixu</item>-->
     </string-array>
 
     <string name="key_pref_temperature" translatable="false">temperature</string>
@@ -147,5 +147,57 @@
     <string name="dialog_preference_theme">Reboot application for apply changes</string>
     <string name="dialog_action_reboot">OK</string>
     <string name="dialog_action_cancel">Cancel</string>
+
+
+    <string-array name="weather_condition">
+        <item>Clear</item>
+        <item>Partly Cloudy</item>
+        <item>Cloudy</item>
+        <item>Overcast</item>
+        <item>Mist</item>
+        <item>Patchy rain nearby</item>
+        <item>Patchy snow nearby</item>
+        <item>Patchy sleet nearby</item>
+        <item>Patchy freezing drizzle nearby</item>
+        <item>Thundery outbreaks in nearby</item>
+        <item>Blowing snow</item>
+        <item>Blizzard</item>
+        <item>Fog</item>
+        <item>Freezing fog</item>
+        <item>Patchy light drizzle</item>
+        <item>Light drizzle</item>
+        <item>Freezing drizzle</item>
+        <item>Heavy freezing drizzle</item>
+        <item>Patchy light rain</item>
+        <item>Light rain</item>
+        <item>Moderate rain at times</item>
+        <item>Moderate rain</item>
+        <item>Heavy rain at times</item>
+        <item>Heavy rain</item>
+        <item>Light freezing rain</item>
+        <item>Moderate or heavy freezing rain</item>
+        <item>Light sleet</item>
+        <item>Moderate or heavy sleet</item>
+        <item>Patchy light snow</item>
+        <item>Light snow</item>
+        <item>Patchy moderate snow</item>
+        <item>Moderate snow</item>
+        <item>Patchy heavy snow</item>
+        <item>Heavy snow</item>
+        <item>Ice pellets</item>
+        <item>Light rain shower</item>
+        <item>Moderate or heavy rain shower</item>
+        <item>Torrential rain shower</item>
+        <item>Light sleet showers</item>
+        <item>Moderate or heavy sleet showers</item>
+        <item>Light snow showers</item>
+        <item>Moderate or heavy snow showers</item>
+        <item>Light showers of ice pellets</item>
+        <item>Moderate or heavy showers of ice pellets</item>
+        <item>Patchy light rain in area with thunder</item>
+        <item>Moderate or heavy rain in area with thunder</item>
+        <item>Patchy light snow in area with thunder</item>
+        <item>Moderate or heavy snow in area with thunder</item>
+    </string-array>
 
 </resources>

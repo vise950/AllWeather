@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.Util;
+package com.dev.nicola.allweather.utils;
 
 import android.Manifest;
 import android.app.Service;

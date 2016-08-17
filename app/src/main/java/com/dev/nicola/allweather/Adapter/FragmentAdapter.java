@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.Adapter;
+package com.dev.nicola.allweather.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

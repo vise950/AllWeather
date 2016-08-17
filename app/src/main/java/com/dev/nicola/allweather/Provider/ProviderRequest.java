@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.Provider;
+package com.dev.nicola.allweather.provider;
 
 import android.util.Log;
 

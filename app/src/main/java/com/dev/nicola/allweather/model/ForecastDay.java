@@ -1,16 +1,16 @@
-package com.dev.nicola.allweather.Model;
+package com.dev.nicola.allweather.model;
 
 /**
  * Created by Nicola on 09/05/2016.
  */
-public class Forecast {
+public class ForecastDay {
 
     private String date;
     private String condition;
     private double temperature;
     private int icon;
 
-    public Forecast(String date, String condition, double temperature, int icon) {
+    public ForecastDay(String date, String condition, double temperature, int icon) {
         this.date = date;
         this.condition = condition;
         this.temperature = temperature;

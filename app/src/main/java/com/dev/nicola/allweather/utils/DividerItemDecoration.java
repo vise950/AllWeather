@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.Util;
+package com.dev.nicola.allweather.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
