@@ -2,6 +2,7 @@ package com.dev.nicola.allweather;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 import com.dev.nicola.allweather.adapter.FragmentAdapter;
 import com.dev.nicola.allweather.utils.LocationGPS;
 import com.dev.nicola.allweather.utils.LocationIP;
+import com.dev.nicola.allweather.utils.LocationUtils;
 import com.dev.nicola.allweather.utils.PlaceAutocomplete;
 import com.dev.nicola.allweather.utils.PreferencesUtils;
 import com.dev.nicola.allweather.utils.Utils;
@@ -63,15 +65,12 @@ public class MainActivity extends AppCompatActivity {
     TabLayout mTabLayout;
     @BindView(R.id.coordinator_layout)
     CoordinatorLayout mCoordinatorLayout;
+    Context mContext;
     private SharedPreferences mPreferences;
     private ProgressDialog mProgressDialog;
     private Snackbar mSnackbar;
-
     private boolean firstRun;
     //    private long lastRefresh;
-    private Utils mUtils;
-    private PreferencesUtils mPreferencesUtils;
-
     private String prefTheme;
     private String prefTemperature;
     private String prefSpeed;
@@ -98,11 +97,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mUtils = new Utils(getApplicationContext(), getResources());
-        mPreferencesUtils = new PreferencesUtils();
+        mContext = getApplicationContext();
 
-        prefTheme = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_theme), "1");
-        mUtils.setTheme(this, prefTheme);
+        prefTheme = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_theme), "1");
+        Utils.setTheme(this, prefTheme);
 
         setContentView(R.layout.activity_main);
 
@@ -110,8 +108,6 @@ public class MainActivity extends AppCompatActivity {
 
         mPreferences = getSharedPreferences(MainActivity.class.getName(), MODE_PRIVATE);
         initialCheckIn();
-
-
     }
 
     @Override
@@ -134,8 +130,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-
-        if (!firstRun && mUtils.checkPermission() && mUtils.checkGpsEnable() && mUtils.checkInternetConnession()) {
+        if (!firstRun && Utils.checkPermission(mContext) && Utils.checkGpsEnable(mContext) && Utils.checkInternetConnession(mContext)) {
             if (mLocationGPS.isConnected())
                 mLocationGPS.stopUsingGPS();
 
@@ -169,18 +164,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkPreferences() {
-        if (!prefTheme.equals(mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_theme), "1")))
+        if (!prefTheme.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_theme), "1")))
             MainActivity.this.recreate();
 
-        else if (!prefTemperature.equals(mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_temperature), "1")) ||
-                !prefSpeed.equals(mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_speed), "3")) ||
-                !prefTime.equals(mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_time), "2")) ||
-                !prefProvider.equals(mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_provider), "ForecastIO"))) {
+        else if (!prefTemperature.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), "1")) ||
+                !prefSpeed.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), "3")) ||
+                !prefTime.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), "2")) ||
+                !prefProvider.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), "ForecastIO"))) {
 
-            prefProvider = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_provider), "ForecastIO");
-            prefTemperature = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_temperature), "1");
-            prefSpeed = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_speed), "3");
-            prefTime = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_time), "2");
+            prefProvider = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), "ForecastIO");
+            prefTemperature = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), "1");
+            prefSpeed = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), "3");
+            prefTime = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), "2");
 
             if (!mProgressDialog.isShowing())
                 mProgressDialog.show();
@@ -193,14 +188,14 @@ public class MainActivity extends AppCompatActivity {
         firstRun = mPreferences.getBoolean("firstRun", true);
 
         if (firstRun) {
-            Intent intent = new Intent(getApplicationContext(), MainIntro.class);
+            Intent intent = new Intent(mContext, MainIntro.class);
             startActivity(intent);
             mPreferences.edit().putBoolean("firstRun", false).apply();
             finish();
         } else {
-            if (!mUtils.checkPermission())
+            if (!Utils.checkPermission(mContext))
                 showSnackbar(1);
-            else if (!mUtils.checkInternetConnession()) {
+            else if (!Utils.checkInternetConnession(mContext)) {
                 showSnackbar(3);
             } else if (mJSONObject == null) {
                 initialSetup();
@@ -213,16 +208,16 @@ public class MainActivity extends AppCompatActivity {
         mProgressDialog = ProgressDialog.show(MainActivity.this, "", getString(R.string.activity_dialog), true);
 
         mPlaceAutocomplete = new PlaceAutocomplete();
-        mProviderData = new ProviderData(getApplicationContext(), getResources());
-        mLocationGPS = new LocationGPS(getApplicationContext());
+        mProviderData = new ProviderData(mContext, getResources());
+        mLocationGPS = new LocationGPS(mContext);
         mLocationIP = new LocationIP();
 
         mHandler = new Handler();
 
-        prefProvider = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_provider), "ForecastIO");
-        prefTemperature = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_temperature), "1");
-        prefSpeed = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_speed), "3");
-        prefTime = mPreferencesUtils.getPreferences(getApplicationContext(), getResources().getString(R.string.key_pref_time), "2");
+        prefProvider = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), "ForecastIO");
+        prefTemperature = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), "1");
+        prefSpeed = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), "3");
+        prefTime = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), "2");
 
         ok = true;
 
@@ -265,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
 
                     switch (id) {
                         case R.id.drawer_item_settings:
-                            Intent intent = new Intent(getApplicationContext(), AppPreferences.class);
+                            Intent intent = new Intent(mContext, AppPreferences.class);
                             startActivity(intent);
                     }
                     mDrawer.closeDrawer(GravityCompat.START);
@@ -279,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
     private void setViewPager(String argument) {
         FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), argument);
         if (mViewPager != null) {
-            Log.d(TAG, "viewPager not null");
             mViewPager.setAdapter(fragmentAdapter);
         }
 
@@ -290,8 +284,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setSearchView() {
-        mSearchAdapter = new SearchAdapter(getApplicationContext());
-        mHistoryDatabase = new SearchHistoryTable(getApplicationContext());
+        mSearchAdapter = new SearchAdapter(mContext);
+        mHistoryDatabase = new SearchHistoryTable(mContext);
         mHistoryDatabase.setHistorySize(4);
         suggestionsList = new ArrayList<>();
         if (mSearchView != null) {
@@ -358,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            SearchAdapter searchAdapter = new SearchAdapter(getApplicationContext(), suggestionsList);
+            SearchAdapter searchAdapter = new SearchAdapter(mContext, suggestionsList);
             mSearchView.setAdapter(searchAdapter);
 
 
@@ -369,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
                     TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
                     String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //troncare stringa da 0 al char ','
                     mHistoryDatabase.addItem(new SearchItem(item));
-                    mLocation = mUtils.getCoordinateByName(item);
+                    mLocation = LocationUtils.getCoordinateByName(mContext, item);
                     new task().execute();
                     if (!mProgressDialog.isShowing())
                         mProgressDialog.show();
@@ -472,12 +466,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             if (mLocation != null) {
-                mJSONObject = mProviderData.getProviderData(prefProvider, mLocation.getLatitude(), mLocation.getLongitude(), mUtils.getLocationName(mLocation.getLatitude(), mLocation.getLongitude()));
+                mJSONObject = mProviderData.getProviderData(prefProvider, mLocation.getLatitude(), mLocation.getLongitude(),
+                        LocationUtils.getLocationName(mContext, mLocation.getLatitude(), mLocation.getLongitude()));
 
             } else {
                 final String ip = mLocationIP.getExternalIP();
                 mLocationIP.getLocation(ip);
-                mJSONObject = mProviderData.getProviderData(prefProvider, mLocationIP.getLatitude(), mLocationIP.getLongitude(), mUtils.getLocationName(mLocationIP.getLatitude(), mLocationIP.getLongitude()));
+                mJSONObject = mProviderData.getProviderData(prefProvider, mLocationIP.getLatitude(), mLocationIP.getLongitude(),
+                        LocationUtils.getLocationName(mContext, mLocationIP.getLatitude(), mLocationIP.getLongitude()));
             }
             return null;
         }

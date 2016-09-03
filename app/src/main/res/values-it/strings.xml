@@ -79,11 +79,11 @@
     <string name="provider">Provider meteo</string>
     <string-array name="provider_unit">
         <item>ForecastIO</item>
-        <!--<item>Apixu</item>-->
+        <item>Apixu</item>
     </string-array>
     <string-array name="provider_value">
         <item>ForecastIO</item>
-        <!--<item>Apixu</item>-->
+        <item>Apixu</item>
     </string-array>
 
 

@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import com.dev.nicola.allweather.adapter.ForecastHourAdapter;
 import com.dev.nicola.allweather.model.ForecastHour;
 import com.dev.nicola.allweather.utils.PreferencesUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -97,13 +97,13 @@ public class DailyFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
 
-        mRecyclerView.removeAllViews();
+        if (mRecyclerView != null)
+            mRecyclerView.removeAllViews();
     }
 
     private void setText() {
-        Log.d(TAG, "setText");
         location.setText(mProviderData.getLocation());
-        image.setImageResource(mProviderData.getImage());
+        Picasso.with(getContext()).load(mProviderData.getImage()).into(image);
         condition.setText(mProviderData.getCondition());
         temperature.setText(mProviderData.getTemperature());
         wind.setText(mProviderData.getWind());

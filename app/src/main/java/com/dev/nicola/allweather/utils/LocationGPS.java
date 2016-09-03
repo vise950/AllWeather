@@ -20,11 +20,9 @@ import android.util.Log;
 public class LocationGPS extends Service implements LocationListener {
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60; // 1 minute
     private final Context mContext;
     protected LocationManager locationManager;
-    private boolean isGPSEnabled = false;
-    private boolean isNetworkEnabled = false;
     private boolean isConnected = false; //flag for GPS status
     private Location location;
 
@@ -42,30 +40,26 @@ public class LocationGPS extends Service implements LocationListener {
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 
             // getting GPS status
-            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
             // getting network status
-            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (isGPSEnabled && isNetworkEnabled) {
                 this.isConnected = true;
 
                 // First get location from Network Provider
-                if (isNetworkEnabled) {
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    Log.d("Network", "Network");
-                    if (locationManager != null)
-                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                }
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                Log.d("Network", "Network");
+                if (locationManager != null)
+                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
-                // if GPS Enabled and getLocation with network is null use GPS Provider
-                if (isGPSEnabled) {
-                    if (location == null) {
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                        Log.d("GPS Enabled", "GPS Enabled");
-                        if (locationManager != null)
-                            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    }
+                // if getLocation with network is null use GPS Provider
+                if (location == null) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    Log.d("GPS Enabled", "GPS Enabled");
+                    if (locationManager != null)
+                        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 }
             }
         } catch (Exception e) {

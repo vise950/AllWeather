@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="com.android.vending.BILLING"/>
+    <!--<uses-permission android:name="com.android.vending.BILLING"/>-->
 
     <application
         android:name="android.support.multidex.MultiDexApplication"
@@ -38,15 +38,15 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
 
-        <receiver
-            android:name=".widget.WidgetProvider">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info"/>
-        </receiver>
+        <!--<receiver-->
+        <!--android:name=".widget.WidgetProvider">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>-->
+        <!--</intent-filter>-->
+        <!--<meta-data-->
+        <!--android:name="android.appwidget.provider"-->
+        <!--android:resource="@xml/widget_info"/>-->
+        <!--</receiver>-->
 
     </application>
 

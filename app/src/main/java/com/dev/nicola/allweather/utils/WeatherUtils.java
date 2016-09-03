@@ -5,7 +5,7 @@ import com.dev.nicola.allweather.R;
 /**
  * Created by Nicola on 17/08/2016.
  */
-public class WeatherConditionUtils {
+public class WeatherUtils {
 
     public static int getWeatherIcon(String condition) {
         int icon;
@@ -76,7 +76,15 @@ public class WeatherConditionUtils {
                 icon = R.drawable.unknown;
                 break;
         }
-
         return icon;
+    }
+
+
+    public static String getWindDirection(int degrees) {
+        String direction;
+        String cardinal[] = {"N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"};
+        int n = (int) ((degrees / 22.5) + 0.5);
+        direction = cardinal[n % cardinal.length];
+        return direction;
     }
 }

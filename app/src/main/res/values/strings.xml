@@ -83,11 +83,11 @@
     <string name="provider">Weather provider</string>
     <string-array name="provider_unit">
         <item>ForecastIO</item>
-        <!--<item>Apixu</item>-->
+        <item>Apixu</item>
     </string-array>
     <string-array name="provider_value">
         <item>ForecastIO</item>
-        <!--<item>Apixu</item>-->
+        <item>Apixu</item>
     </string-array>
 
     <string name="key_pref_temperature" translatable="false">temperature</string>

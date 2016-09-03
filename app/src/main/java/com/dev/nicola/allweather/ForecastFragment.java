@@ -35,7 +35,6 @@ public class ForecastFragment extends Fragment {
     AdView mAdView;
     private ProviderData mProviderData;
     private String argument;
-    private PreferencesUtils mPreferencesUtils;
 
     public static ForecastFragment newInstance(String argument) {
         Bundle bundle = new Bundle();
@@ -51,7 +50,6 @@ public class ForecastFragment extends Fragment {
 
         argument = getArguments().getString("ARGUMENT");
         mProviderData = new ProviderData(getContext(), getResources());
-        mPreferencesUtils = new PreferencesUtils();
         MobileAds.initialize(getContext(), "ca-app-pub-5053914526798733~3075057204");
     }
 
@@ -78,6 +76,8 @@ public class ForecastFragment extends Fragment {
 
         if (mAdView != null)
             mAdView.destroy();
+
+        if (mRecyclerView != null)
         mRecyclerView.removeAllViews();
     }
 
@@ -88,7 +88,7 @@ public class ForecastFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        String prefProvider = mPreferencesUtils.getPreferences(getContext(), getResources().getString(R.string.key_pref_provider), "ForecastIO");
+        String prefProvider = PreferencesUtils.getPreferences(getContext(), getResources().getString(R.string.key_pref_provider), "ForecastIO");
 
         mProviderData.elaborateData(prefProvider, argument);
         mProviderData.pullForecastDayData(prefProvider);
