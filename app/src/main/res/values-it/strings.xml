@@ -12,9 +12,9 @@
 
     <string name="activity_dialog">Caricamento...</string>
 
-    <string name="action_my_places">I miei luoghi</string>
+    <!--<string name="action_my_places">I miei luoghi</string>-->
     <string name="action_settings">Impostazioni</string>
-    <string name="action_credits">Crediti</string>
+    <!--<string name="action_credits">Crediti</string>-->
 
     <string name="first_category">Unità</string>
 
@@ -24,11 +24,11 @@
         <item>Fahrenheit (F)</item>
         <item>Kelvin (K)</item>
     </string-array>
-    <string-array name="temperature_value">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
+    <!--<string-array name="temperature_value">-->
+    <!--<item>celsius</item>-->
+    <!--<item>fahrenheit</item>-->
+    <!--<item>kelvin</item>-->
+    <!--</string-array>-->
 
     <string name="pref_speed">Velocità</string>
     <string-array name="speed_unit">
@@ -36,42 +36,35 @@
         <item>Kilometri orari (Km/h)</item>
         <item>Metri al secondo (M/s)</item>
     </string-array>
-    <string-array name="speed_value">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
+    <!--<string-array name="speed_value">-->
+    <!--<item>mileshour</item>-->
+    <!--<item>kilometershour</item>-->
+    <!--<item>metershour</item>-->
+    <!--</string-array>-->
 
     <string name="pref_time">Ora</string>
     <string-array name="time_unit">
         <item>0-12</item>
         <item>0-24</item>
     </string-array>
-    <string-array name="time_value">
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-
-    <string-array name="system_unit">
-        <item>Metrico (°C, m/s)</item>
-        <item>Impreriale (°F, mhp)</item>
-    </string-array>
-    <string-array name="system_value">
-        <item>1</item>
-        <item>2</item>
-    </string-array>
+    <!--<string-array name="time_value">-->
+    <!--<item>twelve</item>-->
+    <!--<item>twentyfour</item>-->
+    <!--</string-array>-->
 
     <string name="second_category">Generale</string>
 
     <string name="pref_theme">Tema</string>
     <string-array name="theme_unit">
+        <!--<item>Automatico</item>-->
         <item>Chiaro</item>
         <item>Scuro</item>
     </string-array>
-    <string-array name="theme_value">
-        <item>1</item>
-        <item>2</item>
-    </string-array>
+    <!--<string-array name="theme_value">-->
+    <!--<item>auto</item>-->
+    <!--<item>light</item>-->
+    <!--<item>dark</item>-->
+    <!--</string-array>-->
 
     <string name="use_geolocation_title">Migliora la posizione</string>
     <string name="use_geolocation_summary">Utilizza il gps per migliorare la posizione</string>
@@ -81,36 +74,11 @@
         <item>ForecastIO</item>
         <item>Apixu</item>
     </string-array>
-    <string-array name="provider_value">
-        <item>ForecastIO</item>
-        <item>Apixu</item>
-    </string-array>
+    <!--<string-array name="provider_value">-->
+    <!--<item>forecastIO</item>-->
+    <!--<item>apixu</item>-->
+    <!--</string-array>-->
 
-
-    <string-array name="days">
-        <item>Domenica</item>
-        <item>Lunedi</item>
-        <item>Martedi</item>
-        <item>Mercoledi</item>
-        <item>Giovedi</item>
-        <item>Venerdi</item>
-        <item>Sabato</item>
-    </string-array>
-
-    <string-array name="months">
-        <item>Gennaio</item>
-        <item>Febbraio</item>
-        <item>Marzo</item>
-        <item>Aprile</item>
-        <item>Maggio</item>
-        <item>Giugno</item>
-        <item>Luglio</item>
-        <item>Agosto</item>
-        <item>Settembre</item>
-        <item>Ottobre</item>
-        <item>Novembre</item>
-        <item>Dicembre</item>
-    </string-array>
 
     <string name="hint_search_view">Cerca luogo</string>
 
@@ -118,11 +86,13 @@
     <string name="snackbar_2">Geolocalizzazione disattiva\nVuoi attivarla?</string>
     <string name="snackbar_3">Nessuna connessione internet</string>
     <string name="snackbar_4">Impossibile recuperare la posizione</string>
-    <string name="snackbar_5">Non sarà possible visualizzare i dati</string>
+    <string name="snackbar_5">aaaaaaaaaaaaaaaaaa</string>
     <string name="snackbar_6">Impossibile contattare il server in questo momento</string>
     <string name="snackbar_7">Dati sono già stati aggiornati</string>
     <string name="snackbar_action_OK">OK</string>
     <string name="snackbar_action_retry">RIPROVA</string>
+
+    <string name="diaolog_connection_disable">Abilita il Wifi o i dati</string>
 
 
     <string name="temperature_label">Temperatura:</string>
@@ -134,58 +104,8 @@
     <string name="dialog_preference_theme">Riavviare per applicare le modifiche</string>
     <string name="dialog_action_reboot">Riavvia</string>
     <string name="dialog_action_cancel">Cancella</string>
-
-
-    <string-array name="weather_condition">
-        <item>Sereno</item>
-        <item>Parzialmente nuvoloso</item>
-        <item>Nuvoloso</item>
-        <item>Coperto</item>
-        <item>Foschia</item>
-        <item>Pioggia a tratti nelle vicinanze</item>
-        <item>Neve a tratti nelle vicinanze</item>
-        <item>Nevischio a tratti nelle vicinanze</item>
-        <item>Pioviggine congelantesi a tratti nelle vicinanze</item>
-        <item>Precipitazioni temporalesche nelle vicinanze</item>
-        <item>Turbinio di neve</item>
-        <item>Blizzard</item>
-        <item>Nebbia</item>
-        <item>Nebbia congelantesi</item>
-        <item>Pioviggine debole a tratti</item>
-        <item>Pioviggine debole</item>
-        <item>Pioviggine congelantesi</item>
-        <item>Pioviggine congelantesi forte</item>
-        <item>Pioggia debole a tratti</item>
-        <item>Pioggia debole</item>
-        <item>Pioggia moderata a tratti</item>
-        <item>Pioggia moderata</item>
-        <item>Pioggia forte a tratti</item>
-        <item>Pioggia forte</item>
-        <item>Pioggia congelantesi debole</item>
-        <item>Pioggia congelantesi moderata o forte</item>
-        <item>Nevischio debole</item>
-        <item>Nevischio moderato o forte</item>
-        <item>Neve debole a tratti</item>
-        <item>Neve debole</item>
-        <item>Neve moderata a tratti</item>
-        <item>Neve moderata</item>
-        <item>Neve forte a tratti</item>
-        <item>Neve forte</item>
-        <item>Pioggia gelata</item>
-        <item>Precipitazioni piovose deboli</item>
-        <item>Precipitazioni piovose moderate o forti</item>
-        <item>Precipitazioni piovose torrenziali</item>
-        <item>Precipitazioni deboli di nevischio</item>
-        <item>Precipitazioni di nevischio moderate o forti</item>
-        <item>Precipitazioni nevose leggere</item>
-        <item>Precipitazioni nevose moderate o leggere</item>
-        <item>Precipitazioni deboli di pioggia gelata</item>
-        <item>Precipitazioni moderate o forti di pioggia gelata</item>
-        <item>Pioggia debole a tratti in zona e tuoni</item>
-        <item>Pioggia moderata o forte in zona e tuoni</item>
-        <item>Neve debole a tratti in zona e tuoni</item>
-        <item>Neve moderata o forte in zona e tuoni</item>
-    </string-array>
-
+    <string name="action_OK">OK</string>
+    <string name="action_cancel">Annulla</string>
+    <string name="action_retry">RIPROVA</string>
 
 </resources>

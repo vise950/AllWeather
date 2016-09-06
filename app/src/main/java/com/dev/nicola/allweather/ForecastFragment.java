@@ -78,7 +78,7 @@ public class ForecastFragment extends Fragment {
             mAdView.destroy();
 
         if (mRecyclerView != null)
-        mRecyclerView.removeAllViews();
+            mRecyclerView.removeAllViews();
     }
 
 
@@ -88,10 +88,9 @@ public class ForecastFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        String prefProvider = PreferencesUtils.getPreferences(getContext(), getResources().getString(R.string.key_pref_provider), "ForecastIO");
+        String prefProvider = PreferencesUtils.getPreferences(getContext(), getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
 
         mProviderData.elaborateData(prefProvider, argument);
-        mProviderData.pullForecastDayData(prefProvider);
 
         List<ForecastDay> forecastDayList;
         forecastDayList = mProviderData.getForecastDayList();

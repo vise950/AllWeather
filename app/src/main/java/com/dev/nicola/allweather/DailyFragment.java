@@ -49,14 +49,16 @@ public class DailyFragment extends Fragment {
 
     private ProviderData mProviderData;
     private String argument;
+    private String prefProvider;
 
     public static DailyFragment newInstance(String argument) {
-        Bundle bundle = new Bundle();
-        bundle.putString("ARGUMENT", argument);
+        Bundle args = new Bundle();
+        args.putString("ARGUMENT", argument);
         DailyFragment dailyFragment = new DailyFragment();
-        dailyFragment.setArguments(bundle);
+        dailyFragment.setArguments(args);
         return dailyFragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,11 +74,9 @@ public class DailyFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        String prefProvider = PreferencesUtils.getPreferences(getContext(), getResources().getString(R.string.key_pref_provider), "ForecastIO");
+        prefProvider = PreferencesUtils.getPreferences(getContext(), getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
 
         mProviderData.elaborateData(prefProvider, argument);
-        mProviderData.pullDailyData(prefProvider);
-        mProviderData.pullForecastHourData(prefProvider);
 
         List<ForecastHour> forecastHourList;
         forecastHourList = mProviderData.getForecastHourList();

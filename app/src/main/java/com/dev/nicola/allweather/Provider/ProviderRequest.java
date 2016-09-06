@@ -32,7 +32,7 @@ public class ProviderRequest {
 
         switch (provider) {
 
-            case "ForecastIO":
+            case "forecastIO":
                 mBuilder = new StringBuilder("https://api.forecast.io/forecast/");
                 mBuilder.append("dfdabe66b08f57ce02d697bb9fe2b5d1");
                 mBuilder.append("/");
@@ -45,7 +45,7 @@ public class ProviderRequest {
                 mBuilder.append("&exclude=minutely,alerts,flags");
                 break;
 
-            case "Apixu":
+            case "apixu":
                 mBuilder = new StringBuilder("https://api.apixu.com/v1/forecast.json");
                 mBuilder.append("?key=");
                 mBuilder.append("f6583f8fe8854178a36175631163003");

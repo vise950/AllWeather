@@ -1,7 +1,6 @@
 package com.dev.nicola.allweather.utils;
 
 import android.content.res.Resources;
-import android.util.Log;
 
 import com.dev.nicola.allweather.R;
 
@@ -44,7 +43,6 @@ public class ImageUtils {
         }
 
         int random = (int) (Math.random() * 9);
-        Log.d("ImageUtils", "random " + random);
         if (time >= sunrise - 1800L && time <= sunrise + 1800L) {
             String sunriseWall[] = resources.getStringArray(R.array.sunrise_wallpaper);
             imageUrl = sunriseWall[random];

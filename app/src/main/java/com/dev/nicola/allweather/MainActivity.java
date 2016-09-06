@@ -3,6 +3,7 @@ package com.dev.nicola.allweather;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -21,6 +22,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -65,17 +67,22 @@ public class MainActivity extends AppCompatActivity {
     TabLayout mTabLayout;
     @BindView(R.id.coordinator_layout)
     CoordinatorLayout mCoordinatorLayout;
-    Context mContext;
+
+    private Context mContext;
     private SharedPreferences mPreferences;
     private ProgressDialog mProgressDialog;
     private Snackbar mSnackbar;
     private boolean firstRun;
-    //    private long lastRefresh;
+    private long lastRefresh;
+
     private String prefTheme;
     private String prefTemperature;
     private String prefSpeed;
     private String prefTime;
+    private String prefProvider;
     private boolean ok = false;
+    private String nullString = null;
+    private boolean goToSetting = false;
 
     private PlaceAutocomplete mPlaceAutocomplete;
     private List<SearchItem> suggestionsList;
@@ -87,10 +94,8 @@ public class MainActivity extends AppCompatActivity {
     private LocationGPS mLocationGPS;
     private LocationIP mLocationIP;
 
-    private Handler mHandler;
     private JSONObject mJSONObject;
     private ProviderData mProviderData;
-    private String prefProvider;
 
 
     @Override
@@ -99,49 +104,54 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = getApplicationContext();
 
-        prefTheme = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_theme), "1");
+        prefTheme = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme));
         Utils.setTheme(this, prefTheme);
 
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
 
-        mPreferences = getSharedPreferences(MainActivity.class.getName(), MODE_PRIVATE);
-        initialCheckIn();
+        mPreferences = getSharedPreferences(MainActivity.class.getName(), Context.MODE_PRIVATE);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(TAG, "onStart");
+
+        if (!Utils.checkInternetConnession(mContext))
+            showSnackbar(3);
+        else if (!Utils.checkGpsEnable(mContext))
+            showSnackbar(2);
+        else if (!Utils.checkPermission(mContext))
+            askPermission();
+        else if (mJSONObject == null)
+            initialSetup();
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (ok)
+        Log.d(TAG, "onResume");
+        if (goToSetting)
             checkPreferences();
 
-//        lastRefresh = mPreferences.getLong("lastRefresh", 0);
-//        if (System.currentTimeMillis() - lastRefresh >= 1000 * 60 * 5)
-//            new task().execute();
+        lastRefresh = mPreferences.getLong("lastRefresh", 0);
+        if (System.currentTimeMillis() - lastRefresh >= 1000 * 60 * 10)
+            new task().execute(nullString);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (!firstRun && Utils.checkPermission(mContext) && Utils.checkGpsEnable(mContext) && Utils.checkInternetConnession(mContext)) {
-            if (mLocationGPS.isConnected())
-                mLocationGPS.stopUsingGPS();
-
-            if (mProgressDialog.isShowing())
-                mProgressDialog.dismiss();
-        }
+        Log.d(TAG, "onStop");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause");
     }
 
     @Override
@@ -164,69 +174,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkPreferences() {
-        if (!prefTheme.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_theme), "1")))
+        if (!prefTheme.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme))))
             MainActivity.this.recreate();
 
-        else if (!prefTemperature.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), "1")) ||
-                !prefSpeed.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), "3")) ||
-                !prefTime.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), "2")) ||
-                !prefProvider.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), "ForecastIO"))) {
+        else if (!prefTemperature.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature))) ||
+                !prefSpeed.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed))) ||
+                !prefTime.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time))) ||
+                !prefProvider.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider)))) {
 
-            prefProvider = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), "ForecastIO");
-            prefTemperature = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), "1");
-            prefSpeed = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), "3");
-            prefTime = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), "2");
+            prefProvider = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
+            prefTemperature = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature));
+            prefSpeed = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed));
+            prefTime = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time));
 
             if (!mProgressDialog.isShowing())
                 mProgressDialog.show();
-            new task().execute();
-        }
-    }
-
-
-    private void initialCheckIn() {
-        firstRun = mPreferences.getBoolean("firstRun", true);
-
-        if (firstRun) {
-            Intent intent = new Intent(mContext, MainIntro.class);
-            startActivity(intent);
-            mPreferences.edit().putBoolean("firstRun", false).apply();
-            finish();
-        } else {
-            if (!Utils.checkPermission(mContext))
-                showSnackbar(1);
-            else if (!Utils.checkInternetConnession(mContext)) {
-                showSnackbar(3);
-            } else if (mJSONObject == null) {
-                initialSetup();
-            }
+            new task().execute(nullString);
         }
     }
 
 
     private void initialSetup() {
-        mProgressDialog = ProgressDialog.show(MainActivity.this, "", getString(R.string.activity_dialog), true);
+        mProgressDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.activity_dialog), true);
 
-        mPlaceAutocomplete = new PlaceAutocomplete();
-        mProviderData = new ProviderData(mContext, getResources());
+        prefProvider = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
+        prefTemperature = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature));
+        prefSpeed = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed));
+        prefTime = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time));
+
         mLocationGPS = new LocationGPS(mContext);
+        mLocation = mLocationGPS.getLocation();
+
         mLocationIP = new LocationIP();
 
-        mHandler = new Handler();
+        setDrawer();
+        setNavigationView();
+        setSearchView();
 
-        prefProvider = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), "ForecastIO");
-        prefTemperature = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), "1");
-        prefSpeed = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), "3");
-        prefTime = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), "2");
+        mProviderData = new ProviderData(mContext, getResources());
+        mPlaceAutocomplete = new PlaceAutocomplete();
 
-        ok = true;
-
-        getLocation();
-    }
-
-    public void getLocation() {
-        mLocation = mLocationGPS.getLocation();
-        new task().execute();
+        new task().execute(nullString);
     }
 
 
@@ -262,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.drawer_item_settings:
                             Intent intent = new Intent(mContext, AppPreferences.class);
                             startActivity(intent);
+                            goToSetting = true;
                     }
                     mDrawer.closeDrawer(GravityCompat.START);
                     return false;
@@ -284,9 +273,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setSearchView() {
+        final Handler handler = new Handler();
         mSearchAdapter = new SearchAdapter(mContext);
         mHistoryDatabase = new SearchHistoryTable(mContext);
-        mHistoryDatabase.setHistorySize(4);
+//        mHistoryDatabase.setHistorySize(4);
         suggestionsList = new ArrayList<>();
         if (mSearchView != null) {
             mSearchView.setVersion(SearchView.VERSION_TOOLBAR);
@@ -297,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
             mSearchView.setShadow(false);
             mSearchView.setAnimationDuration(SearchView.ANIMATION_DURATION);
 
-            if (prefTheme.equals("1"))
+            if (prefTheme.equals(getResources().getString(R.string.default_pref_theme)))
                 mSearchView.setTheme(SearchView.THEME_LIGHT, true);
             else
                 mSearchView.setTheme(SearchView.THEME_DARK, true);
@@ -322,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
             mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextChange(final String newText) {
-                    mHistoryDatabase.open();
+//                    mHistoryDatabase.open();
                     if (newText.length() > 2) {
                         if (!firstSuggestion.contains(newText))
                             new Thread(new Runnable() {
@@ -330,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
                                 public void run() {
                                     mPlaceAutocomplete.autocomplete(newText);
 
-                                    mHandler.post(new Runnable() {
+                                    handler.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             suggestionsList = mPlaceAutocomplete.getSuggestionList();
@@ -352,9 +342,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            //agiungere un altro searchAdapter risolve il bug che non fa vedere i suggerimenti
+            // FIXME: 03/09/2016
             SearchAdapter searchAdapter = new SearchAdapter(mContext, suggestionsList);
             mSearchView.setAdapter(searchAdapter);
-
 
             mSearchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
                 @Override
@@ -362,9 +353,9 @@ public class MainActivity extends AppCompatActivity {
                     mSearchView.close(false);
                     TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
                     String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //troncare stringa da 0 al char ','
-                    mHistoryDatabase.addItem(new SearchItem(item));
-                    mLocation = LocationUtils.getCoordinateByName(mContext, item);
-                    new task().execute();
+//                    mHistoryDatabase.addItem(new SearchItem(item));
+//                    mLocation = LocationUtils.getCoordinateByName(mContext, item);
+                    new task().execute(item);
                     if (!mProgressDialog.isShowing())
                         mProgressDialog.show();
                 }
@@ -377,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
         switch (code) {
             case 1:// ask LOCATION permission
                 mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_1, Snackbar.LENGTH_INDEFINITE);
-                mSnackbar.setAction(R.string.snackbar_action_OK, new View.OnClickListener() {
+                mSnackbar.setAction(R.string.action_OK, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         askPermission();
@@ -388,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
 
             case 2:// GPS disable
                 mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_2, Snackbar.LENGTH_INDEFINITE);
-                mSnackbar.setAction(R.string.snackbar_action_OK, new View.OnClickListener() {
+                mSnackbar.setAction(R.string.action_OK, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent gpsSetting = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -399,7 +390,28 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case 3:// No internet connession
-                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_3, Snackbar.LENGTH_LONG);
+                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_3, Snackbar.LENGTH_INDEFINITE);
+                mSnackbar.setAction(R.string.action_OK, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setMessage(R.string.diaolog_connection_disable)
+                                .setPositiveButton(R.string.action_settings, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        startActivity(new Intent(Settings.ACTION_SETTINGS));
+                                    }
+                                })
+                                .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        finish();
+                                    }
+                                })
+                                .show();
+                    }
+                });
+                mSnackbar.setActionTextColor(Color.YELLOW);
                 break;
 
             case 4:// Impossibile recuperare la posizione
@@ -407,12 +419,19 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case 5:// LOCATION permission denied
+                // FIXME: 03/09/2016 fix text snackbar
                 mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_5, Snackbar.LENGTH_LONG);
+                mSnackbar.setAction(R.string.action_OK, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        askPermission();
+                    }
+                });
                 break;
 
             case 6:// Impossibile contattare il server
                 mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_6, Snackbar.LENGTH_INDEFINITE);
-                mSnackbar.setAction(R.string.snackbar_action_retry, new View.OnClickListener() {
+                mSnackbar.setAction(R.string.action_retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         new task().execute();
@@ -437,15 +456,9 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_ASK_PERMISSIONS:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission Granted
-                    Log.d(TAG, "permission granted");
-                } else {
-                    // Permission Denied
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    // Permission DENIED
                     showSnackbar(5);
-
-                    if (mProgressDialog.isShowing())
-                        mProgressDialog.dismiss();
                 }
                 break;
             default:
@@ -454,41 +467,48 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public class task extends AsyncTask<Void, Void, Void> {
+    public class task extends AsyncTask<String, Void, Void> {
 
         @Override
         protected void onPreExecute() {
-            setDrawer();
-            setNavigationView();
-            setSearchView();
+            Log.d(TAG, "onPreExecute");
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-            if (mLocation != null) {
+        protected Void doInBackground(String... params) {
+            Log.d(TAG, "doInBackground");
+            if (params[0] != null) {
+                mLocation = LocationUtils.getCoordinateByName(mContext, params[0]);
                 mJSONObject = mProviderData.getProviderData(prefProvider, mLocation.getLatitude(), mLocation.getLongitude(),
                         LocationUtils.getLocationName(mContext, mLocation.getLatitude(), mLocation.getLongitude()));
-
             } else {
-                final String ip = mLocationIP.getExternalIP();
-                mLocationIP.getLocation(ip);
-                mJSONObject = mProviderData.getProviderData(prefProvider, mLocationIP.getLatitude(), mLocationIP.getLongitude(),
-                        LocationUtils.getLocationName(mContext, mLocationIP.getLatitude(), mLocationIP.getLongitude()));
+
+                if (mLocation != null) {
+                    mJSONObject = mProviderData.getProviderData(prefProvider, mLocation.getLatitude(), mLocation.getLongitude(),
+                            LocationUtils.getLocationName(mContext, mLocation.getLatitude(), mLocation.getLongitude()));
+
+                } else {
+
+                    final String ip = mLocationIP.getExternalIP();
+                    mLocationIP.getLocation(ip);
+                    mJSONObject = mProviderData.getProviderData(prefProvider, mLocationIP.getLatitude(), mLocationIP.getLongitude(),
+                            LocationUtils.getLocationName(mContext, mLocationIP.getLatitude(), mLocationIP.getLongitude()));
+                }
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void v) {
+            Log.d(TAG, "onPostExecute");
 
             RelativeLayout placeholderLayout = (RelativeLayout) findViewById(R.id.placeholder_layout);
 
             if (mJSONObject != null) {
-                Log.d(TAG, "jsonObject not null");
                 setViewPager(mJSONObject.toString());
-                mJSONObject = null;
                 placeholderLayout.setVisibility(View.INVISIBLE);
             } else {
+//                 FIXME: 04/09/2016 il server se non risponde da comuqnue una risposta con il codice d'errore quindi il jsonObject!=null
                 showSnackbar(6);
                 placeholderLayout.setVisibility(View.VISIBLE);
             }

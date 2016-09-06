@@ -44,10 +44,10 @@ public class TimeUtils {
             Two h's will print a leading zero: 01:13 PM. One h will print without the leading zero: 1:13 PM.
         */
         switch (units) {
-            case "1":
+            case "12":
                 hour = new SimpleDateFormat("h:mm a", Locale.getDefault());
                 break;
-            case "2":
+            case "24":
                 hour = new SimpleDateFormat("H:mm", Locale.getDefault());
                 break;
         }

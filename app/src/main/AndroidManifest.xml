@@ -27,9 +27,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainIntro"
-            android:theme="@style/introFullscreenTheme"/>
-        <activity
             android:name=".AppPreferences"
             android:label="@string/action_settings"/>
 

@@ -8,19 +8,16 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
-import com.google.android.gms.ads.AdView;
-
 /**
  * Created by Nicola on 07/04/2016.
  */
 public class AppPreferences extends AppCompatActivity {
-    private AdView mAdView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), "1").equals("1"))
+        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme)).equals("light"))
             setTheme(R.style.AppTheme);
         else
             setTheme(R.style.AppThemeDark);
@@ -43,17 +40,17 @@ public class AppPreferences extends AppCompatActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
 
-                    if (!newValue.equals(preferenceManager.getSharedPreferences().getString(getResources().getString(R.string.key_pref_theme), "1"))) {
+                    if (!newValue.equals(preferenceManager.getSharedPreferences().getString(getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme)))) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setMessage(R.string.dialog_preference_theme);
                         builder.setCancelable(false);
-                        builder.setPositiveButton(R.string.dialog_action_reboot, new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton(R.string.action_OK, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 getActivity().recreate();
                             }
                         });
-                        builder.setNegativeButton(R.string.dialog_action_cancel, null);
+                        builder.setNegativeButton(R.string.action_cancel, null);
                         builder.create().show();
                     }
 

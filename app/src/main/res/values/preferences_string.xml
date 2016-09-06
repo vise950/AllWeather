@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="key_pref_temperature" translatable="false">temperature</string>
+    <string name="key_pref_speed" translatable="false">speed</string>
+    <string name="key_pref_time" translatable="false">time</string>
+    <string name="key_pref_theme" translatable="false">theme</string>
+    <string name="key_pref_provider" translatable="false">provider</string>
+
+    <string name="default_pref_temperature" translatable="false">celsius</string>
+    <string name="default_pref_speed" translatable="false">kmh</string>
+    <string name="default_pref_time" translatable="false">24</string>
+    <string name="default_pref_theme" translatable="false">light</string>
+    <string name="default_pref_provider" translatable="false">forecastIO</string>
+
+</resources>

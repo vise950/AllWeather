@@ -10,10 +10,10 @@ public class UnitConverterUtils {
     public static int CelsiusToFahrenheitOrKelvin(int temperature, String units) {
         int temp;
         switch (units) {
-            case "2":
+            case "fahrenheit":
                 temp = (temperature * 9 / 5) + 32;
                 break;
-            case "3":
+            case "kelvin":
                 temp = (int) (temperature + 273.15);
                 break;
             default:
@@ -29,12 +29,12 @@ public class UnitConverterUtils {
         String s;
         double n;
         switch (units) {
-            case "1":
+            case "mph":
                 n = speed / 0.44704;
                 s = new DecimalFormat("#.##").format(n);
                 s = s + " mph";
                 break;
-            case "2":
+            case "kmh":
                 n = speed * 3.6;
                 s = new DecimalFormat("#.##").format(n);
                 s = s + " Km/h";

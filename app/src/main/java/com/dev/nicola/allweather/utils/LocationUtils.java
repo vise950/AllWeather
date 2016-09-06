@@ -5,7 +5,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,14 +18,10 @@ public class LocationUtils {
     public static String getLocationName(Context context, double latitude, double longitude) {
         String cityName = "Not Found";
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-        Log.d("LocationUtils", "location latitude " + latitude);
-        Log.d("LocationUtils", "location longitude " + longitude);
         try {
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 5);
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0) {
                 cityName = addresses.get(0).getLocality();
-                Log.d("LocationUtils", "location size " + addresses.size());
-                Log.d("LocationUtils", "location 1 " + addresses.get(0).getLocality());
             }
 
         } catch (IOException e) {

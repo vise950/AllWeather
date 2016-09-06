@@ -41,7 +41,7 @@ public class Utils {
     }
 
     public static void setTheme(Activity activity, String theme) {
-        if (theme.equals("1"))
+        if (theme.equals("light"))
             activity.setTheme(R.style.lightTheme);
         else
             activity.setTheme(R.style.darkTheme);
