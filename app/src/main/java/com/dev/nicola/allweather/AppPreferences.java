@@ -1,11 +1,9 @@
 package com.dev.nicola.allweather;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 /**
@@ -40,19 +38,8 @@ public class AppPreferences extends AppCompatActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
 
-                    if (!newValue.equals(preferenceManager.getSharedPreferences().getString(getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme)))) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage(R.string.dialog_preference_theme);
-                        builder.setCancelable(false);
-                        builder.setPositiveButton(R.string.action_OK, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                getActivity().recreate();
-                            }
-                        });
-                        builder.setNegativeButton(R.string.action_cancel, null);
-                        builder.create().show();
-                    }
+                    if (!newValue.equals(preferenceManager.getSharedPreferences().getString(getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme))))
+                        getActivity().recreate();
 
                     return true;
                 }

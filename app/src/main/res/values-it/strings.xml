@@ -2,19 +2,12 @@
 <resources>
     <string name="app_name">AllWeather</string>
 
-    <string name="intro_title_1">Benvenuto</string>
-    <string name="intro_title_2">Posizione</string>
-    <string name="intro_title_3">Iniziamo</string>
-    <string name="intro_description_1">Grazie per avermi scelto\nSpero di soddisfare le tue richieste</string>
-    <string name="intro_description_2">Assicurati di avere la geolocalizzazione attiva per migliorare le informazioni</string>
-    <string name="intro_description_3">Sono pronto a mostrarti le informazioni</string>
-    <string name="intro_description_permission_2">Ho bisogno di accedere alla tua posizione per migliorare le informazioni</string>
-
     <string name="activity_dialog">Caricamento...</string>
 
-    <!--<string name="action_my_places">I miei luoghi</string>-->
+    <string name="tab1_title">OGGI</string>
+    <string name="tab2_title">SETTIMANA</string>
+
     <string name="action_settings">Impostazioni</string>
-    <!--<string name="action_credits">Crediti</string>-->
 
     <string name="first_category">Unità</string>
 
@@ -24,11 +17,6 @@
         <item>Fahrenheit (F)</item>
         <item>Kelvin (K)</item>
     </string-array>
-    <!--<string-array name="temperature_value">-->
-    <!--<item>celsius</item>-->
-    <!--<item>fahrenheit</item>-->
-    <!--<item>kelvin</item>-->
-    <!--</string-array>-->
 
     <string name="pref_speed">Velocità</string>
     <string-array name="speed_unit">
@@ -36,21 +24,12 @@
         <item>Kilometri orari (Km/h)</item>
         <item>Metri al secondo (M/s)</item>
     </string-array>
-    <!--<string-array name="speed_value">-->
-    <!--<item>mileshour</item>-->
-    <!--<item>kilometershour</item>-->
-    <!--<item>metershour</item>-->
-    <!--</string-array>-->
 
     <string name="pref_time">Ora</string>
     <string-array name="time_unit">
         <item>0-12</item>
         <item>0-24</item>
     </string-array>
-    <!--<string-array name="time_value">-->
-    <!--<item>twelve</item>-->
-    <!--<item>twentyfour</item>-->
-    <!--</string-array>-->
 
     <string name="second_category">Generale</string>
 
@@ -60,52 +39,30 @@
         <item>Chiaro</item>
         <item>Scuro</item>
     </string-array>
-    <!--<string-array name="theme_value">-->
-    <!--<item>auto</item>-->
-    <!--<item>light</item>-->
-    <!--<item>dark</item>-->
-    <!--</string-array>-->
-
-    <string name="use_geolocation_title">Migliora la posizione</string>
-    <string name="use_geolocation_summary">Utilizza il gps per migliorare la posizione</string>
 
     <string name="provider">Provider meteo</string>
     <string-array name="provider_unit">
         <item>ForecastIO</item>
         <item>Apixu</item>
     </string-array>
-    <!--<string-array name="provider_value">-->
-    <!--<item>forecastIO</item>-->
-    <!--<item>apixu</item>-->
-    <!--</string-array>-->
-
 
     <string name="hint_search_view">Cerca luogo</string>
 
     <string name="snackbar_1">Non ho accesso alla posizione\nVuoi darmi il permesso?</string>
     <string name="snackbar_2">Geolocalizzazione disattiva\nVuoi attivarla?</string>
     <string name="snackbar_3">Nessuna connessione internet</string>
-    <string name="snackbar_4">Impossibile recuperare la posizione</string>
-    <string name="snackbar_5">aaaaaaaaaaaaaaaaaa</string>
-    <string name="snackbar_6">Impossibile contattare il server in questo momento</string>
-    <string name="snackbar_7">Dati sono già stati aggiornati</string>
-    <string name="snackbar_action_OK">OK</string>
-    <string name="snackbar_action_retry">RIPROVA</string>
-
+    <string name="snackbar_4">Impossibile contattare il server in questo momento</string>
     <string name="diaolog_connection_disable">Abilita il Wifi o i dati</string>
 
+    <string name="action_OK">OK</string>
+    <string name="action_retry">RIPROVA</string>
+    <string name="action_cancel">Annulla</string>
 
     <string name="temperature_label">Temperatura:</string>
     <string name="wind_label">Vento:</string>
-    <string name="humidity_laber">Umidità:</string>
+    <string name="humidity_label">Umidità:</string>
+    <string name="pressure_label">Pressione:</string>
     <string name="sunrise_label">Alba:</string>
     <string name="sunset_label">Tramonto:</string>
-
-    <string name="dialog_preference_theme">Riavviare per applicare le modifiche</string>
-    <string name="dialog_action_reboot">Riavvia</string>
-    <string name="dialog_action_cancel">Cancella</string>
-    <string name="action_OK">OK</string>
-    <string name="action_cancel">Annulla</string>
-    <string name="action_retry">RIPROVA</string>
 
 </resources>

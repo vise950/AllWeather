@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 /**
  * Created by Nicola on 25/05/2016.
@@ -44,17 +43,16 @@ public class LocationGPS extends Service implements LocationListener {
             boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (isGPSEnabled && isNetworkEnabled) {
+                isConnected = true;
 
                 // First get location from Network Provider
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                Log.d("Network", "Network");
                 if (locationManager != null)
                     location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
                 // if getLocation with network is null use GPS Provider
                 if (location == null) {
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    Log.d("GPS Enabled", "GPS Enabled");
                     if (locationManager != null)
                         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 }
@@ -62,8 +60,6 @@ public class LocationGPS extends Service implements LocationListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        locationManager.removeUpdates(LocationGPS.this);
 
         return location;
     }

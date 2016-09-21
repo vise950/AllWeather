@@ -29,41 +29,37 @@ public class PlaceAutocomplete {
 
     private static String TAG = PlaceAutocomplete.class.getSimpleName();
     public List<SearchItem> suggestionsList;
-    private StringBuilder mBuilder;
-    private OkHttpClient mClient;
-    private Request mRequest;
-    private Response mResponse;
-    private JSONObject mObject;
 
     public void autocomplete(String query) {
         String url;
         suggestionsList = new ArrayList<>();
         String suggestion;
 
-        mBuilder = new StringBuilder(PLACES_API_BASE);
-        mBuilder.append(TYPE_AUTOCOMPLETE);
-        mBuilder.append(OUT_JSON);
-        mBuilder.append("?input=");
-        mBuilder.append(query);
-        mBuilder.append("&types=");
-        mBuilder.append(TYPES);
-        mBuilder.append("&key=");
-        mBuilder.append(GOOGLE_API_KEY);
-        url = mBuilder.toString();
+        url = PLACES_API_BASE + TYPE_AUTOCOMPLETE +
+                OUT_JSON +
+                "?input=" +
+                query +
+                "&types=" +
+                TYPES +
+                "&key=" +
+                GOOGLE_API_KEY;
 
-        mClient = new OkHttpClient();
-        mRequest = new Request.Builder()
+        Log.d(TAG, "url autocomplete " + url);
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
                 .url(url)
                 .build();
 
         try {
-            mResponse = mClient.newCall(mRequest).execute();
-            String responseData = mResponse.body().string();
+            Response response = client.newCall(request).execute();
+            String responseData = response.body().string();
 
-            mObject = new JSONObject(responseData);
-            JSONArray predsJsonArray = mObject.getJSONArray("predictions");
+            JSONObject object = new JSONObject(responseData);
+            JSONArray predsJsonArray = object.getJSONArray("predictions");
             for (int i = 0; i < 3; i++) {
                 suggestion = predsJsonArray.getJSONObject(i).getString("description");
+                Log.d(TAG, "suggestion " + suggestion);
                 int index = suggestion.indexOf(',');
                 int lastIndex = suggestion.lastIndexOf(',');
                 if (index != lastIndex)

@@ -2,7 +2,6 @@ package com.dev.nicola.allweather;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 
 import com.dev.nicola.allweather.model.ForecastDay;
 import com.dev.nicola.allweather.model.ForecastHour;
@@ -14,7 +13,6 @@ import com.dev.nicola.allweather.utils.LocationUtils;
 import com.dev.nicola.allweather.utils.PreferencesUtils;
 import com.dev.nicola.allweather.utils.TimeUtils;
 import com.dev.nicola.allweather.utils.UnitConverterUtils;
-import com.dev.nicola.allweather.utils.Utils;
 import com.dev.nicola.allweather.utils.WeatherUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,18 +28,17 @@ import java.util.List;
 public class ProviderData {
 
     private static String TAG = ProviderData.class.getSimpleName();
-    JSONObject mObject;
     private Resources mResources;
     private Context mContext;
     private ForecastIOData mForecastIOData;
     private ApixuData mApixuData;
-    private Utils mUtils;
     private String location;
     private String image;
     private String condition;
     private String temperature;
     private String wind;
     private String humidity;
+    private String pressure;
     private String sunrise;
     private String sunset;
     private List<ForecastDay> mForecastDayList;
@@ -95,8 +92,6 @@ public class ProviderData {
                 location = LocationUtils.getLocationName(mContext,
                         mForecastIOData.getLatitude(),
                         mForecastIOData.getLongitude());
-
-                Log.d(TAG, "location " + location);
                 image = ImageUtils.getImage(mResources,
                         mForecastIOData.getDaily().getData().get(0).getSunriseTime(), mForecastIOData.getDaily().getData().get(0).getSunsetTime(),
                         mForecastIOData.getCurrently().getTime(),
@@ -110,6 +105,8 @@ public class ProviderData {
                         UnitConverterUtils.MsToKmhOrKph(mForecastIOData.getCurrently().getWindSpeed(), windUnits));
                 humidity = String.format(mResources.getString(R.string.humidity),
                         mForecastIOData.getCurrently().getHumidity());
+                pressure = String.format(mResources.getString(R.string.pressure),
+                        mForecastIOData.getCurrently().getPressure());
                 sunrise = TimeUtils.getHourFormat(mForecastIOData.getDaily().getData().get(0).getSunriseTime(),
                         null,
                         timeUnits);
@@ -137,6 +134,8 @@ public class ProviderData {
                         UnitConverterUtils.MsToKmhOrKph(mApixuData.getCurrent().getWindKph(), windUnits));
                 humidity = String.format(mResources.getString(R.string.humidity),
                         String.valueOf(mApixuData.getCurrent().getHumidity()));
+                pressure = String.format(mResources.getString(R.string.pressure),
+                        String.valueOf(mApixuData.getCurrent().getPressureMb()));
                 sunrise = TimeUtils.getHourFormat(0,
                         mApixuData.getForecast().getForecastday().get(0).getAstro().getSunrise(),
                         timeUnits);
@@ -166,8 +165,6 @@ public class ProviderData {
             case "apixu":
                 int indexHour = TimeUtils.getLocalTime();
                 int indexDay = 0;
-                Log.d(TAG, "indexHour " + indexHour);
-                Log.d(TAG, "size Apixu hour array " + mApixuData.getForecast().getForecastday().get(0).getHour().size());
                 for (int i = 0; i < 24; i++) {
                     forecastHour = new ForecastHour(TimeUtils.getHourFormat(mApixuData.getForecast().getForecastday().get(indexDay).getHour().get(indexHour).getTimeEpoch(), null, timeUnits),
                             WeatherUtils.getWeatherIcon(mApixuData.getForecast().getForecastday().get(indexDay).getHour().get(indexHour).getCondition().getCode().toString()),
@@ -238,6 +235,10 @@ public class ProviderData {
 
     public String getHumidity() {
         return humidity;
+    }
+
+    public String getPressure() {
+        return pressure;
     }
 
     public String getSunrise() {

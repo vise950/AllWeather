@@ -59,6 +59,8 @@ public class ProviderRequest {
 
         url = mBuilder.toString();
 
+        Log.d(TAG, "url " + url);
+
         JSONObject mObject;
 
         mClient = new OkHttpClient();

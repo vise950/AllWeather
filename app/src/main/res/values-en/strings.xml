@@ -2,11 +2,6 @@
 
     <string name="app_name">AllWeather</string>
 
-    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-5053914526798733/4551790409</string>
-
-    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
-    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-
     <string name="activity_dialog">Loading...</string>
 
     <string name="tab1_title">NOW</string>
@@ -22,11 +17,6 @@
         <item>Fahrenheit (F)</item>
         <item>Kelvin (K)</item>
     </string-array>
-    <string-array name="temperature_value" translatable="false">
-        <item>celsius</item>
-        <item>fahrenheit</item>
-        <item>kelvin</item>
-    </string-array>
 
     <string name="pref_speed">Speed</string>
     <string-array name="speed_unit">
@@ -34,20 +24,11 @@
         <item>Kilometers per hour (Km/h)</item>
         <item>Meters per second (M/s)</item>
     </string-array>
-    <string-array name="speed_value" translatable="false">
-        <item>mph</item>
-        <item>kmh</item>
-        <item>ms</item>
-    </string-array>
 
     <string name="pref_time">Time</string>
     <string-array name="time_unit">
         <item>0-12</item>
         <item>0-24</item>
-    </string-array>
-    <string-array name="time_value" translatable="false">
-        <item>12</item>
-        <item>24</item>
     </string-array>
 
     <string name="second_category">General</string>
@@ -58,20 +39,11 @@
         <item>Light</item>
         <item>Dark</item>
     </string-array>
-    <string-array name="theme_value" translatable="false">
-        <!--<item>auto</item>-->
-        <item>light</item>
-        <item>dark</item>
-    </string-array>
 
     <string name="provider">Weather provider</string>
     <string-array name="provider_unit">
         <item>ForecastIO</item>
         <item>Apixu</item>
-    </string-array>
-    <string-array name="provider_value" translatable="false">
-        <item>forecastIO</item>
-        <item>apixu</item>
     </string-array>
 
 
@@ -93,9 +65,5 @@
     <string name="pressure_label">Pressure:</string>
     <string name="sunrise_label">Sunrise:</string>
     <string name="sunset_label">Sunset:</string>
-    <string name="temperature" translatable="false">%1$s°</string>
-    <string name="wind" translatable="false">%1$s %2$s</string>
-    <string name="humidity" translatable="false">%1$s%%</string>
-    <string name="pressure" translatable="false">%1$s mb</string>
 
 </resources>

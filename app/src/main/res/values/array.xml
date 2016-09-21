@@ -5,7 +5,7 @@
         <item>Sunday</item>
         <item>Monday</item>
         <item>Tuesday</item>
-        <item>Wendnesday</item>
+        <item>Wednesday</item>
         <item>Thursday</item>
         <item>Friday</item>
         <item>Saturday</item>
@@ -23,7 +23,7 @@
         <item>September</item>
         <item>October</item>
         <item>November</item>
-        <item>Dicember</item>
+        <item>December</item>
     </string-array>
 
     <string-array name="weather_condition">

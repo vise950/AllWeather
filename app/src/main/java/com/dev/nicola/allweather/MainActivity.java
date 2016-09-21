@@ -72,15 +72,14 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences mPreferences;
     private ProgressDialog mProgressDialog;
     private Snackbar mSnackbar;
-    private boolean firstRun;
     private long lastRefresh;
+    private boolean firstRun = true;
 
     private String prefTheme;
     private String prefTemperature;
     private String prefSpeed;
     private String prefTime;
     private String prefProvider;
-    private boolean ok = false;
     private String nullString = null;
     private boolean goToSetting = false;
 
@@ -101,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
 
         mContext = getApplicationContext();
 
@@ -112,12 +112,29 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mPreferences = getSharedPreferences(MainActivity.class.getName(), Context.MODE_PRIVATE);
+
+//        firstRun = mPreferences.getBoolean("firstRun", true);
+//        if (firstRun) {
+//            PreferenceManager.getDefaultSharedPreferences(mContext).edit().clear().apply();
+//            mPreferences.edit().putBoolean("firstRun", false).apply();
+//        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
+
+//        if (goToSetting)
+//            initialSetup();
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
 
         if (!Utils.checkInternetConnession(mContext))
             showSnackbar(3);
@@ -127,25 +144,22 @@ public class MainActivity extends AppCompatActivity {
             askPermission();
         else if (mJSONObject == null)
             initialSetup();
-    }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume");
         if (goToSetting)
             checkPreferences();
-
-        lastRefresh = mPreferences.getLong("lastRefresh", 0);
-        if (System.currentTimeMillis() - lastRefresh >= 1000 * 60 * 10)
-            new task().execute(nullString);
+//        lastRefresh = mPreferences.getLong("lastRefresh", 0);
+//        if (System.currentTimeMillis() - lastRefresh >= 1000 * 60 * 10)
+//            new task().execute(nullString);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.d(TAG, "onStop");
+
+//        if (mLocationGPS.isConnected())
+//            mLocationGPS.stopUsingGPS();
     }
 
     @Override
@@ -174,9 +188,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkPreferences() {
-        if (!prefTheme.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme))))
+        if (!prefTheme.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme)))) {
+            prefTheme = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme));
             MainActivity.this.recreate();
+        }
 
+        // FIXME: 09/09/2016 se cambio tema e provider crasha
         else if (!prefTemperature.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature))) ||
                 !prefSpeed.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed))) ||
                 !prefTime.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time))) ||
@@ -195,7 +212,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initialSetup() {
-        mProgressDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.activity_dialog), true);
+        mProgressDialog = ProgressDialog.show(MainActivity.this, null, null, true);
+        mProgressDialog.setContentView(R.layout.progress_bar);
+        mProgressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
 
         prefProvider = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
         prefTemperature = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature));
@@ -251,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent = new Intent(mContext, AppPreferences.class);
                             startActivity(intent);
                             goToSetting = true;
+//                            mJSONObject = null;
                     }
                     mDrawer.closeDrawer(GravityCompat.START);
                     return false;
@@ -261,7 +282,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setViewPager(String argument) {
-        FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), argument);
+        Log.d(TAG, "setViewPager");
+        FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), mContext, argument);
         if (mViewPager != null) {
             mViewPager.setAdapter(fragmentAdapter);
         }
@@ -275,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
     private void setSearchView() {
         final Handler handler = new Handler();
         mSearchAdapter = new SearchAdapter(mContext);
-        mHistoryDatabase = new SearchHistoryTable(mContext);
+//        mHistoryDatabase = new SearchHistoryTable(mContext);
 //        mHistoryDatabase.setHistorySize(4);
         suggestionsList = new ArrayList<>();
         if (mSearchView != null) {
@@ -285,7 +307,10 @@ public class MainActivity extends AppCompatActivity {
             mSearchView.setHint(R.string.hint_search_view);
             mSearchView.setVoice(false);
             mSearchView.setShadow(false);
+            mSearchView.setDivider(false);
             mSearchView.setAnimationDuration(SearchView.ANIMATION_DURATION);
+            mSearchView.setNavigationIconArrowHamburger();
+
 
             if (prefTheme.equals(getResources().getString(R.string.default_pref_theme)))
                 mSearchView.setTheme(SearchView.THEME_LIGHT, true);
@@ -309,28 +334,34 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            // FIXME: 08/09/2016 click historyTable cause crash app
             mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextChange(final String newText) {
-//                    mHistoryDatabase.open();
-                    if (newText.length() > 2) {
-                        if (!firstSuggestion.contains(newText))
+                    if (newText.length() >= 2) {
+                        if (!firstSuggestion.contains(newText)) {    // FIXME: 13/09/2016 i suggerimenti sono lenti ad apparire
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    Log.d(TAG, "run thread");
                                     mPlaceAutocomplete.autocomplete(newText);
 
                                     handler.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             suggestionsList = mPlaceAutocomplete.getSuggestionList();
+                                            Log.d(TAG, "suggestionList " + suggestionsList.size());
                                             firstSuggestion = suggestionsList.get(0).get_text().toString();
+                                            Log.d(TAG, "firstSuggetion " + firstSuggestion);
                                             mSearchAdapter.setSuggestionsList(suggestionsList);
-                                            mSearchView.setAdapter(mSearchAdapter);
+                                            Log.d(TAG, "searchAdapter " + mSearchAdapter.getItemCount());
+                                            mSearchView.setAdapter(mSearchAdapter); // FIXME: 16/09/2016  java.lang.IllegalArgumentException: Scrapped or attached views may not be recycled. isScrap:false isAttached:true
                                         }
                                     });
                                 }
                             }).start();
+
+                        }
                     }
                     return false;
                 }
@@ -342,19 +373,38 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            //agiungere un altro searchAdapter risolve il bug che non fa vedere i suggerimenti
-            // FIXME: 03/09/2016
+            // FIXME: 03/09/2016 agiungere un altro searchAdapter risolve il bug che non fa vedere i suggerimenti
             SearchAdapter searchAdapter = new SearchAdapter(mContext, suggestionsList);
             mSearchView.setAdapter(searchAdapter);
 
-            mSearchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+
+//            mSearchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(View view, int position) {
+//                    mSearchView.close(false);
+//                    TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
+//                    String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //troncare stringa da 0 al char ','
+//                    mHistoryDatabase.addItem(new SearchItem(item));
+//                    mLocation = LocationUtils.getCoordinateByName(mContext, item);
+//                    mHistoryDatabase.clearDatabase();
+//                    new task().execute(item);
+//                    if (!mProgressDialog.isShowing())
+//                        mProgressDialog.show();
+//                }
+//            });
+
+            mSearchAdapter.addOnItemClickListener(new SearchAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     mSearchView.close(false);
                     TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
                     String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //troncare stringa da 0 al char ','
+                    Log.d(TAG, "item " + item);
+//                    mHistoryDatabase.open();
 //                    mHistoryDatabase.addItem(new SearchItem(item));
 //                    mLocation = LocationUtils.getCoordinateByName(mContext, item);
+//                    mHistoryDatabase.clearDatabase();
+//                    mHistoryDatabase.close();
                     new task().execute(item);
                     if (!mProgressDialog.isShowing())
                         mProgressDialog.show();
@@ -382,8 +432,7 @@ public class MainActivity extends AppCompatActivity {
                 mSnackbar.setAction(R.string.action_OK, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent gpsSetting = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(gpsSetting);
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
                 });
                 mSnackbar.setActionTextColor(Color.YELLOW);
@@ -414,33 +463,15 @@ public class MainActivity extends AppCompatActivity {
                 mSnackbar.setActionTextColor(Color.YELLOW);
                 break;
 
-            case 4:// Impossibile recuperare la posizione
-                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_4, Snackbar.LENGTH_LONG);
-                break;
-
-            case 5:// LOCATION permission denied
-                // FIXME: 03/09/2016 fix text snackbar
-                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_5, Snackbar.LENGTH_LONG);
-                mSnackbar.setAction(R.string.action_OK, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        askPermission();
-                    }
-                });
-                break;
-
-            case 6:// Impossibile contattare il server
-                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_6, Snackbar.LENGTH_INDEFINITE);
+            case 4:// Impossibile contattare il server
+                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_4, Snackbar.LENGTH_INDEFINITE);
                 mSnackbar.setAction(R.string.action_retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new task().execute();
+                        new task().execute(nullString);
                     }
                 });
                 mSnackbar.setActionTextColor(Color.YELLOW);
-                break;
-            case 7:// dati già aggiornati
-                mSnackbar = Snackbar.make(mCoordinatorLayout, R.string.snackbar_7, Snackbar.LENGTH_LONG);
                 break;
         }
         mSnackbar.show();
@@ -458,7 +489,7 @@ public class MainActivity extends AppCompatActivity {
             case REQUEST_CODE_ASK_PERMISSIONS:
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     // Permission DENIED
-                    showSnackbar(5);
+                    showSnackbar(1);
                 }
                 break;
             default:
@@ -472,11 +503,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             Log.d(TAG, "onPreExecute");
+
+            if (mViewPager != null) {      // FIXME: 18/09/2016 fix provvisorio per memory leak. Ogni volta ricreo i fragment del viewpager usando molta memoria
+                mViewPager.removeAllViews();
+                Log.d(TAG, "remove viewpager view");
+            }
+            // FIXME: 18/09/2016 se cambio tema il viewPager non "carica" i dati
         }
 
         @Override
         protected Void doInBackground(String... params) {
             Log.d(TAG, "doInBackground");
+
             if (params[0] != null) {
                 mLocation = LocationUtils.getCoordinateByName(mContext, params[0]);
                 mJSONObject = mProviderData.getProviderData(prefProvider, mLocation.getLatitude(), mLocation.getLongitude(),
@@ -484,13 +522,15 @@ public class MainActivity extends AppCompatActivity {
             } else {
 
                 if (mLocation != null) {
+//                    Log.d(TAG,"location not null");
                     mJSONObject = mProviderData.getProviderData(prefProvider, mLocation.getLatitude(), mLocation.getLongitude(),
                             LocationUtils.getLocationName(mContext, mLocation.getLatitude(), mLocation.getLongitude()));
 
                 } else {
-
+//                    Log.d(TAG,"location null, using ip");
                     final String ip = mLocationIP.getExternalIP();
                     mLocationIP.getLocation(ip);
+//                    Log.d(TAG,"lat location ip "+mLocationIP.getLatitude());
                     mJSONObject = mProviderData.getProviderData(prefProvider, mLocationIP.getLatitude(), mLocationIP.getLongitude(),
                             LocationUtils.getLocationName(mContext, mLocationIP.getLatitude(), mLocationIP.getLongitude()));
                 }
@@ -505,18 +545,26 @@ public class MainActivity extends AppCompatActivity {
             RelativeLayout placeholderLayout = (RelativeLayout) findViewById(R.id.placeholder_layout);
 
             if (mJSONObject != null) {
+//                Log.d(TAG,"JsonObject "+mJSONObject);
+
+//                if (mViewPager != null) {
+//                    mViewPager.removeAllViews();
+//                    Log.d(TAG,"remove viewpager view");
+//                }
                 setViewPager(mJSONObject.toString());
                 placeholderLayout.setVisibility(View.INVISIBLE);
+                // FIXME: 18/09/2016 provare con setContentView al posto del placehoder
             } else {
-//                 FIXME: 04/09/2016 il server se non risponde da comuqnue una risposta con il codice d'errore quindi il jsonObject!=null
-                showSnackbar(6);
+                showSnackbar(4);
+                if (mViewPager != null)
+                    mViewPager.removeAllViews();
                 placeholderLayout.setVisibility(View.VISIBLE);
             }
 
             if (mProgressDialog.isShowing())
                 mProgressDialog.dismiss();
 
-            mPreferences.edit().putLong("lastRefresh", System.currentTimeMillis()).apply();
+//            mPreferences.edit().putLong("lastRefresh", System.currentTimeMillis()).apply();
         }
     }
 

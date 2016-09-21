@@ -127,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/wind_label_daily_fragment"
                     android:layout_margin="6dp"
-                    android:text="@string/humidity_laber"
+                    android:text="@string/humidity_label"
                     android:textSize="18sp"/>
 
                 <TextView
@@ -140,12 +140,31 @@
                     android:text="75%"
                     android:textSize="18sp"/>
 
+                <TextView
+                    android:id="@+id/pressure_label_daily_fragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/humidity_label_daily_fragment"
+                    android:layout_margin="6dp"
+                    android:text="@string/pressure_label"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/pressure_daily_fragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/humidity_label_daily_fragment"
+                    android:layout_margin="6dp"
+                    android:text="1024 mb"
+                    android:textSize="18sp"/>
+
 
                 <TextView
                     android:id="@+id/sunrise_label_daily_fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/humidity_label_daily_fragment"
+                    android:layout_below="@id/pressure_label_daily_fragment"
                     android:layout_margin="6dp"
                     android:text="@string/sunrise_label"
                     android:textSize="18sp"/>
@@ -155,7 +174,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_below="@id/humidity_label_daily_fragment"
+                    android:layout_below="@id/pressure_label_daily_fragment"
                     android:layout_margin="6dp"
                     android:text="7:54"
                     android:textSize="18sp"/>

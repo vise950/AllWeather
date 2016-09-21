@@ -40,6 +40,8 @@ public class DailyFragment extends Fragment {
     TextView wind;
     @BindView(R.id.humidity_daily_fragment)
     TextView humidity;
+    @BindView(R.id.pressure_daily_fragment)
+    TextView pressure;
     @BindView(R.id.sunrise_daily_fragment)
     TextView sunrise;
     @BindView(R.id.sunset_daily_fragment)
@@ -52,6 +54,7 @@ public class DailyFragment extends Fragment {
     private String prefProvider;
 
     public static DailyFragment newInstance(String argument) {
+
         Bundle args = new Bundle();
         args.putString("ARGUMENT", argument);
         DailyFragment dailyFragment = new DailyFragment();
@@ -103,11 +106,12 @@ public class DailyFragment extends Fragment {
 
     private void setText() {
         location.setText(mProviderData.getLocation());
-        Picasso.with(getContext()).load(mProviderData.getImage()).into(image);
+        Picasso.with(getContext()).load(mProviderData.getImage()).into(image); // FIXME: 18/09/2016 non devo cambiare immagine ad ogni riciesta
         condition.setText(mProviderData.getCondition());
         temperature.setText(mProviderData.getTemperature());
         wind.setText(mProviderData.getWind());
         humidity.setText(mProviderData.getHumidity());
+        pressure.setText(mProviderData.getPressure());
         sunrise.setText(mProviderData.getSunrise());
         sunset.setText(mProviderData.getSunset());
     }

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AllWeather</string>
+
+    <string name="activity_dialog">Chargement...</string>
+
+    <string name="tab1_title">AUJOURD\'HUI</string>
+    <string name="tab2_title">SEMAINE</string>
+
+    <string name="action_settings">Paramètres</string>
+
+    <string name="first_category">Unités</string>
+
+    <string name="pref_temperature">Température</string>
+    <string-array name="temperature_unit">
+        <item>Celsius (C)</item>
+        <item>Fahrenheit (F)</item>
+        <item>Kelvin (K)</item>
+    </string-array>
+
+    <string name="pref_speed">Vitesse</string>
+    <string-array name="speed_unit">
+        <item>Miles par heure (Mph)</item>
+        <item>Kilomètres par heure (Km/h)</item>
+        <item>Mètres par seconde (M/s)</item>
+    </string-array>
+
+    <string name="pref_time">Temps</string>
+    <string-array name="time_unit">
+        <item>0-12</item>
+        <item>0-24</item>
+    </string-array>
+
+    <string name="second_category">Générales</string>
+
+    <string name="pref_theme">Thème</string>
+    <string-array name="theme_unit">
+        <!--<item>Automatico</item>-->
+        <item>Lumière</item>
+        <item>Sombre</item>
+    </string-array>
+
+    <string name="provider">Fournisseur de temps</string>
+    <string-array name="provider_unit">
+        <item>ForecastIO</item>
+        <item>Apixu</item>
+    </string-array>
+
+    <string name="hint_search_view">Recherche placer</string>
+
+    <string name="snackbar_1">Je n\’ai pas accès à l’emplacement\nVous souhaitez me donner la permission ?</string>
+    <string name="snackbar_2">Géolocalisation n\’est pas active\nVous voulez l’activer ?</string>
+    <string name="snackbar_3">Pas de connexion internet</string>
+    <string name="snackbar_4">Impossible de contacter le serveur en ce moment</string>
+    <string name="diaolog_connection_disable">Activez la connexion Wifi ou de données</string>
+
+    <string name="action_OK">OK</string>
+    <string name="action_retry">RETENTER</string>
+    <string name="action_cancel">Annuler</string>
+
+    <string name="temperature_label">Température:</string>
+    <string name="wind_label">Vent:</string>
+    <string name="humidity_label">Humidité:</string>
+    <string name="pressure_label">Pression:</string>
+    <string name="sunrise_label">Sunrise:</string>
+    <string name="sunset_label">Sunset:</string>
+
+</resources>
