@@ -2,6 +2,8 @@ package com.dev.nicola.allweather.provider;
 
 import android.util.Log;
 
+import com.dev.nicola.allweather.BuildConfig;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,19 +29,19 @@ public class ProviderRequest {
     public ProviderRequest() {
     }
 
-    public JSONObject getData(String provider, Double latitude, Double longitude) {
+    public JSONObject getData(String provider, Double latitude, Double longitude, String place) {
         String url;
 
         switch (provider) {
 
             case "forecastIO":
-                mBuilder = new StringBuilder("https://api.forecast.io/forecast/");
-                mBuilder.append("dfdabe66b08f57ce02d697bb9fe2b5d1");
+                mBuilder = new StringBuilder("https://api.darksky.net/forecast/");
+                mBuilder.append(com.dev.nicola.allweather.BuildConfig.FORECASTIO_API_KEY);
                 mBuilder.append("/");
                 mBuilder.append(latitude);
                 mBuilder.append(",");
                 mBuilder.append(longitude);
-                mBuilder.append("?units=si");
+                mBuilder.append("?units=us");
                 mBuilder.append("&lang=");
                 mBuilder.append(Locale.getDefault().getLanguage());
                 mBuilder.append("&exclude=minutely,alerts,flags");
@@ -48,12 +50,21 @@ public class ProviderRequest {
             case "apixu":
                 mBuilder = new StringBuilder("https://api.apixu.com/v1/forecast.json");
                 mBuilder.append("?key=");
-                mBuilder.append("f6583f8fe8854178a36175631163003");
+                mBuilder.append(BuildConfig.APIXU_API_KEY);
                 mBuilder.append("&q=");
                 mBuilder.append(latitude);
                 mBuilder.append(",");
                 mBuilder.append(longitude);
                 mBuilder.append("&days=10");
+                break;
+
+            case "yahoo":
+                mBuilder = new StringBuilder("https://query.yahooapis.com/v1/public/yql?q=");
+                mBuilder.append("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=");
+                mBuilder.append("\"");
+                mBuilder.append(place);
+                mBuilder.append("\")");
+                mBuilder.append("&format=json");
                 break;
         }
 

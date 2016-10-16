@@ -27,51 +27,31 @@ public class ForecastIOData {
     @Expose
     private Daily daily;
 
-    /**
-     * @return The latitude
-     */
+
     public Double getLatitude() {
         return latitude;
     }
 
-    /**
-     * @return The longitude
-     */
     public Double getLongitude() {
         return longitude;
     }
 
-    /**
-     * @return The timezone
-     */
     public String getTimezone() {
         return timezone;
     }
 
-    /**
-     * @return The offset
-     */
     public Integer getOffset() {
         return offset;
     }
 
-    /**
-     * @return The currently
-     */
     public Currently getCurrently() {
         return currently;
     }
 
-    /**
-     * @return The hourly
-     */
     public Hourly getHourly() {
         return hourly;
     }
 
-    /**
-     * @return The daily
-     */
     public Daily getDaily() {
         return daily;
     }

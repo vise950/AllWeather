@@ -56,24 +56,29 @@ public class TimeUtils {
     }
 
 
-    public static String getDayFormat(Resources resources, Integer time) {
-        String t;
+    public static String getDay(Resources resources, int i) {
+        long n = 86400000 * i; // n = 24h in millis * giorno  ex. 24h * 2 = dopodomani
         String days[] = resources.getStringArray(R.array.days);
         String months[] = resources.getStringArray(R.array.months);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(time * 1000L);
+        calendar.setTimeInMillis(calendar.getTimeInMillis() + n); //aggiungo n giorni ad oggi
         calendar.setTimeZone(TimeZone.getDefault());
 
         int dayIndex = calendar.get(Calendar.DAY_OF_WEEK);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH);
-        t = days[dayIndex - 1] + " " + day + " " + months[month];
-        return t;
+        return days[dayIndex - 1] + " " + day + " " + months[month];
+
     }
 
 
-    public static int getLocalTime() {
+    public static int getLocalTimeHour() {
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.HOUR_OF_DAY);
+    }
+
+    public static long getLocalTimeMillis() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getTimeInMillis();
     }
 }

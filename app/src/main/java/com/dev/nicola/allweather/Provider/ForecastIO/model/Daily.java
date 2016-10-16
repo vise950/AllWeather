@@ -18,23 +18,15 @@ public class Daily {
     @Expose
     private List<DailyData> data = new ArrayList<>();
 
-    /**
-     * @return The summary
-     */
+
     public String getSummary() {
         return summary;
     }
 
-    /**
-     * @return The icon
-     */
     public String getIcon() {
         return icon;
     }
 
-    /**
-     * @return The data
-     */
     public List<DailyData> getData() {
         return data;
     }

@@ -15,10 +15,9 @@ import java.util.Locale;
  */
 public class ImageUtils {
 
-    public static String getImage(Resources resources, long sunrise, long sunset, long time, String sSunrise, String sSunset) {
+    public static String getImage(Resources resources, long sunrise, long sunset, String sSunrise, String sSunset) {
         String imageUrl;
-
-//        Log.d(TAG,"date time "+time);
+        long time = TimeUtils.getLocalTimeMillis();
         if (sSunrise != null && sSunset != null) {
 //            Log.d(TAG,"string sunrise "+sSunrise);
 //            Log.d(TAG,"string sunset "+sSunset);
@@ -35,7 +34,6 @@ public class ImageUtils {
 //                Log.d(TAG,"date1 "+d1);
                 sunset = d1.getTime();
 //                Log.d(TAG,"date1 millisecond "+sunset);
-                time = time * 1000L;
 //                Log.d(TAG,"date time in millisecond "+time);
             } catch (ParseException e) {
                 e.printStackTrace();

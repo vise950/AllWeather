@@ -56,7 +56,7 @@ public class ForecastHourAdapter extends RecyclerView.Adapter<ForecastHourAdapte
         TextView temperature;
 
 
-        public ForecastViewHolder(View view) {
+        ForecastViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }

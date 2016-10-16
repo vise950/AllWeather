@@ -54,7 +54,6 @@ public class DailyFragment extends Fragment {
     private String prefProvider;
 
     public static DailyFragment newInstance(String argument) {
-
         Bundle args = new Bundle();
         args.putString("ARGUMENT", argument);
         DailyFragment dailyFragment = new DailyFragment();
@@ -77,17 +76,19 @@ public class DailyFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        prefProvider = PreferencesUtils.getPreferences(getContext(), getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
+        prefProvider = PreferencesUtils.getDefaultPreferences(getContext(), getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
 
         mProviderData.elaborateData(prefProvider, argument);
 
-        List<ForecastHour> forecastHourList;
-        forecastHourList = mProviderData.getForecastHourList();
-        ForecastHourAdapter forecastHourAdapter = new ForecastHourAdapter(forecastHourList);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(forecastHourAdapter);
+        if (!prefProvider.equals("yahoo")) {
+            List<ForecastHour> forecastHourList;
+            forecastHourList = mProviderData.getForecastHourList();
+            ForecastHourAdapter forecastHourAdapter = new ForecastHourAdapter(forecastHourList);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            mRecyclerView.setAdapter(forecastHourAdapter);
+        }
 
         setText();
 
@@ -106,7 +107,7 @@ public class DailyFragment extends Fragment {
 
     private void setText() {
         location.setText(mProviderData.getLocation());
-        Picasso.with(getContext()).load(mProviderData.getImage()).into(image); // FIXME: 18/09/2016 non devo cambiare immagine ad ogni riciesta
+        Picasso.with(getContext()).load(mProviderData.getImage()).into(image); // FIXME: 18/09/2016 non devo cambiare immagine ad ogni richiesta
         condition.setText(mProviderData.getCondition());
         temperature.setText(mProviderData.getTemperature());
         wind.setText(mProviderData.getWind());

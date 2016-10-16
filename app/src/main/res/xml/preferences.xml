@@ -2,13 +2,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/first_category">
+        android:title="@string/pref_first_category">
 
         <ListPreference
             android:defaultValue="@string/default_pref_temperature"
             android:entries="@array/temperature_unit"
             android:entryValues="@array/temperature_value"
             android:key="@string/key_pref_temperature"
+            android:summary="%s"
             android:title="@string/pref_temperature"/>
 
         <ListPreference
@@ -16,6 +17,7 @@
             android:entries="@array/speed_unit"
             android:entryValues="@array/speed_value"
             android:key="@string/key_pref_speed"
+            android:summary="%s"
             android:title="@string/pref_speed"/>
 
         <ListPreference
@@ -23,26 +25,33 @@
             android:entries="@array/time_unit"
             android:entryValues="@array/time_value"
             android:key="@string/key_pref_time"
+            android:summary="%s"
             android:title="@string/pref_time"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/second_category">
+        android:title="@string/pref_second_category">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/key_pref_use_gps"
+            android:summary="@string/pref_use_gps_desc"
+            android:title="@string/pref_use_gps"/>
 
         <ListPreference
             android:defaultValue="@string/default_pref_theme"
             android:entries="@array/theme_unit"
             android:entryValues="@array/theme_value"
             android:key="@string/key_pref_theme"
+            android:summary="%s"
             android:title="@string/pref_theme"/>
 
         <ListPreference
             android:defaultValue="@string/default_pref_provider"
-            android:entries="@array/provider_unit"
-            android:entryValues="@array/provider_value"
             android:key="@string/key_pref_provider"
-            android:title="@string/provider"/>
+            android:summary="%s"
+            android:title="@string/pref_provider"/>
 
     </PreferenceCategory>
 

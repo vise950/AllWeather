@@ -5,13 +5,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/ll_ad"
+        android:id="@+id/lineat_layout_ads"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:orientation="vertical">
-        <!---->
+
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
             android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
         android:id="@+id/forecast_day_recycle_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/ll_ad"
+        android:layout_above="@id/lineat_layout_ads"
         android:scrollbars="vertical"/>
 
 

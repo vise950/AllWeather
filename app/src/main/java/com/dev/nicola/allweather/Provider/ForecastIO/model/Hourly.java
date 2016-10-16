@@ -18,23 +18,15 @@ public class Hourly {
     @Expose
     private List<HourlyData> data = new ArrayList<>();
 
-    /**
-     * @return The summary
-     */
+
     public String getSummary() {
         return summary;
     }
 
-    /**
-     * @return The icon
-     */
     public String getIcon() {
         return icon;
     }
 
-    /**
-     * @return The data
-     */
     public List<HourlyData> getData() {
         return data;
     }

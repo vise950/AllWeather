@@ -77,4 +77,65 @@
         <item>Moderate or heavy snow in area with thunder</item>
     </string-array>
 
+
+    <string-array name="temperature_unit">
+        <item>Celsius (C)</item>
+        <item>Fahrenheit (F)</item>
+        <item>Kelvin (K)</item>
+    </string-array>
+    <string-array name="temperature_value" translatable="false">
+        <item>celsius</item>
+        <item>fahrenheit</item>
+        <item>kelvin</item>
+    </string-array>
+
+    <string-array name="speed_unit">
+        <item>Miles per hour (Mph)</item>
+        <item>Kilometers per hour (Km/h)</item>
+        <item>Meters per second (M/s)</item>
+    </string-array>
+    <string-array name="speed_value" translatable="false">
+        <item>mph</item>
+        <item>kmh</item>
+        <item>ms</item>
+    </string-array>
+
+    <string-array name="time_unit">
+        <item>0-12</item>
+        <item>0-24</item>
+    </string-array>
+    <string-array name="time_value" translatable="false">
+        <item>12</item>
+        <item>24</item>
+    </string-array>
+
+    <string-array name="theme_unit">
+        <!--<item>Auto</item>-->
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="theme_value" translatable="false">
+        <!--<item>auto</item>-->
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+
+    <string-array name="provider_unit_pro">
+        <item>ForecastIO</item>
+        <item>Apixu</item>
+        <item>Yahoo</item>
+    </string-array>
+    <string-array name="provider_value_pro" translatable="false">
+        <item>forecastIO</item>
+        <item>apixu</item>
+        <item>yahoo</item>
+    </string-array>
+
+    <string-array name="provider_unit_free">
+        <item>ForecastIO</item>
+    </string-array>
+    <string-array name="provider_value_free" translatable="false">
+        <item>forecastIO</item>
+    </string-array>
+
 </resources>

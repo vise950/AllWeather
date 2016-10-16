@@ -7,14 +7,14 @@ import java.text.DecimalFormat;
  */
 public class UnitConverterUtils {
 
-    public static int CelsiusToFahrenheitOrKelvin(int temperature, String units) {
+    public static int temperatureConverter(int temperature, String units) { //temperature è sempre fahrenheit
         int temp;
         switch (units) {
-            case "fahrenheit":
-                temp = (temperature * 9 / 5) + 32;
+            case "celsius":
+                temp = (temperature - 32) * 5 / 9;
                 break;
             case "kelvin":
-                temp = (int) (temperature + 273.15);
+                temp = (int) (temperature + 459.67) * 5 / 9;
                 break;
             default:
                 temp = temperature;
@@ -25,23 +25,22 @@ public class UnitConverterUtils {
 
 
     //coverter meter per second to kilometer per hour
-    public static String MsToKmhOrKph(double speed, String units) {
+    public static String speedConverter(double speed, String units) {
         String s;
         double n;
         switch (units) {
-            case "mph":
-                n = speed / 0.44704;
+            case "ms":
+                n = speed * 0.44704;
                 s = new DecimalFormat("#.##").format(n);
-                s = s + " mph";
+                s = s + " m/s";
                 break;
             case "kmh":
-                n = speed * 3.6;
+                n = speed * 1.609344;
                 s = new DecimalFormat("#.##").format(n);
                 s = s + " Km/h";
                 break;
             default:
-                s = speed + " m/s";
-
+                s = speed + " mph";
         }
         return s;
     }

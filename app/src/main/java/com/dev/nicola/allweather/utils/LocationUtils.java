@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,15 +18,20 @@ public class LocationUtils {
 
     public static String getLocationName(Context context, double latitude, double longitude) {
         String cityName = "Not Found";
+//        Log.d("LocationUtils","latitude "+latitude);
+//        Log.d("LocationUtils","longitude "+longitude);
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+//            Log.d("LocationUtils","list size "+addresses.size());
             if (addresses.size() > 0) {
                 cityName = addresses.get(0).getLocality();
+//                Log.d("LocationUtils","city "+cityName);
             }
 
         } catch (IOException e) {
             e.printStackTrace();
+            Log.d("LocationUtils", "exception " + e); // FIXME: 22/09/2016 exception java.io.IOException: Service not Available forse è un problema di play services
         }
         return cityName;
     }

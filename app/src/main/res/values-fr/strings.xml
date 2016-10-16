@@ -8,51 +8,30 @@
     <string name="tab2_title">SEMAINE</string>
 
     <string name="action_settings">Paramètres</string>
+    <string name="action_unlock_pro">Déverrouiller pro</string>
 
-    <string name="first_category">Unités</string>
-
+    <string name="pref_first_category">Unités</string>
     <string name="pref_temperature">Température</string>
-    <string-array name="temperature_unit">
-        <item>Celsius (C)</item>
-        <item>Fahrenheit (F)</item>
-        <item>Kelvin (K)</item>
-    </string-array>
-
     <string name="pref_speed">Vitesse</string>
-    <string-array name="speed_unit">
-        <item>Miles par heure (Mph)</item>
-        <item>Kilomètres par heure (Km/h)</item>
-        <item>Mètres par seconde (M/s)</item>
-    </string-array>
-
     <string name="pref_time">Temps</string>
-    <string-array name="time_unit">
-        <item>0-12</item>
-        <item>0-24</item>
-    </string-array>
-
-    <string name="second_category">Générales</string>
-
+    <string name="pref_second_category">Générales</string>
+    <string name="pref_use_gps">Améliorer les données météorologiques</string>
+    <string name="pref_use_gps_desc">Utilisation gps pour améliorer la emplacement</string>
     <string name="pref_theme">Thème</string>
-    <string-array name="theme_unit">
-        <!--<item>Automatico</item>-->
-        <item>Lumière</item>
-        <item>Sombre</item>
-    </string-array>
-
-    <string name="provider">Fournisseur de temps</string>
-    <string-array name="provider_unit">
-        <item>ForecastIO</item>
-        <item>Apixu</item>
-    </string-array>
+    <string name="pref_provider">Fournisseur de temps</string>
 
     <string name="hint_search_view">Recherche placer</string>
+    <string name="no_result_suggestion">aucun résultat</string>
 
     <string name="snackbar_1">Je n\’ai pas accès à l’emplacement\nVous souhaitez me donner la permission ?</string>
     <string name="snackbar_2">Géolocalisation n\’est pas active\nVous voulez l’activer ?</string>
     <string name="snackbar_3">Pas de connexion internet</string>
     <string name="snackbar_4">Impossible de contacter le serveur en ce moment</string>
     <string name="diaolog_connection_disable">Activez la connexion Wifi ou de données</string>
+    <string name="dialog_preference_yahoo">Yahoo ne supporte pas les prévisions horaires</string>
+    <string name="dialog_pro_version_title">Fonctionnalités pro</string>
+    <string name="dialog_pro_version_message">"--Débloquer tous les fournisseur de météo\n-Supprimer des annonces"</string>
+    <string name="dialog_already_pro_version">Déjà pro</string>
 
     <string name="action_OK">OK</string>
     <string name="action_retry">RETENTER</string>

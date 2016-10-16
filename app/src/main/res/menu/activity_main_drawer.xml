@@ -10,6 +10,11 @@
             android:icon="@drawable/ic_settings"
             android:title="@string/action_settings"/>
 
+        <item
+            android:id="@+id/drawer_item_pro_version"
+            android:icon="@drawable/ic_lock_open"
+            android:title="@string/action_unlock_pro"/>
+
     </group>
 
 </menu>

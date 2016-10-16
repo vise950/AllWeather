@@ -7,10 +7,10 @@ public class ForecastDay {
 
     private String date;
     private String condition;
-    private int temperature;
+    private String temperature;
     private int icon;
 
-    public ForecastDay(String date, String condition, int temperature, int icon) {
+    public ForecastDay(String date, String condition, String temperature, int icon) {
         this.date = date;
         this.condition = condition;
         this.temperature = temperature;
@@ -34,11 +34,11 @@ public class ForecastDay {
         this.condition = condition;
     }
 
-    public int getTemperature() {
+    public String getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(int temperature) {
+    public void setTemperature(String temperature) {
         this.temperature = temperature;
     }
 

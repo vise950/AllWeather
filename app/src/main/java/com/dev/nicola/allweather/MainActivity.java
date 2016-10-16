@@ -1,6 +1,5 @@
 package com.dev.nicola.allweather;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -34,6 +32,7 @@ import com.dev.nicola.allweather.adapter.FragmentAdapter;
 import com.dev.nicola.allweather.utils.LocationGPS;
 import com.dev.nicola.allweather.utils.LocationIP;
 import com.dev.nicola.allweather.utils.LocationUtils;
+import com.dev.nicola.allweather.utils.PermissionUtils;
 import com.dev.nicola.allweather.utils.PlaceAutocomplete;
 import com.dev.nicola.allweather.utils.PreferencesUtils;
 import com.dev.nicola.allweather.utils.Utils;
@@ -55,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     final static String TAG = MainActivity.class.getSimpleName();
 
     final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
+    final private boolean DEBUG_MODE = BuildConfig.DEBUG;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
     @BindView(R.id.navigation_view)
@@ -73,13 +73,14 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
     private Snackbar mSnackbar;
     private long lastRefresh;
-    private boolean firstRun = true;
+    private boolean searchViewItemClick = false;
 
     private String prefTheme;
     private String prefTemperature;
     private String prefSpeed;
     private String prefTime;
     private String prefProvider;
+    private boolean prefUseGps;
     private String nullString = null;
     private boolean goToSetting = false;
 
@@ -96,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
     private JSONObject mJSONObject;
     private ProviderData mProviderData;
 
+    private MyBilling mBilling;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = getApplicationContext();
 
-        prefTheme = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme));
+        prefTheme = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme));
         Utils.setTheme(this, prefTheme);
 
         setContentView(R.layout.activity_main);
@@ -112,6 +115,9 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mPreferences = getSharedPreferences(MainActivity.class.getName(), Context.MODE_PRIVATE);
+
+        mBilling = new MyBilling(MainActivity.this);
+        mBilling.onCreate();
 
 //        firstRun = mPreferences.getBoolean("firstRun", true);
 //        if (firstRun) {
@@ -121,12 +127,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mBilling.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
-
-//        if (goToSetting)
-//            initialSetup();
 
     }
 
@@ -136,18 +144,19 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.d(TAG, "onResume");
 
-        if (!Utils.checkInternetConnession(mContext))
+        if (!Utils.checkInternetConnession(mContext)) {
             showSnackbar(3);
-        else if (!Utils.checkGpsEnable(mContext))
+        } else if (prefUseGps && !Utils.checkGpsEnable(mContext)) {
             showSnackbar(2);
-        else if (!Utils.checkPermission(mContext))
-            askPermission();
-        else if (mJSONObject == null)
+        } else if (prefUseGps && !Utils.checkPermission(mContext)) {
+            PermissionUtils.askPermission(MainActivity.this);
+        } else if (mJSONObject == null) {
             initialSetup();
+        }
 
-
-        if (goToSetting)
+        if (goToSetting) {
             checkPreferences();
+        }
 //        lastRefresh = mPreferences.getLong("lastRefresh", 0);
 //        if (System.currentTimeMillis() - lastRefresh >= 1000 * 60 * 10)
 //            new task().execute(nullString);
@@ -158,8 +167,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         Log.d(TAG, "onStop");
 
-//        if (mLocationGPS.isConnected())
-//            mLocationGPS.stopUsingGPS();
+        if (mLocationGPS != null && mLocationGPS.isConnected()) {
+            mLocationGPS.stopUsingGPS();
+        }
     }
 
     @Override
@@ -172,8 +182,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mViewPager != null)
+        if (mViewPager != null) {
             mViewPager.removeAllViews();
+        }
+
+        if (mBilling != null) {
+            mBilling.onDestroy();
+        }
     }
 
     @Override
@@ -188,25 +203,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkPreferences() {
-        if (!prefTheme.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme)))) {
-            prefTheme = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme));
+        if (!prefTheme.equals(PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme))) /*&&
+                !prefProvider.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider)))*/) {
+            prefTheme = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme));
+//            prefProvider = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
             MainActivity.this.recreate();
         }
 
         // FIXME: 09/09/2016 se cambio tema e provider crasha
-        else if (!prefTemperature.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature))) ||
-                !prefSpeed.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed))) ||
-                !prefTime.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time))) ||
-                !prefProvider.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider)))) {
+        else if (!prefTemperature.equals(PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature))) ||
+                !prefSpeed.equals(PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed))) ||
+                !prefTime.equals(PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time))) ||
+                !prefProvider.equals(PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider)))) {
 
-            prefProvider = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
-            prefTemperature = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature));
-            prefSpeed = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed));
-            prefTime = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time));
+            prefProvider = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
+            prefTemperature = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature));
+            prefSpeed = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed));
+            prefTime = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time));
 
-            if (!mProgressDialog.isShowing())
+            if (mViewPager != null) {
+                mViewPager.removeAllViews();
+            }
+            if (!mProgressDialog.isShowing()) {
                 mProgressDialog.show();
+            }
             new task().execute(nullString);
+        } else if (prefUseGps != PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_use_gps), false)) {
+            prefUseGps = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_use_gps), false);
+            mJSONObject = null;
+            MainActivity.this.onResume();
         }
     }
 
@@ -217,13 +242,20 @@ public class MainActivity extends AppCompatActivity {
         mProgressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
-        prefProvider = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
-        prefTemperature = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature));
-        prefSpeed = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed));
-        prefTime = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time));
+        prefProvider = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
+        prefTemperature = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature));
+        prefSpeed = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed));
+        prefTime = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time));
+        prefUseGps = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_use_gps), false);
 
-        mLocationGPS = new LocationGPS(mContext);
-        mLocation = mLocationGPS.getLocation();
+        if (DEBUG_MODE) { //se sono in debug l'app è pro
+            PreferencesUtils.setPreferences(mContext, getResources().getString(R.string.key_pro_version), true);
+        }
+
+        if (prefUseGps) {
+            mLocationGPS = new LocationGPS(mContext);
+            mLocation = mLocationGPS.getLocation();
+        }
 
         mLocationIP = new LocationIP();
 
@@ -232,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
         setSearchView();
 
         mProviderData = new ProviderData(mContext, getResources());
-        mPlaceAutocomplete = new PlaceAutocomplete();
+        mPlaceAutocomplete = new PlaceAutocomplete(mContext);
 
         new task().execute(nullString);
     }
@@ -272,6 +304,26 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(intent);
                             goToSetting = true;
 //                            mJSONObject = null;
+                            break;
+
+                        case R.id.drawer_item_pro_version:
+                            if (!PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pro_version), false)) {
+                                mBilling.purchaseDialog(getResources().getString(R.string.dialog_pro_version_title),
+                                        getResources().getString(R.string.dialog_pro_version_message),
+                                        getResources().getString(R.string.action_OK),
+                                        getResources().getString(R.string.action_cancel));
+                            } else {
+                                final AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                                dialog.setTitle(getResources().getString(R.string.dialog_already_pro_version));
+                                dialog.setPositiveButton(getResources().getString(R.string.action_OK), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                                dialog.show();
+                            }
+                            break;
                     }
                     mDrawer.closeDrawer(GravityCompat.START);
                     return false;
@@ -282,8 +334,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setViewPager(String argument) {
-        Log.d(TAG, "setViewPager");
         FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), mContext, argument);
+
         if (mViewPager != null) {
             mViewPager.setAdapter(fragmentAdapter);
         }
@@ -295,10 +347,122 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setSearchView() {
+//        final Handler handler = new Handler();
+//        mSearchAdapter = new SearchAdapter(mContext);
+////        mHistoryDatabase = new SearchHistoryTable(mContext);
+////        mHistoryDatabase.setHistorySize(4);
+//        suggestionsList = new ArrayList<>();
+//        if (mSearchView != null) {
+//            mSearchView.setVersion(SearchView.VERSION_TOOLBAR);
+//            mSearchView.setVersionMargins(SearchView.VERSION_MARGINS_TOOLBAR_BIG);
+//            mSearchView.setElevation(10);
+//            mSearchView.setHint(R.string.hint_search_view);
+//            mSearchView.setVoice(false);
+//            mSearchView.setShadow(false);
+//            mSearchView.setDivider(false);
+//            mSearchView.setAnimationDuration(SearchView.ANIMATION_DURATION);
+//            mSearchView.setNavigationIconArrowHamburger();
+//
+//
+//            if (prefTheme.equals(getResources().getString(R.string.default_pref_theme)))
+//                mSearchView.setTheme(SearchView.THEME_LIGHT, true);
+//            else
+//                mSearchView.setTheme(SearchView.THEME_DARK, true);
+//
+//            mSearchView.setOnMenuClickListener(new SearchView.OnMenuClickListener() {
+//                @Override
+//                public void onMenuClick() {
+//                    mDrawer.openDrawer(GravityCompat.START);
+//                }
+//            });
+//
+//            mSearchView.setOnOpenCloseListener(new SearchView.OnOpenCloseListener() {
+//                @Override
+//                public void onClose() {
+//                }
+//
+//                @Override
+//                public void onOpen() {
+//                }
+//            });
+//
+//            // FIXME: 08/09/2016 click historyTable cause crash app
+//            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                @Override
+//                public boolean onQueryTextChange(final String query) {
+//                    if (query.length() >= 2) {
+////                        if (!firstSuggestion.contains(query)) {    // FIXME: 13/09/2016 i suggerimenti sono lenti ad apparire
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Log.d(TAG, "run thread");
+//                                mPlaceAutocomplete.autocomplete(query);
+//
+//                                handler.post(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        suggestionsList = mPlaceAutocomplete.getSuggestionList();
+//                                        Log.d(TAG, "suggestionList " + suggestionsList.size());
+////                                            firstSuggestion = suggestionsList.get(0).get_text().toString();
+////                                            Log.d(TAG, "firstSuggetion " + firstSuggestion);
+//                                        mSearchAdapter.setSuggestionsList(suggestionsList);
+//                                        Log.d(TAG, "searchAdapter " + mSearchAdapter.getItemCount());
+//                                        mSearchView.setAdapter(mSearchAdapter); // FIXME: 16/09/2016  java.lang.IllegalArgumentException: Scrapped or attached views may not be recycled. isScrap:false isAttached:true
+//                                    }
+//                                });
+//                            }
+//                        }).start();
+//
+//
+////                        } else {
+////                            Log.d(TAG, "searchView first suggestion eqauals");
+////                            suggestionsList = mPlaceAutocomplete.getSuggestionList();
+////                            Log.d(TAG, "searchView suggestionList " + suggestionsList.size());
+////                            mSearchAdapter.setSuggestionsList(suggestionsList.subList(0,1));
+////                            Log.d(TAG, "searchView searchAdapter " + mSearchAdapter.getItemCount());
+////                            mSearchView.setAdapter(mSearchAdapter);
+////                        }
+//                    }
+//                    return true;
+//                }
+//
+//                @Override
+//                public boolean onQueryTextSubmit(String query) {
+//                    mSearchView.close(false);
+//                    return false;
+//                }
+//            });
+//
+//            // FIXME: 03/09/2016 agiungere un altro searchAdapter risolve il bug che non fa vedere i suggerimenti
+//            SearchAdapter searchAdapter = new SearchAdapter(mContext, null);
+//            mSearchView.setAdapter(searchAdapter);
+////
+//
+//
+//            mSearchAdapter.addOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(View view, int position) {
+//                    mSearchView.close(false);
+//                    searchViewItemClick = true;
+//                    TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
+//                    if (!textView.getText().toString().equals(getResources().getString(R.string.no_result_suggestion))) { //if string not equals at no result
+//                        String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //troncare stringa da 0 al char ','
+//                        Log.d(TAG, "item " + item);
+////                    mHistoryDatabase.open();
+////                    mHistoryDatabase.addItem(new SearchItem(item));
+////                    mLocation = LocationUtils.getCoordinateByName(mContext, item);
+////                    mHistoryDatabase.clearDatabase();
+////                    mHistoryDatabase.close();
+//                        new task().execute(item);
+//                        if (!mProgressDialog.isShowing())
+//                            mProgressDialog.show();
+//                    }
+//                }
+//            });
+//        }
+
         final Handler handler = new Handler();
         mSearchAdapter = new SearchAdapter(mContext);
-//        mHistoryDatabase = new SearchHistoryTable(mContext);
-//        mHistoryDatabase.setHistorySize(4);
         suggestionsList = new ArrayList<>();
         if (mSearchView != null) {
             mSearchView.setVersion(SearchView.VERSION_TOOLBAR);
@@ -307,16 +471,13 @@ public class MainActivity extends AppCompatActivity {
             mSearchView.setHint(R.string.hint_search_view);
             mSearchView.setVoice(false);
             mSearchView.setShadow(false);
-            mSearchView.setDivider(false);
             mSearchView.setAnimationDuration(SearchView.ANIMATION_DURATION);
-            mSearchView.setNavigationIconArrowHamburger();
 
-
-            if (prefTheme.equals(getResources().getString(R.string.default_pref_theme)))
+            if (prefTheme.equals(getResources().getString(R.string.default_pref_theme))) {
                 mSearchView.setTheme(SearchView.THEME_LIGHT, true);
-            else
+            } else {
                 mSearchView.setTheme(SearchView.THEME_DARK, true);
-
+            }
             mSearchView.setOnMenuClickListener(new SearchView.OnMenuClickListener() {
                 @Override
                 public void onMenuClick() {
@@ -334,36 +495,33 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            // FIXME: 08/09/2016 click historyTable cause crash app
             mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
-                public boolean onQueryTextChange(final String newText) {
-                    if (newText.length() >= 2) {
-                        if (!firstSuggestion.contains(newText)) {    // FIXME: 13/09/2016 i suggerimenti sono lenti ad apparire
+                public boolean onQueryTextChange(final String query) {
+                    if (query.length() > 1) {
+                        if (!firstSuggestion.toLowerCase().contains(query.toLowerCase())) {
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.d(TAG, "run thread");
-                                    mPlaceAutocomplete.autocomplete(newText);
+                                    mPlaceAutocomplete.autocomplete(query);
 
                                     handler.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             suggestionsList = mPlaceAutocomplete.getSuggestionList();
-                                            Log.d(TAG, "suggestionList " + suggestionsList.size());
+                                            Log.d(TAG, "suggestion list size " + suggestionsList.size());
                                             firstSuggestion = suggestionsList.get(0).get_text().toString();
-                                            Log.d(TAG, "firstSuggetion " + firstSuggestion);
                                             mSearchAdapter.setSuggestionsList(suggestionsList);
-                                            Log.d(TAG, "searchAdapter " + mSearchAdapter.getItemCount());
-                                            mSearchView.setAdapter(mSearchAdapter); // FIXME: 16/09/2016  java.lang.IllegalArgumentException: Scrapped or attached views may not be recycled. isScrap:false isAttached:true
+                                            Log.d(TAG, "searchAdapter size " + mSearchAdapter.getItemCount());
+                                            mSearchView.setAdapter(mSearchAdapter);
                                         }
                                     });
                                 }
                             }).start();
-
-                        }
+                        } else
+                            mSearchView.setAdapter(mSearchAdapter);
                     }
-                    return false;
+                    return true;
                 }
 
                 @Override
@@ -373,41 +531,21 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            // FIXME: 03/09/2016 agiungere un altro searchAdapter risolve il bug che non fa vedere i suggerimenti
-            SearchAdapter searchAdapter = new SearchAdapter(mContext, suggestionsList);
-            mSearchView.setAdapter(searchAdapter);
+            mSearchView.setAdapter(mSearchAdapter);
 
 
-//            mSearchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(View view, int position) {
-//                    mSearchView.close(false);
-//                    TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
-//                    String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //troncare stringa da 0 al char ','
-//                    mHistoryDatabase.addItem(new SearchItem(item));
-//                    mLocation = LocationUtils.getCoordinateByName(mContext, item);
-//                    mHistoryDatabase.clearDatabase();
-//                    new task().execute(item);
-//                    if (!mProgressDialog.isShowing())
-//                        mProgressDialog.show();
-//                }
-//            });
-
-            mSearchAdapter.addOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+            mSearchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     mSearchView.close(false);
                     TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
-                    String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //troncare stringa da 0 al char ','
-                    Log.d(TAG, "item " + item);
-//                    mHistoryDatabase.open();
-//                    mHistoryDatabase.addItem(new SearchItem(item));
-//                    mLocation = LocationUtils.getCoordinateByName(mContext, item);
-//                    mHistoryDatabase.clearDatabase();
-//                    mHistoryDatabase.close();
-                    new task().execute(item);
-                    if (!mProgressDialog.isShowing())
-                        mProgressDialog.show();
+                    if (!textView.getText().toString().equals(getResources().getString(R.string.no_result_suggestion))) { //if string not equals at no result
+                        String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //troncare stringa da 0 al char ','
+                        new task().execute(item);
+                        if (!mProgressDialog.isShowing()) {
+                            mProgressDialog.show();
+                        }
+                    }
                 }
             });
         }
@@ -421,7 +559,7 @@ public class MainActivity extends AppCompatActivity {
                 mSnackbar.setAction(R.string.action_OK, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        askPermission();
+                        PermissionUtils.askPermission(MainActivity.this);
                     }
                 });
                 mSnackbar.setActionTextColor(Color.YELLOW);
@@ -469,6 +607,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         new task().execute(nullString);
+                        if (!mProgressDialog.isShowing())
+                            mProgressDialog.show();
                     }
                 });
                 mSnackbar.setActionTextColor(Color.YELLOW);
@@ -477,11 +617,6 @@ public class MainActivity extends AppCompatActivity {
         mSnackbar.show();
     }
 
-
-    private void askPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -502,35 +637,36 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            Log.d(TAG, "onPreExecute");
+//            Log.d(TAG, "onPreExecute");
 
-            if (mViewPager != null) {      // FIXME: 18/09/2016 fix provvisorio per memory leak. Ogni volta ricreo i fragment del viewpager usando molta memoria
+            if (searchViewItemClick && mViewPager != null) {
                 mViewPager.removeAllViews();
-                Log.d(TAG, "remove viewpager view");
             }
-            // FIXME: 18/09/2016 se cambio tema il viewPager non "carica" i dati
+
+//            if (mSnackbar!=null && mSnackbar.isShown())
+//                mSnackbar.dismiss();
         }
 
         @Override
         protected Void doInBackground(String... params) {
-            Log.d(TAG, "doInBackground");
+//            Log.d(TAG, "doInBackground");
 
             if (params[0] != null) {
+                Log.d(TAG, "doInBackground string not null");
                 mLocation = LocationUtils.getCoordinateByName(mContext, params[0]);
                 mJSONObject = mProviderData.getProviderData(prefProvider, mLocation.getLatitude(), mLocation.getLongitude(),
                         LocationUtils.getLocationName(mContext, mLocation.getLatitude(), mLocation.getLongitude()));
             } else {
 
-                if (mLocation != null) {
-//                    Log.d(TAG,"location not null");
+                if (prefUseGps && mLocation != null) {
+                    Log.d(TAG, "doInBackground location not null");
                     mJSONObject = mProviderData.getProviderData(prefProvider, mLocation.getLatitude(), mLocation.getLongitude(),
                             LocationUtils.getLocationName(mContext, mLocation.getLatitude(), mLocation.getLongitude()));
 
                 } else {
-//                    Log.d(TAG,"location null, using ip");
+                    Log.d(TAG, "doInBackground location null, using ip");
                     final String ip = mLocationIP.getExternalIP();
                     mLocationIP.getLocation(ip);
-//                    Log.d(TAG,"lat location ip "+mLocationIP.getLatitude());
                     mJSONObject = mProviderData.getProviderData(prefProvider, mLocationIP.getLatitude(), mLocationIP.getLongitude(),
                             LocationUtils.getLocationName(mContext, mLocationIP.getLatitude(), mLocationIP.getLongitude()));
                 }
@@ -540,32 +676,41 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void v) {
-            Log.d(TAG, "onPostExecute");
+//            Log.d(TAG, "onPostExecute");
 
             RelativeLayout placeholderLayout = (RelativeLayout) findViewById(R.id.placeholder_layout);
 
             if (mJSONObject != null) {
-//                Log.d(TAG,"JsonObject "+mJSONObject);
-
-//                if (mViewPager != null) {
-//                    mViewPager.removeAllViews();
-//                    Log.d(TAG,"remove viewpager view");
-//                }
                 setViewPager(mJSONObject.toString());
-                placeholderLayout.setVisibility(View.INVISIBLE);
-                // FIXME: 18/09/2016 provare con setContentView al posto del placehoder
+                placeholderLayout.setVisibility(View.INVISIBLE); // FIXME: 18/09/2016 provare con setContentView al posto del placehoder
             } else {
                 showSnackbar(4);
-                if (mViewPager != null)
+                if (mViewPager != null) {
                     mViewPager.removeAllViews();
+                }
                 placeholderLayout.setVisibility(View.VISIBLE);
             }
 
-            if (mProgressDialog.isShowing())
+            if (mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
+            }
 
+            searchViewItemClick = false;
 //            mPreferences.edit().putLong("lastRefresh", System.currentTimeMillis()).apply();
+
         }
     }
+
+//    public class testLoader extends AsyncTaskLoader<String> {
+//
+//        public testLoader(Context context) {
+//            super(context);
+//        }
+//
+//        @Override
+//        public String loadInBackground() {
+//            return null;
+//        }
+//    }
 
 }

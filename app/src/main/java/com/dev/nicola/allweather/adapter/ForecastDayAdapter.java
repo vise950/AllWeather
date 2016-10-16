@@ -39,8 +39,7 @@ public class ForecastDayAdapter extends RecyclerView.Adapter<ForecastDayAdapter.
         ForecastDay forecastDay = mForecastDayList.get(position);
         holder.date.setText(forecastDay.getDate());
         holder.condition.setText(forecastDay.getCondition());
-        holder.temperature.setText(String.valueOf(forecastDay.getTemperature()) + "°");
-//        holder.temperature.setText(String.format(Resources.getSystem().getString(R.string.temperature),forecast.getTemperature()));
+        holder.temperature.setText(String.valueOf(forecastDay.getTemperature()));
         holder.icon.setImageResource(forecastDay.getIcon());
     }
 
@@ -59,7 +58,7 @@ public class ForecastDayAdapter extends RecyclerView.Adapter<ForecastDayAdapter.
         @BindView(R.id.icon_forecast_day)
         ImageView icon;
 
-        public ForecastViewHolder(View view) {
+        ForecastViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }

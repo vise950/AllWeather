@@ -4,6 +4,7 @@
     <string name="key_pref_temperature" translatable="false">temperature</string>
     <string name="key_pref_speed" translatable="false">speed</string>
     <string name="key_pref_time" translatable="false">time</string>
+    <string name="key_pref_use_gps" translatable="false">useGps</string>
     <string name="key_pref_theme" translatable="false">theme</string>
     <string name="key_pref_provider" translatable="false">provider</string>
 
@@ -12,5 +13,7 @@
     <string name="default_pref_time" translatable="false">24</string>
     <string name="default_pref_theme" translatable="false">light</string>
     <string name="default_pref_provider" translatable="false">forecastIO</string>
+
+    <string name="key_pro_version" translatable="false">isProVersion</string>
 
 </resources>

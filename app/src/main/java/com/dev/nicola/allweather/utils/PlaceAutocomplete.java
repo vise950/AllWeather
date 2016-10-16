@@ -1,7 +1,10 @@
 package com.dev.nicola.allweather.utils;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.dev.nicola.allweather.BuildConfig;
+import com.dev.nicola.allweather.R;
 import com.lapism.searchview.SearchItem;
 
 import org.json.JSONArray;
@@ -11,6 +14,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -25,10 +29,15 @@ public class PlaceAutocomplete {
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
     private static final String OUT_JSON = "/json";
     private static final String TYPES = "(cities)";
-    private static final String GOOGLE_API_KEY = "AIzaSyASZMgu_N3JTvHcbLhs57ZEKOEyqrIPF6g";
+    private static final String GOOGLE_API_KEY = BuildConfig.AUTOCOMPLETE_API_KEY;
 
     private static String TAG = PlaceAutocomplete.class.getSimpleName();
-    public List<SearchItem> suggestionsList;
+    private Context mContext;
+    private List<SearchItem> suggestionsList;
+
+    public PlaceAutocomplete(Context context) {
+        this.mContext = context;
+    }
 
     public void autocomplete(String query) {
         String url;
@@ -37,12 +46,10 @@ public class PlaceAutocomplete {
 
         url = PLACES_API_BASE + TYPE_AUTOCOMPLETE +
                 OUT_JSON +
-                "?input=" +
-                query +
-                "&types=" +
-                TYPES +
-                "&key=" +
-                GOOGLE_API_KEY;
+                "?input=" + query +
+                "&types=" + TYPES +
+                "&language=" + Locale.getDefault().getLanguage() +
+                "&key=" + GOOGLE_API_KEY;
 
         Log.d(TAG, "url autocomplete " + url);
 
@@ -57,15 +64,19 @@ public class PlaceAutocomplete {
 
             JSONObject object = new JSONObject(responseData);
             JSONArray predsJsonArray = object.getJSONArray("predictions");
-            for (int i = 0; i < 3; i++) {
-                suggestion = predsJsonArray.getJSONObject(i).getString("description");
-                Log.d(TAG, "suggestion " + suggestion);
-                int index = suggestion.indexOf(',');
-                int lastIndex = suggestion.lastIndexOf(',');
-                if (index != lastIndex)
-                    suggestion = suggestion.substring(0, index) + suggestion.substring(lastIndex, suggestion.length());
+            if (predsJsonArray.length() == 0) {
+                suggestionsList.add(new SearchItem(mContext.getString(R.string.no_result_suggestion)));
+            } else {
+                for (int i = 0; i < 3; i++) {
+                    suggestion = predsJsonArray.getJSONObject(i).getString("description");
+                    Log.d(TAG, "searchView suggestion " + suggestion);
+                    int index = suggestion.indexOf(',');
+                    int lastIndex = suggestion.lastIndexOf(',');
+                    if (index != lastIndex)
+                        suggestion = suggestion.substring(0, index) + suggestion.substring(lastIndex, suggestion.length());
 
-                suggestionsList.add(new SearchItem(suggestion));
+                    suggestionsList.add(new SearchItem(suggestion));
+                }
             }
 
         } catch (IOException | JSONException e) {

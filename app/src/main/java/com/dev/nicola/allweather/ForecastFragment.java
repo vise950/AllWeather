@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.dev.nicola.allweather.adapter.ForecastDayAdapter;
 import com.dev.nicola.allweather.model.ForecastDay;
@@ -33,6 +34,8 @@ public class ForecastFragment extends Fragment {
     RecyclerView mRecyclerView;
     @BindView(R.id.adView)
     AdView mAdView;
+    @BindView(R.id.lineat_layout_ads)
+    LinearLayout mLinearLayout;
     private ProviderData mProviderData;
     private String argument;
 
@@ -88,7 +91,7 @@ public class ForecastFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        String prefProvider = PreferencesUtils.getPreferences(getContext(), getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
+        String prefProvider = PreferencesUtils.getDefaultPreferences(getContext(), getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
 
         mProviderData.elaborateData(prefProvider, argument);
 
@@ -105,9 +108,13 @@ public class ForecastFragment extends Fragment {
 
         argument = null;
 
-        AdRequest adRequest = new AdRequest.Builder().build();
-        if (mAdView != null)
-            mAdView.loadAd(adRequest);
+        if (!PreferencesUtils.getPreferences(getActivity(), getResources().getString(R.string.key_pro_version), false)) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            if (mAdView != null)
+                mAdView.loadAd(adRequest);
+        } else {
+            mLinearLayout.removeAllViews();
+        }
 
         return view;
     }

@@ -14,7 +14,7 @@ import com.dev.nicola.allweather.R;
  */
 public class FragmentAdapter extends FragmentStatePagerAdapter {
 
-    final int PAGE_COUNT = 2;
+    private final int PAGE_COUNT = 2;
     private Context context;
     private String argument;
 

@@ -13,75 +13,30 @@
     <string name="tab2_title">WEEK</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_unlock_pro">Unlock pro</string>
 
-    <string name="first_category">Units</string>
-
+    <string name="pref_first_category">Units</string>
     <string name="pref_temperature">Temperature</string>
-    <string-array name="temperature_unit">
-        <item>Celsius (C)</item>
-        <item>Fahrenheit (F)</item>
-        <item>Kelvin (K)</item>
-    </string-array>
-    <string-array name="temperature_value" translatable="false">
-        <item>celsius</item>
-        <item>fahrenheit</item>
-        <item>kelvin</item>
-    </string-array>
-
     <string name="pref_speed">Speed</string>
-    <string-array name="speed_unit">
-        <item>Miles per hour (Mph)</item>
-        <item>Kilometers per hour (Km/h)</item>
-        <item>Meters per second (M/s)</item>
-    </string-array>
-    <string-array name="speed_value" translatable="false">
-        <item>mph</item>
-        <item>kmh</item>
-        <item>ms</item>
-    </string-array>
-
     <string name="pref_time">Time</string>
-    <string-array name="time_unit">
-        <item>0-12</item>
-        <item>0-24</item>
-    </string-array>
-    <string-array name="time_value" translatable="false">
-        <item>12</item>
-        <item>24</item>
-    </string-array>
-
-    <string name="second_category">General</string>
-
+    <string name="pref_second_category">General</string>
+    <string name="pref_use_gps">Improve weather data</string>
+    <string name="pref_use_gps_desc">Use gps for improve location</string>
     <string name="pref_theme">Theme</string>
-    <string-array name="theme_unit">
-        <!--<item>Auto</item>-->
-        <item>Light</item>
-        <item>Dark</item>
-    </string-array>
-    <string-array name="theme_value" translatable="false">
-        <!--<item>auto</item>-->
-        <item>light</item>
-        <item>dark</item>
-    </string-array>
-
-    <string name="provider">Weather provider</string>
-    <string-array name="provider_unit">
-        <item>ForecastIO</item>
-        <item>Apixu</item>
-    </string-array>
-    <string-array name="provider_value" translatable="false">
-        <item>forecastIO</item>
-        <item>apixu</item>
-    </string-array>
-
+    <string name="pref_provider">Weather provider</string>
 
     <string name="hint_search_view">Search place</string>
+    <string name="no_result_suggestion">No result</string>
 
     <string name="snackbar_1">I don\'t have access to the location\nWould you like to give me permission?</string>
     <string name="snackbar_2">Geolocation is not active\nDo you want to activate it?</string>
     <string name="snackbar_3">No internet connection</string>
     <string name="snackbar_4">Cannot contact the server at this time</string>
     <string name="diaolog_connection_disable">Enable Wifi or data connection</string>
+    <string name="dialog_preference_yahoo">Yahoo don\'t support the hourly forecast</string>
+    <string name="dialog_pro_version_title">Pro features</string>
+    <string name="dialog_pro_version_message">"-Unlock all weather provider\n-Remove ads"</string>
+    <string name="dialog_already_pro_version">Already pro</string>
 
     <string name="action_OK">OK</string>
     <string name="action_retry">RETRY</string>
@@ -97,5 +52,4 @@
     <string name="wind" translatable="false">%1$s %2$s</string>
     <string name="humidity" translatable="false">%1$s%%</string>
     <string name="pressure" translatable="false">%1$s mb</string>
-
 </resources>
