@@ -16,28 +16,9 @@ import okhttp3.Response;
  */
 public class LocationIP {
 
-    private static final String BASE = " http://api.ipinfodb.com/v3/ip-city/";
-    private static final String FORMAT = "?format=json";
-    private static final String API_KEY = "4eea81c1ec8394806a3f5f774bbcd4f97d680cfcaf47e7cf68be05589ed80a36";
-    /**
-     * Example request:
-     * http://api.ipinfodb.com/v3/ip-city/?format=json&key=API_KEY&ip=IP_ADDRESS
-     * <p/>
-     * Example response:
-     * {
-     * "statusCode" : "OK",
-     * "statusMessage" : "",
-     * "ipAddress" : "74.125.45.100",
-     * "countryCode" : "US",
-     * "countryName" : "UNITED STATES",
-     * "regionName" : "CALIFORNIA",
-     * "cityName" : "MOUNTAIN VIEW",
-     * "zipCode" : "94043",
-     * "latitude" : "37.3861",
-     * "longitude" : "-122.084",
-     * "timeZone" : "-07:00"
-     * }
-     */
+    private static final String BASE = "http://freegeoip.net/";
+    private static final String FORMAT = "json/";
+
 
     private static String TAG = LocationIP.class.getSimpleName();
     public Double latitude;
@@ -47,6 +28,17 @@ public class LocationIP {
     private Request mRequest;
     private Response mResponse;
     private JSONObject mObject;
+
+
+    /**
+     * @return String with external IP
+     * <p>
+     * Example request IP:
+     * https://wtfismyip.com/text
+     * <p>
+     * Example response:
+     * 82.48.162.147
+     */
 
     public String getExternalIP() {
         String url = "https://wtfismyip.com/text";
@@ -65,14 +57,35 @@ public class LocationIP {
         return ip;
     }
 
+
+    /**
+     *
+     * @param IP is external IP for create server request for location
+     *
+     * Example request position:
+    http://freegeoip.net/json/IP_ADDRESS
+     *
+     * Example response:
+    {
+    ip: "82.48.162.147",
+    country_code: "IT",
+    country_name: "Italy",
+    region_code: "34",
+    region_name: "Veneto",
+    city: "Creazzo",
+    zip_code: "36051",
+    time_zone: "Europe/Rome",
+    latitude: 45.5315,
+    longitude: 11.4779,
+    metro_code: 0
+    }
+     */
+
     public void getLocation(String IP) {
         String url;
 
         mBuilder = new StringBuilder(BASE);
         mBuilder.append(FORMAT);
-        mBuilder.append("&key=");
-        mBuilder.append(API_KEY);
-        mBuilder.append("&ip=");
         mBuilder.append(IP);
         url = mBuilder.toString();
 

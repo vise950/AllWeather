@@ -29,6 +29,13 @@ public class LocationGPS extends Service implements LocationListener {
         this.mContext = context;
     }
 
+
+    /**
+     * take location first with network provider and before if network provider is null with gps sensor
+     * network provider is more fast than gps provider
+     *
+     * @return location
+     */
     public Location getLocation() {
         try {
             if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -47,8 +54,8 @@ public class LocationGPS extends Service implements LocationListener {
 
                 // First get location from Network Provider
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                if (locationManager != null)
-                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    if (locationManager != null)
+                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
                 // if getLocation with network is null use GPS Provider
                 if (location == null) {

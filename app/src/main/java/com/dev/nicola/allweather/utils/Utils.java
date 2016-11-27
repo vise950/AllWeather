@@ -1,13 +1,10 @@
 package com.dev.nicola.allweather.utils;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.dev.nicola.allweather.R;
 
@@ -15,16 +12,6 @@ import com.dev.nicola.allweather.R;
  * Created by Nicola on 02/04/2016.
  */
 public class Utils {
-
-    public static boolean checkPermission(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
-    }
 
 
     public static boolean checkGpsEnable(Context context) {
@@ -40,14 +27,19 @@ public class Utils {
                 connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 
-    public static void setTheme(Activity activity, String theme) {
-        if (theme.equals("light"))
-            activity.setTheme(R.style.lightTheme);
-        else
-            activity.setTheme(R.style.darkTheme);
+    public static void setTheme(Context context) {
+        switch (PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_pref_theme), context.getString(R.string.default_pref_theme))) {
+
+            case "light":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "dark":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            case "auto":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+        }
     }
-
-
 
 
 }

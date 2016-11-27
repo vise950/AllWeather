@@ -32,7 +32,7 @@ public class MyBilling {
     // The helper object
     private IabHelper mHelper;
 
-    private String base64EncodedPublicKey = BuildConfig.APPLICATION_API_KEY;
+    private String base64EncodedPublicKey = BuildConfig.LICENSE_API_KEY;
     private Boolean isProVersion = false;
     private String payload = "AllWeatherPro";
     // Listener that's called when we finish querying the items and
@@ -60,6 +60,9 @@ public class MyBilling {
 //            Constants.isAdsDisabled = (removeAdsPurchase != null && verifyDeveloperPayload(removeAdsPurchase));
             if (purchase != null && verifyDeveloperPayload(purchase))
                 setIsProVersion();
+            else
+                setIsNotProVersion();
+
         }
     };
     // Callback for when a purchase is finished
@@ -200,6 +203,7 @@ public class MyBilling {
         });
     }
 
+
     public void consume(final String skuName) {
         mHelper.queryInventoryAsync(true, new IabHelper.QueryInventoryFinishedListener() {
             @Override
@@ -217,6 +221,11 @@ public class MyBilling {
         PreferencesUtils.setPreferences(activity.getApplicationContext(), "isProVersion", isProVersion);
     }
 
+    private void setIsNotProVersion() {
+        isProVersion = false;
+        PreferencesUtils.setPreferences(activity.getApplicationContext(), "isProVersion", isProVersion);
+    }
+
 
     // message for error action
     private void complain(final String message) {
@@ -225,7 +234,7 @@ public class MyBilling {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
     }

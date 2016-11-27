@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.1'
+        classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -21,6 +21,19 @@ allprojects {
 
     }
 }
+
+
+ext {
+    //dependencies
+    supportLibraryVersion = '25.0.0'
+    playServicesLibraryVersion = '9.8.00'
+    okHttpLibraryVersion = '3.4.1'
+    gsonLibraryVersion = '2.7'
+    searchViewLibraryVersion = '4.0'//'3.4.1'
+    butterknifeLibraryVersion = '8.4.0'
+    picassoLibraryVersion = '2.5.2'
+}
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir

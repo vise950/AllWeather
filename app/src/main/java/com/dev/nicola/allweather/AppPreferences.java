@@ -1,17 +1,17 @@
 package com.dev.nicola.allweather;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.dev.nicola.allweather.utils.PreferencesUtils;
+import com.dev.nicola.allweather.utils.SnackbarUtils;
+import com.dev.nicola.allweather.utils.Utils;
 
 /**
  * Created by Nicola on 07/04/2016.
@@ -23,10 +23,7 @@ public class AppPreferences extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme)).equals("light"))
-            setTheme(R.style.AppTheme);
-        else
-            setTheme(R.style.AppThemeDark);
+        Utils.setTheme(getApplicationContext());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
@@ -66,22 +63,34 @@ public class AppPreferences extends AppCompatActivity {
             /*
              * se proVersion==true mostro tutti i provider altrimenti solo uno
              */
-            ListPreference lp = (ListPreference) findPreference(getResources().getString(R.string.key_pref_provider));
+            ListPreference listProvider = (ListPreference) findPreference(getResources().getString(R.string.key_pref_provider));
+
+//            listProvider.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//                @Override
+//                public boolean onPreferenceClick(Preference preference) {
+//                    Log.d("Preferences","click list provider");
+//                    preference.setEnabled(true);
+//
+//                    return true;
+//                }
+//            });
+
             if (isProVersion) {
-                lp.setEntries(getResources().getStringArray(R.array.provider_unit_pro));
-                lp.setEntryValues(getResources().getStringArray(R.array.provider_value_pro));
-                lp.setDefaultValue(getResources().getString(R.string.default_pref_provider));
+                listProvider.setEntries(getResources().getStringArray(R.array.provider_unit_pro));
+                listProvider.setEntryValues(getResources().getStringArray(R.array.provider_value_pro));
+                listProvider.setDefaultValue(getResources().getString(R.string.default_pref_provider));
             } else {
-                lp.setEntries(getResources().getStringArray(R.array.provider_unit_free));
-                lp.setEntryValues(getResources().getStringArray(R.array.provider_value_free));
-                lp.setDefaultValue(getResources().getString(R.string.default_pref_provider));
+                listProvider.setEntries(getResources().getStringArray(R.array.provider_unit_free));
+                listProvider.setEntryValues(getResources().getStringArray(R.array.provider_value_free));
+                listProvider.setDefaultValue(getResources().getString(R.string.default_pref_provider));
+//                listProvider.setEnabled(true);
             }
 
             
             /*
              * quando cambio tema riavvio le impostazioni in modo da applicare il tema
              */
-            final Preference theme = findPreference(getResources().getString(R.string.key_pref_theme));
+            Preference theme = findPreference(getResources().getString(R.string.key_pref_theme));
             theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object value) {
@@ -93,22 +102,14 @@ public class AppPreferences extends AppCompatActivity {
 
 
             /*
-             * se provider==yahoo mostro un dialog 
+             * se provider==yahoo mostro un avviso perchè yahoo non supporta le previsioni orarie
              */
             Preference provider = findPreference(getResources().getString(R.string.key_pref_provider));
             provider.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object value) {
                     if (value.toString().equals("yahoo")) {
-                        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-                        dialog.setMessage(getResources().getString(R.string.dialog_preference_yahoo));
-                        dialog.setPositiveButton(getResources().getString(R.string.action_OK), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                        dialog.show();
+                        SnackbarUtils.showSnackbar(getActivity(), getView(), 5);
                     }
                     return true;
                 }

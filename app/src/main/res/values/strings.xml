@@ -34,9 +34,9 @@
     <string name="snackbar_4">Cannot contact the server at this time</string>
     <string name="diaolog_connection_disable">Enable Wifi or data connection</string>
     <string name="dialog_preference_yahoo">Yahoo don\'t support the hourly forecast</string>
-    <string name="dialog_pro_version_title">Pro features</string>
-    <string name="dialog_pro_version_message">"-Unlock all weather provider\n-Remove ads"</string>
-    <string name="dialog_already_pro_version">Already pro</string>
+    <string name="pro_version_title">Pro features:</string>
+    <string name="pro_version_message">"-Unlock all weather provider"</string>
+    <string name="already_pro_version">Already pro</string>
 
     <string name="action_OK">OK</string>
     <string name="action_retry">RETRY</string>

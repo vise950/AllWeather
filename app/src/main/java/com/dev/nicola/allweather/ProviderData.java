@@ -34,15 +34,15 @@ public class ProviderData {
     private ForecastIOData mForecastIOData;
     private ApixuData mApixuData;
     private YahooData mYahooData;
-    private String location;
-    private String image;
-    private String condition;
-    private String temperature;
-    private String wind;
-    private String humidity;
-    private String pressure;
-    private String sunrise;
-    private String sunset;
+    private String location = "null";
+    private String image = "null";
+    private String condition = "null";
+    private String temperature = "null";
+    private String wind = "null";
+    private String humidity = "null";
+    private String pressure = "null";
+    private String sunrise = "null";
+    private String sunset = "null";
     private List<ForecastDay> mForecastDayList;
     private List<ForecastHour> mForecastHourList;
     private String tempUnits;
@@ -50,14 +50,14 @@ public class ProviderData {
     private String timeUnits;
 
     public ProviderData(Context context, Resources resources) {
-        this.mContext = context;
+        mContext = context;
         this.mResources = resources;
         tempUnits = PreferencesUtils.getDefaultPreferences(context, resources.getString(R.string.key_pref_temperature), resources.getString(R.string.default_pref_temperature));
         windUnits = PreferencesUtils.getDefaultPreferences(context, resources.getString(R.string.key_pref_speed), resources.getString(R.string.default_pref_speed));
         timeUnits = PreferencesUtils.getDefaultPreferences(context, resources.getString(R.string.key_pref_time), resources.getString(R.string.default_pref_time));
     }
 
-    public JSONObject getProviderData(String provider, double latitude, double longitude, String place) {
+    public static JSONObject getProviderData(String provider, double latitude, double longitude, String place) {
         ProviderRequest providerRequest = new ProviderRequest();
         return providerRequest.getData(provider, latitude, longitude, place);
     }
@@ -101,11 +101,7 @@ public class ProviderData {
                 location = LocationUtils.getLocationName(mContext,
                         mForecastIOData.getLatitude(),
                         mForecastIOData.getLongitude());
-                image = ImageUtils.getImage(mResources,
-                        mForecastIOData.getDaily().getData().get(0).getSunriseTime(),
-                        mForecastIOData.getDaily().getData().get(0).getSunsetTime(),
-                        null,
-                        null);
+                image = ImageUtils.getImage(mResources);
                 condition = mForecastIOData.getCurrently().getSummary();
                 temperature = String.format(mResources.getString(R.string.temperature),
                         UnitConverterUtils.temperatureConverter(mForecastIOData.getCurrently().getTemperature(), tempUnits));
@@ -125,11 +121,7 @@ public class ProviderData {
 
             case "apixu":
                 location = mApixuData.getLocation().getName();
-                image = ImageUtils.getImage(mResources,
-                        0,
-                        0,
-                        mApixuData.getForecast().getForecastday().get(0).getAstro().getSunrise(),
-                        mApixuData.getForecast().getForecastday().get(0).getAstro().getSunset());
+                image = ImageUtils.getImage(mResources);
                 condition = mApixuData.getCurrent().getCurrentCondition().getText();
                 temperature = String.format(mResources.getString(R.string.temperature),
                         UnitConverterUtils.temperatureConverter(mApixuData.getCurrent().getTempF(), tempUnits));
@@ -149,11 +141,7 @@ public class ProviderData {
 
             case "yahoo":
                 location = mYahooData.getQuery().getResults().getChannel().getLocation().getCity();
-                image = ImageUtils.getImage(mResources,
-                        0,
-                        0,
-                        mYahooData.getQuery().getResults().getChannel().getAstronomy().getSunrise(),
-                        mYahooData.getQuery().getResults().getChannel().getAstronomy().getSunrise());
+                image = ImageUtils.getImage(mResources);
                 condition = mYahooData.getQuery().getResults().getChannel().getItem().getCondition().getText();
                 temperature = String.format(mResources.getString(R.string.temperature),
                         UnitConverterUtils.temperatureConverter(Integer.parseInt(mYahooData.getQuery().getResults().getChannel().getItem().getCondition().getTemp()), tempUnits));
@@ -200,8 +188,9 @@ public class ProviderData {
                     if (indexHour >= 23) {
                         indexHour = 0;
                         indexDay++;
-                    } else
+                    } else {
                         indexHour++;
+                    }
                 }
                 break;
 

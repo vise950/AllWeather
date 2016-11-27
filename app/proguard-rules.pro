@@ -25,7 +25,7 @@
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
 
-# OkHttp
+#OkHttp
 -keepattributes Signature
 -keepattributes *Annotation*
 -keep class okhttp3.** { *; }
@@ -42,16 +42,15 @@
 #Picasso
 -dontwarn com.squareup.okhttp.**
 
+#Turn off Logging
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
+    public static *** i(...);
+    public static *** e(...);
+    public static *** w(...);
+    public static *** wtf(...);
+}
+
 #In-app billing
 #-keep class com.billing.utils.**
-
-#Logging
-#-assumenosideeffects class android.util.Log {
-#    public static *** e(...);
-#    public static *** w(...);
-#    public static *** wtf(...);
-#    public static *** d(...);
-#    public static *** v(...);
-#}
-
-

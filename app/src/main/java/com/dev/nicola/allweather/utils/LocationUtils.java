@@ -18,15 +18,11 @@ public class LocationUtils {
 
     public static String getLocationName(Context context, double latitude, double longitude) {
         String cityName = "Not Found";
-//        Log.d("LocationUtils","latitude "+latitude);
-//        Log.d("LocationUtils","longitude "+longitude);
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-//            Log.d("LocationUtils","list size "+addresses.size());
             if (addresses.size() > 0) {
                 cityName = addresses.get(0).getLocality();
-//                Log.d("LocationUtils","city "+cityName);
             }
 
         } catch (IOException e) {

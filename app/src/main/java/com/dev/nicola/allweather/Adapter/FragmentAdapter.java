@@ -12,26 +12,28 @@ import com.dev.nicola.allweather.R;
 /**
  * Created by Nicola on 12/05/2016.
  */
+
+/**
+ * Fragment adapter for view pager and tab layout
+ */
 public class FragmentAdapter extends FragmentStatePagerAdapter {
 
     private final int PAGE_COUNT = 2;
     private Context context;
-    private String argument;
 
-    public FragmentAdapter(FragmentManager fm, Context context, String argument) {
+    public FragmentAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
-        this.argument = argument;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return DailyFragment.newInstance(argument);
+                return new DailyFragment();
 
             case 1:
-                return ForecastFragment.newInstance(argument);
+                return new ForecastFragment();
         }
         return null;
     }

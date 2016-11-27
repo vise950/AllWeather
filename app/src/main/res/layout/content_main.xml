@@ -31,38 +31,27 @@
     <!--android:layout_height="match_parent"-->
     <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
-    <RelativeLayout
-        android:id="@+id/placeholder_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:visibility="invisible">
+    <include
+        android:id="@+id/progress_dialog_container"
+        layout="@layout/progress_dialog"
+        android:visibility="gone"/>
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/placeholder_image"/>
+    <include
+        android:id="@+id/placeholder_no_data"
+        layout="@layout/error_no_data"
+        android:visibility="gone"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageView"
-            android:layout_centerHorizontal="true"
-            android:text="No data"
-            android:textColor="@color/secondary_text"
-            android:textSize="22sp"/>
-
-    </RelativeLayout>
-
+    <include
+        android:id="@+id/placeholder_no_connection"
+        layout="@layout/error_no_connection"
+        android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>

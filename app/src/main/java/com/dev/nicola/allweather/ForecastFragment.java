@@ -8,15 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.dev.nicola.allweather.adapter.ForecastDayAdapter;
 import com.dev.nicola.allweather.model.ForecastDay;
 import com.dev.nicola.allweather.utils.DividerItemDecoration;
 import com.dev.nicola.allweather.utils.PreferencesUtils;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 import java.util.List;
 
@@ -32,10 +28,10 @@ public class ForecastFragment extends Fragment {
 
     @BindView(R.id.forecast_day_recycle_view)
     RecyclerView mRecyclerView;
-    @BindView(R.id.adView)
-    AdView mAdView;
-    @BindView(R.id.lineat_layout_ads)
-    LinearLayout mLinearLayout;
+    //    @BindView(R.id.adView)
+//    AdView mAdView;
+//    @BindView(R.id.lineat_layout_ads)
+//    LinearLayout mLinearLayout;
     private ProviderData mProviderData;
     private String argument;
 
@@ -51,17 +47,18 @@ public class ForecastFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        argument = getArguments().getString("ARGUMENT");
+//        argument = getArguments().getString("ARGUMENT");
+        argument = PreferencesUtils.getPreferences(getContext(), "lastJSONObject", null);
         mProviderData = new ProviderData(getContext(), getResources());
-        MobileAds.initialize(getContext(), "ca-app-pub-5053914526798733~3075057204");
+//        MobileAds.initialize(getContext(), "ca-app-pub-5053914526798733~3075057204");
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        if (mAdView != null)
-            mAdView.pause();
+//        if (mAdView != null)
+//            mAdView.pause();
     }
 
 
@@ -69,16 +66,16 @@ public class ForecastFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (mAdView != null)
-            mAdView.resume();
+//        if (mAdView != null)
+//            mAdView.resume();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        if (mAdView != null)
-            mAdView.destroy();
+//        if (mAdView != null)
+//            mAdView.destroy();
 
         if (mRecyclerView != null)
             mRecyclerView.removeAllViews();
@@ -108,13 +105,13 @@ public class ForecastFragment extends Fragment {
 
         argument = null;
 
-        if (!PreferencesUtils.getPreferences(getActivity(), getResources().getString(R.string.key_pro_version), false)) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            if (mAdView != null)
-                mAdView.loadAd(adRequest);
-        } else {
-            mLinearLayout.removeAllViews();
-        }
+//        if (!PreferencesUtils.getPreferences(getActivity(), getResources().getString(R.string.key_pro_version), false)) {
+//            AdRequest adRequest = new AdRequest.Builder().build();
+//            if (mAdView != null)
+//                mAdView.loadAd(adRequest);
+//        } else {
+//            mLinearLayout.removeAllViews();
+//        }
 
         return view;
     }

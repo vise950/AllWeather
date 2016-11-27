@@ -66,7 +66,8 @@ public class DailyFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        argument = getArguments().getString("ARGUMENT");
+//        argument = getArguments().getString("ARGUMENT");
+        argument = PreferencesUtils.getPreferences(getContext(), "lastJSONObject", null);
         mProviderData = new ProviderData(getContext(), getResources());
     }
 
@@ -91,8 +92,6 @@ public class DailyFragment extends Fragment {
         }
 
         setText();
-
-        argument = null;
 
         return view;
     }

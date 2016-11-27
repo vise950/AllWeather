@@ -18,6 +18,10 @@ import butterknife.ButterKnife;
 /**
  * Created by Nicola on 14/08/2016.
  */
+
+/**
+ * Adapter for hourly forecast weather
+ */
 public class ForecastHourAdapter extends RecyclerView.Adapter<ForecastHourAdapter.ForecastViewHolder> {
 
     private List<ForecastHour> mForecastHourList;

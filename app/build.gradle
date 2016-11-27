@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25"
 
     defaultConfig {
         applicationId "com.dev.nicola.allweather"
         minSdkVersion 19
-        targetSdkVersion 24
-        versionCode 110
-        versionName "1.1.0"
+        targetSdkVersion 25
+        versionCode 112
+        versionName "1.1.2"
 
         multiDexEnabled true
     }
@@ -33,7 +33,7 @@ android {
         buildTypes.each {
             it.buildConfigField 'String', 'FORECASTIO_API_KEY', ForecastIOApiKey
             it.buildConfigField 'String', 'APIXU_API_KEY', ApixuApiKey
-            it.buildConfigField 'String', 'APPLICATION_API_KEY', ApplicationApiKey
+            it.buildConfigField 'String', 'LICENSE_API_KEY', LicenseApiKey
             it.buildConfigField 'String', 'AUTOCOMPLETE_API_KEY', AutocompleteApiKey
         }
     }
@@ -41,25 +41,25 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
-
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:cardview-v7:24.2.1'
-    compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.google.android.gms:play-services:9.4.0'
-    compile 'com.google.android.gms:play-services-ads:9.4.0'
+    compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+    compile "com.android.support:support-v4:$rootProject.ext.supportLibraryVersion"
+    compile "com.android.support:design:$rootProject.ext.supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$rootProject.ext.supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
+    compile "com.google.android.gms:play-services:$rootProject.ext.playServicesLibraryVersion"
+    compile "com.google.android.gms:play-services-ads:$rootProject.ext.playServicesLibraryVersion"
     compile 'com.android.support:multidex:1.0.1'
 
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.lapism:searchview:3.4.1'
-    compile 'com.jakewharton:butterknife:8.4.0'
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile "com.squareup.okhttp3:okhttp:$rootProject.ext.okHttpLibraryVersion"
+    compile "com.google.code.gson:gson:$rootProject.ext.gsonLibraryVersion"
+    compile "com.lapism:searchview:$rootProject.ext.searchViewLibraryVersion"
+    compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeLibraryVersion"
+    apt "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeLibraryVersion"
+    compile "com.squareup.picasso:picasso:$rootProject.ext.picassoLibraryVersion"
+
 }

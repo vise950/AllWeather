@@ -7,7 +7,13 @@ import java.text.DecimalFormat;
  */
 public class UnitConverterUtils {
 
-    public static int temperatureConverter(int temperature, String units) { //temperature è sempre fahrenheit
+    /**
+     * @param temperature is temperature that will be converted
+     *                    temperature is in fahrenheit
+     * @param units       is units take form Preferences of temperature
+     * @return int temperature
+     */
+    public static int temperatureConverter(int temperature, String units) {
         int temp;
         switch (units) {
             case "celsius":
@@ -24,7 +30,12 @@ public class UnitConverterUtils {
     }
 
 
-    //coverter meter per second to kilometer per hour
+    /**
+     * @param speed is speed that will be converted
+     *              speed is in mph
+     * @param units
+     * @return
+     */
     public static String speedConverter(double speed, String units) {
         String s;
         double n;

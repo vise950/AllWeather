@@ -110,12 +110,12 @@
     </string-array>
 
     <string-array name="theme_unit">
-        <!--<item>Auto</item>-->
+        <item>Auto</item>
         <item>Light</item>
         <item>Dark</item>
     </string-array>
     <string-array name="theme_value" translatable="false">
-        <!--<item>auto</item>-->
+        <item>auto</item>
         <item>light</item>
         <item>dark</item>
     </string-array>

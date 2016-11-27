@@ -29,6 +29,18 @@ public class ProviderRequest {
     public ProviderRequest() {
     }
 
+
+    /**
+     * @param provider  is name of weather provider take from Preferences
+     * @param latitude  is latitude of place
+     * @param longitude is longitude of place
+     * @param place     is name of place
+     * @return JSonObject with server response
+     * <p>
+     * create URL with provider name
+     * server request
+     * server response
+     */
     public JSONObject getData(String provider, Double latitude, Double longitude, String place) {
         String url;
 
@@ -69,7 +81,6 @@ public class ProviderRequest {
         }
 
         url = mBuilder.toString();
-
         Log.d(TAG, "url " + url);
 
         JSONObject mObject;
@@ -79,6 +90,7 @@ public class ProviderRequest {
                 .url(url)
                 .build();
 
+        // FIXME: 26/11/2016 empty server response
         try {
             mResponse = mClient.newCall(mRequest).execute();
             String responseData = mResponse.body().string();
@@ -89,6 +101,5 @@ public class ProviderRequest {
         }
         return mObject;
     }
-
 }
 

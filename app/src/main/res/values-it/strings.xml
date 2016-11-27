@@ -29,9 +29,9 @@
     <string name="snackbar_4">Impossibile contattare il server in questo momento</string>
     <string name="diaolog_connection_disable">Abilita il Wifi o i dati</string>
     <string name="dialog_preference_yahoo">Yahoo non supporta le previsioni orarie</string>
-    <string name="dialog_pro_version_title">Vantaggi pro</string>
-    <string name="dialog_pro_version_message">"-Sblocca tutti i provider meteo\n-Rimozione pubblicità"</string>
-    <string name="dialog_already_pro_version">Già pro</string>
+    <string name="pro_version_title">Vantaggi pro:</string>
+    <string name="pro_version_message">"-Sblocca tutti i provider meteo"</string>
+    <string name="already_pro_version">Già pro</string>
 
     <string name="action_OK">OK</string>
     <string name="action_retry">RIPROVA</string>
