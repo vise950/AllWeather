@@ -6,8 +6,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath "io.realm:realm-gradle-plugin:2.2.1"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -25,13 +26,26 @@ allprojects {
 
 ext {
     //dependencies
-    supportLibraryVersion = '25.0.0'
-    playServicesLibraryVersion = '9.8.00'
-    okHttpLibraryVersion = '3.4.1'
-    gsonLibraryVersion = '2.7'
-    searchViewLibraryVersion = '4.0'//'3.4.1'
-    butterknifeLibraryVersion = '8.4.0'
+
+    //android support
+    supportLibraryVersion = '25.1.0'
+
+    //play services
+    playServicesLibraryVersion = '10.0.1'
+
+    //network
+    okHttpLibraryVersion = '3.5.0'
+    retrofitLibaryVersion='2.1.0'
     picassoLibraryVersion = '2.5.2'
+
+    //gson
+    gsonLibraryVersion = '2.8.0'
+
+    //searchview
+    searchViewLibraryVersion = '4.0'//'3.4.1'
+
+    //butterknife
+    butterknifeLibraryVersion = '8.4.0'
 }
 
 

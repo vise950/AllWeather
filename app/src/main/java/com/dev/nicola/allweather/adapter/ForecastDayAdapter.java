@@ -52,6 +52,7 @@ public class ForecastDayAdapter extends RecyclerView.Adapter<ForecastDayAdapter.
         return mForecastDayList.size();
     }
 
+
     public class ForecastViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.date_forecast_day)
         TextView date;

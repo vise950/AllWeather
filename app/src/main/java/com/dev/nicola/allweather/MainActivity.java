@@ -40,6 +40,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity implements AsyncTaskCompleteListener {
 
@@ -89,8 +90,9 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
     private Location mLocation;
     private LocationGPS mLocationGPS;
 
-    private MyBilling mBilling;
+    private com.dev.nicola.allweather.MyBilling mBilling;
 
+    private Realm mRealm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +106,9 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+        mRealm=Realm.getDefaultInstance();
 
-        mBilling = new MyBilling(MainActivity.this);
+        mBilling = new com.dev.nicola.allweather.MyBilling(MainActivity.this);
         mBilling.onCreate();
     }
 
@@ -199,6 +202,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
             mDialog.setVisibility(View.GONE);
         }
         mDialog = null;
+
+        mRealm.close();
 
         firstRun = false;
     }
@@ -378,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
 
                     switch (id) {
                         case R.id.drawer_item_settings:
-                            Intent intentSetting = new Intent(mContext, AppPreferences.class);
+                            Intent intentSetting = new Intent(mContext, com.dev.nicola.allweather.AppPreferences.class);
                             startActivity(intentSetting);
                             goToSetting = true;
                             break;
@@ -387,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
                             if (PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pro_version), false)) {
                                 SnackbarUtils.showSnackbar(MainActivity.this, mCoordinatorLayout, 6);
                             } else {
-                                Intent intentInApp = new Intent(mContext, InAppPurchaseActivity.class);
+                                Intent intentInApp = new Intent(mContext, com.dev.nicola.allweather.InAppPurchaseActivity.class);
                                 startActivity(intentInApp);
                             }
                             break;

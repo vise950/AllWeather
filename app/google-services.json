@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "968680245926",
+    "project_id": "firebase-allweather"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968680245926:android:3cadc11edbfe9e65",
+        "android_client_info": {
+          "package_name": "com.dev.nicola.allweather"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6w4VMIXWbdsro41IE_EX4zA9ezfEwzQc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-80525186-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
