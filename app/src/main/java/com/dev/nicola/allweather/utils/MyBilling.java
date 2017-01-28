@@ -182,12 +182,12 @@ public class MyBilling {
 
     private void setIsProVersion() {
         isProVersion = true;
-        PreferencesUtils.setPreferences(activity.getApplicationContext(), "isProVersion", isProVersion);
+        PreferencesUtils.INSTANCE.setPreferences(activity.getApplicationContext(), "isProVersion", isProVersion);
     }
 
     private void setIsNotProVersion() {
         isProVersion = false;
-        PreferencesUtils.setPreferences(activity.getApplicationContext(), "isProVersion", isProVersion);
+        PreferencesUtils.INSTANCE.setPreferences(activity.getApplicationContext(), "isProVersion", isProVersion);
     }
 
 

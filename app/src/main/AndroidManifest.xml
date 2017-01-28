@@ -11,8 +11,6 @@
     <uses-feature android:name="android.hardware.location.network"/>
     <uses-feature android:name="android.hardware.location.gps"/>
 
-    <!--android:name="android.support.multidex.MultiDexApplication"-->
-
     <application
         android:name=".application.Init"
         android:allowBackup="true"

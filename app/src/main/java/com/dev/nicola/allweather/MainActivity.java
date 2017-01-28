@@ -1,5 +1,6 @@
 package com.dev.nicola.allweather;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -7,9 +8,11 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -21,14 +24,18 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.dev.nicola.allweather.adapter.FragmentAdapter;
-import com.dev.nicola.allweather.callback.AsyncTaskCompleteListener;
-import com.dev.nicola.allweather.utils.LocationGPS;
 import com.dev.nicola.allweather.utils.LocationUtils;
 import com.dev.nicola.allweather.utils.PermissionUtils;
 import com.dev.nicola.allweather.utils.PlaceAutocomplete;
 import com.dev.nicola.allweather.utils.PreferencesUtils;
 import com.dev.nicola.allweather.utils.SnackbarUtils;
 import com.dev.nicola.allweather.utils.Utils;
+import com.dev.nicola.allweather.weatherProvider.DarkSky.model.RootData;
+import com.dev.nicola.allweather.weatherProvider.DarkSky.service.DarkSkyClient;
+import com.dev.nicola.allweather.weatherProvider.DarkSky.service.DarkSkyService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.lapism.searchview.SearchAdapter;
 import com.lapism.searchview.SearchHistoryTable;
 import com.lapism.searchview.SearchItem;
@@ -40,9 +47,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements AsyncTaskCompleteListener {
+public class MainActivity extends AppCompatActivity implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     final static String TAG = MainActivity.class.getSimpleName();
 
@@ -68,9 +78,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
     @BindView(R.id.progress_dialog_container)
     View mDialog;
 
-
     private Context mContext;
-    private boolean searchViewItemClick = false;
     private boolean firstRun = false;
 
     private String prefTheme;
@@ -86,18 +94,17 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
     private SearchAdapter mSearchAdapter;
     private SearchHistoryTable mHistoryDatabase;
     private String firstSuggestion = "";
+    private boolean searchViewItemClick = false;
 
+    private GoogleApiClient mGoogleApiClient;
     private Location mLocation;
-    private LocationGPS mLocationGPS;
-
     private com.dev.nicola.allweather.MyBilling mBilling;
 
-    private Realm mRealm;
+//    private Realm mRealm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate");
 
         mContext = getApplicationContext();
 
@@ -106,10 +113,11 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-        mRealm=Realm.getDefaultInstance();
+//        mRealm=Realm.getDefaultInstance();
+        buildGoogleApiClient();
 
-        mBilling = new com.dev.nicola.allweather.MyBilling(MainActivity.this);
-        mBilling.onCreate();
+//        mBilling = new com.dev.nicola.allweather.MyBilling(MainActivity.this);
+//        mBilling.onCreate();
     }
 
     @Override
@@ -121,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
+        mGoogleApiClient.connect();
     }
 
 
@@ -129,11 +138,11 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
         super.onResume();
         Log.d(TAG, "onResume");
 
-        if (!Utils.checkInternetConnession(mContext)) {
+        if (!Utils.checkInternetConnection(mContext)) {
             placeholderNoConnection.setVisibility(View.VISIBLE);
-        } else if (prefUseGps && !Utils.checkGpsEnable(mContext)) {
+        } else if (!Utils.checkGpsEnable(mContext)) {
             SnackbarUtils.showSnackbar(MainActivity.this, mCoordinatorLayout, 2);
-        } else if (prefUseGps && !PermissionUtils.isPermissionGranted(mContext)) {
+        } else if (!PermissionUtils.isPermissionGranted(mContext)) {
             SnackbarUtils.showSnackbar(MainActivity.this, mCoordinatorLayout, 1);
         } else if (!firstRun) {
             initialSetup();
@@ -141,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
         }
 
         if (goToSetting) {
-            Log.d(TAG, "onResume checkPref");
             checkPreferences();
         }
     }
@@ -163,8 +171,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
         super.onStop();
         Log.d(TAG, "onStop");
 
-        if (mLocationGPS != null && mLocationGPS.isConnected()) {
-            mLocationGPS.stopUsingGPS();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
         }
     }
 
@@ -177,33 +185,11 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
             mBilling.onDestroy();
         }
 
-        if (mDrawer != null) {
-            mDrawer.removeAllViews();
-        }
-        mDrawer = null;
-
-        if (mViewPager != null) {
-            mViewPager.removeAllViews();
-        }
-        mViewPager = null;
-
-        if (mTabLayout != null) {
-            mTabLayout.removeAllViews();
-        }
-        mTabLayout = null;
-
-        if (mSearchView != null) {
-            mSearchView.removeAllViews();
-        }
-        mSearchView = null;
-        mSearchAdapter = null;
-
         if (mDialog != null && mDialog.getVisibility() == View.VISIBLE) {
             mDialog.setVisibility(View.GONE);
         }
-        mDialog = null;
 
-        mRealm.close();
+//        mRealm.close();
 
         firstRun = false;
     }
@@ -218,6 +204,14 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
         } else {
             super.onBackPressed();
         }
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
     }
 
 
@@ -243,61 +237,59 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
 
     @OnClick(R.id.button_retry_no_data)
     public void retryNoData() {
-        new MyAsyncTask(mContext, MainActivity.this).execute(mLocation);
     }
 
 
     /**
      * asynctask callback
      */
-    @Override
-    public void onTaskComplete() {
-        Log.d(TAG, "TASK COMPLETE");
-        if ((PreferencesUtils.getPreferences(mContext, "lastJSONObject", null)) == null) {
-            placeholderNoData.setVisibility(View.VISIBLE);
-        } else {
-            setViewPager();
-            String place = PreferencesUtils.getPreferences(mContext, "lastPlace", null);
-            if (place != null) {
-                mSearchView.setTextOnly(place);
-            }
-        }
-
-        if (mDialog != null && mDialog.getVisibility() == View.VISIBLE) {
-            mDialog.startAnimation(AnimationUtils.loadAnimation(mContext, android.R.anim.fade_out));
-            mViewPager.startAnimation(AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in));
-            mDialog.setVisibility(View.GONE);
-            mViewPager.setVisibility(View.VISIBLE);
-        }
-    }
-
+//    @Override
+//    public void onTaskComplete() {
+//        Log.d(TAG, "TASK COMPLETE");
+//        if ((PreferencesUtils.INSTANCE.getPreferences(mContext, "lastJSONObject", null)) == null) {
+//            placeholderNoData.setVisibility(View.VISIBLE);
+//        } else {
+//            setViewPager();
+//            String place = PreferencesUtils.INSTANCE.getPreferences(mContext, "lastPlace", null);
+//            if (place != null) {
+//                mSearchView.setTextOnly(place);
+//            }
+//        }
+//
+//        if (mDialog != null && mDialog.getVisibility() == View.VISIBLE) {
+//            mDialog.startAnimation(AnimationUtils.loadAnimation(mContext, android.R.anim.fade_out));
+//            mViewPager.startAnimation(AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in));
+//            mDialog.setVisibility(View.GONE);
+//            mViewPager.setVisibility(View.VISIBLE);
+//        }
+//    }
 
     private void checkPreferences() {
-        if (!prefTheme.equals(PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme))) ||
-                !prefProvider.equals(PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider)))) {
-            prefTheme = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme));
-            prefProvider = PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
+        if (!prefTheme.equals(PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme))) ||
+                !prefProvider.equals(PreferencesUtils.INSTANCE.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider)))) {
+            prefTheme = PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme));
+            prefProvider = PreferencesUtils.INSTANCE.getPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
             recreate();
         }
 //
 //        // FIXME: 09/09/2016 se cambio tema e provider crasha
-        else if (!prefTemperature.equals(PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature))) ||
-                !prefSpeed.equals(PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed))) ||
-                !prefTime.equals(PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time))) ||
-                !prefProvider.equals(PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider)))) {
+        else if (!prefTemperature.equals(PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature))) ||
+                !prefSpeed.equals(PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed))) ||
+                !prefTime.equals(PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time))) ||
+                !prefProvider.equals(PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider)))) {
 
-            prefProvider = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
-            prefTemperature = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature));
-            prefSpeed = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed));
-            prefTime = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time));
+            prefProvider = PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
+            prefTemperature = PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature));
+            prefSpeed = PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed));
+            prefTime = PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time));
 
             if (mDialog != null && mDialog.getVisibility() == View.GONE) {
                 mViewPager.setVisibility(View.GONE);
                 mDialog.setVisibility(View.VISIBLE);
             }
-            new MyAsyncTask(mContext, MainActivity.this).execute(mLocation);
-        } else if (prefUseGps != PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_use_gps), false)) {
-            prefUseGps = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_use_gps), false);
+//            new MyAsyncTask(mContext, MainActivity.this).execute(mLocation);
+        } else if (prefUseGps != PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_use_gps), false)) {
+            prefUseGps = PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_use_gps), false);
             MainActivity.this.onResume();
         }
 
@@ -314,41 +306,59 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
 
         getPreferences();
 
-        if (prefUseGps) {
-            mLocationGPS = new LocationGPS(mContext);
-            mLocation = mLocationGPS.getLocation();
-        }
+//        if (prefUseGps) {
+//            mLocationGPS = new LocationGPS(mContext);
+//            mLocation = mLocationGPS.getLocation();
+//        }
 
 
         if (DEBUG_MODE) { //se sono in debug l'app è pro
-            PreferencesUtils.setPreferences(mContext, getResources().getString(R.string.key_pro_version), true);
+            PreferencesUtils.INSTANCE.setPreferences(mContext, getResources().getString(R.string.key_pro_version), true);
         }
 
         setDrawer();
         setNavigationView();
         setSearchView();
-
-        new MyAsyncTask(mContext, MainActivity.this).execute(mLocation);
+        getData();
     }
 
 
+    private void getData() {
+        DarkSkyService service = DarkSkyClient.INSTANCE.getService();
+        Call<RootData> call = service.getDarkSkyData(37.421998333333335, -122.08400000000002);
+
+        call.enqueue(new Callback<RootData>() {
+            @Override
+            public void onResponse(Call<RootData> call, Response<RootData> response) {
+                if (response.isSuccessful()) {
+                    Log.e(TAG, "onResponse " + response.body().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RootData> call, Throwable t) {
+                Log.e(TAG, "onFailure " + t.toString());
+            }
+        });
+    }
+
     private void getPreferences() {
         if (prefTheme == null) {
-            prefTheme = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme));
+            prefTheme = PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_theme), getResources().getString(R.string.default_pref_theme));
         }
         if (prefProvider == null) {
-            prefProvider = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
+            prefProvider = PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
         }
         if (prefTemperature == null) {
-            prefTemperature = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature));
+            prefTemperature = PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_temperature), getResources().getString(R.string.default_pref_temperature));
         }
         if (prefSpeed == null) {
-            prefSpeed = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed));
+            prefSpeed = PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_speed), getResources().getString(R.string.default_pref_speed));
         }
         if (prefTime == null) {
-            prefTime = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time));
+            prefTime = PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_time), getResources().getString(R.string.default_pref_time));
         }
-        prefUseGps = PreferencesUtils.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_use_gps), false);
+        prefUseGps = PreferencesUtils.INSTANCE.getDefaultPreferences(mContext, getResources().getString(R.string.key_pref_use_gps), false);
     }
 
 
@@ -389,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
                             break;
 
                         case R.id.drawer_item_pro_version:
-                            if (PreferencesUtils.getPreferences(mContext, getResources().getString(R.string.key_pro_version), false)) {
+                            if (PreferencesUtils.INSTANCE.getPreferences(mContext, getResources().getString(R.string.key_pro_version), false)) {
                                 SnackbarUtils.showSnackbar(MainActivity.this, mCoordinatorLayout, 6);
                             } else {
                                 Intent intentInApp = new Intent(mContext, com.dev.nicola.allweather.InAppPurchaseActivity.class);
@@ -519,13 +529,13 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
                     TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
                     if (!textView.getText().toString().equals(getResources().getString(R.string.no_result_suggestion))) { //if string not equals at no result
                         String item = (textView.getText().toString()).substring(0, (textView.getText().toString()).indexOf(',')); //troncare stringa da 0 al char ','
-                        mLocation = LocationUtils.getCoordinateByName(mContext, item);
+                        mLocation = LocationUtils.INSTANCE.getCoordinateByName(mContext, item);
                         if (mLocation != null) {
                             if (mDialog != null && mDialog.getVisibility() == View.GONE) {
                                 mViewPager.setVisibility(View.GONE);
                                 mDialog.setVisibility(View.VISIBLE);
                             }
-                            new MyAsyncTask(mContext, MainActivity.this).execute(mLocation);
+//                            new MyAsyncTask(mContext, MainActivity.this).execute(mLocation);
                         }
                     }
                 }
@@ -628,5 +638,33 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskComplete
 //                }
 //            });
 //        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLocation!=null){
+            Log.e(TAG,"location lat "+mLocation.getLatitude());
+            Log.e(TAG,"location lng "+mLocation.getLongitude());
+        }else {
+            Log.e(TAG,"location null");
+        }
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.e(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
     }
 }

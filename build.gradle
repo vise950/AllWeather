@@ -1,6 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext.kotlin_version = '1.0.6'
     repositories {
         jcenter()
         mavenCentral()
@@ -9,6 +10,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath "io.realm:realm-gradle-plugin:2.2.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -28,24 +30,21 @@ ext {
     //dependencies
 
     //android support
-    supportLibraryVersion = '25.1.0'
+    support_version = '25.1.0'
 
     //play services
-    playServicesLibraryVersion = '10.0.1'
+    play_services_version = '10.0.1'
 
     //network
-    okHttpLibraryVersion = '3.5.0'
-    retrofitLibaryVersion='2.1.0'
-    picassoLibraryVersion = '2.5.2'
-
-    //gson
-    gsonLibraryVersion = '2.8.0'
+    okHttp_version = '3.5.0'
+    retrofit_version='2.1.0'
+    picasso_version = '2.5.2'
 
     //searchview
-    searchViewLibraryVersion = '4.0'//'3.4.1'
+    searchView_version = '4.0'//'3.4.1'
 
     //butterknife
-    butterknifeLibraryVersion = '8.4.0'
+    butterknife_version = '8.4.0'
 }
 
 

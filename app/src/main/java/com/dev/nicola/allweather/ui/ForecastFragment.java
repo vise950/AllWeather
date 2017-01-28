@@ -32,7 +32,7 @@ public class ForecastFragment extends Fragment {
 //    AdView mAdView;
 //    @BindView(R.id.lineat_layout_ads)
 //    LinearLayout mLinearLayout;
-    private ProviderData mProviderData;
+//    private ProviderData mProviderData;
     private String argument;
 
     public static ForecastFragment newInstance(String argument) {
@@ -48,8 +48,8 @@ public class ForecastFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
 //        argument = getArguments().getString("ARGUMENT");
-        argument = PreferencesUtils.getPreferences(getContext(), "lastJSONObject", null);
-        mProviderData = new ProviderData(getContext(), getResources());
+        argument = PreferencesUtils.INSTANCE.getPreferences(getContext(), "lastJSONObject", null);
+//        mProviderData = new ProviderData(getContext(), getResources());
 //        MobileAds.initialize(getContext(), "ca-app-pub-5053914526798733~3075057204");
     }
 
@@ -88,12 +88,12 @@ public class ForecastFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        String prefProvider = PreferencesUtils.getDefaultPreferences(getContext(), getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
+        String prefProvider = PreferencesUtils.INSTANCE.getDefaultPreferences(getContext(), getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
 
-        mProviderData.elaborateData(prefProvider, argument);
+//        mProviderData.elaborateData(prefProvider, argument);
 
-        List<ForecastDay> forecastDayList;
-        forecastDayList = mProviderData.getForecastDayList();
+        List<ForecastDay> forecastDayList=null;
+//        forecastDayList = mProviderData.getForecastDayList();
 
         ForecastDayAdapter forecastDayAdapter = new ForecastDayAdapter(forecastDayList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);

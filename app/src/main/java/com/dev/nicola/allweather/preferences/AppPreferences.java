@@ -23,7 +23,7 @@ public class AppPreferences extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Utils.setTheme(getApplicationContext());
+        Utils.INSTANCE.setTheme(getApplicationContext());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
@@ -56,7 +56,7 @@ public class AppPreferences extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
 
-            boolean isProVersion = PreferencesUtils.getPreferences(getActivity(), getResources().getString(R.string.key_pro_version), false);
+            boolean isProVersion = PreferencesUtils.INSTANCE.getPreferences(getActivity(), getResources().getString(R.string.key_pro_version), false);
 
             final PreferenceManager preferenceManager = getPreferenceManager();
 
@@ -109,7 +109,7 @@ public class AppPreferences extends AppCompatActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object value) {
                     if (value.toString().equals("yahoo")) {
-                        SnackbarUtils.showSnackbar(getActivity(), getView(), 5);
+                        SnackbarUtils.INSTANCE.showSnackbar(getActivity(), getView(), 5);
                     }
                     return true;
                 }

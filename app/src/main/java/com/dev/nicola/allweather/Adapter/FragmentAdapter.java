@@ -5,9 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.dev.nicola.allweather.DailyFragment;
 import com.dev.nicola.allweather.ForecastFragment;
 import com.dev.nicola.allweather.R;
+import com.dev.nicola.allweather.ui.*;
+
 
 /**
  * Created by Nicola on 12/05/2016.

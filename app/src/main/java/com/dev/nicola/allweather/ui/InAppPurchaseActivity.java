@@ -25,7 +25,7 @@ public class InAppPurchaseActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Utils.setTheme(getApplicationContext());
+        Utils.INSTANCE.setTheme(getApplicationContext());
 
         setContentView(R.layout.activity_in_app_purchase);
 

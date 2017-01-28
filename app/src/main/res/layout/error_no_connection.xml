@@ -1,42 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical">
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ImageView
         android:id="@+id/image_no_connection"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="200dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_above="@+id/textView_no_connection"
+        android:layout_centerHorizontal="true"
         android:contentDescription="error_connection"
         android:src="@drawable/ic_signal_wifi_off"/>
-
 
     <TextView
         android:id="@+id/textView_no_connection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/image_no_connection"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="12dp"
-        android:text="No internet connection"/>
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        android:text="No internet connection\nPlease enable"/>
 
     <Button
         android:id="@+id/button_retry_no_connection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView_no_connection"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:background="@color/transparent"
+        android:layout_below="@+id/textView_no_connection"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_placeholder_background"
         android:elevation="12dp"
         android:onClick="retryNoConnection"
         android:text="Retry"
         android:textColor="@color/accent"/>
+
 
 </RelativeLayout>

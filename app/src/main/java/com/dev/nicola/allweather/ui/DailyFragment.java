@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather;
+package com.dev.nicola.allweather.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dev.nicola.allweather.R;
 import com.dev.nicola.allweather.adapter.ForecastHourAdapter;
 import com.dev.nicola.allweather.model.ForecastHour;
 import com.dev.nicola.allweather.utils.PreferencesUtils;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class DailyFragment extends Fragment {
     @BindView(R.id.forecast_hour_recycle_view)
     RecyclerView mRecyclerView;
 
-    private ProviderData mProviderData;
+//    private ProviderData mProviderData;
     private String argument;
     private String prefProvider;
 
@@ -67,8 +67,8 @@ public class DailyFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
 //        argument = getArguments().getString("ARGUMENT");
-        argument = PreferencesUtils.getPreferences(getContext(), "lastJSONObject", null);
-        mProviderData = new ProviderData(getContext(), getResources());
+        argument = PreferencesUtils.INSTANCE.getPreferences(getContext(), "lastJSONObject", null);
+//        mProviderData = new ProviderData(getContext(), getResources());
     }
 
     @Override
@@ -77,13 +77,13 @@ public class DailyFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        prefProvider = PreferencesUtils.getDefaultPreferences(getContext(), getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
+        prefProvider = PreferencesUtils.INSTANCE.getDefaultPreferences(getContext(), getResources().getString(R.string.key_pref_provider), getResources().getString(R.string.default_pref_provider));
 
-        mProviderData.elaborateData(prefProvider, argument);
+//        mProviderData.elaborateData(prefProvider, argument);
 
         if (!prefProvider.equals("yahoo")) {
-            List<ForecastHour> forecastHourList;
-            forecastHourList = mProviderData.getForecastHourList();
+            List<ForecastHour> forecastHourList=null;
+//            forecastHourList = mProviderData.getForecastHourList();
             ForecastHourAdapter forecastHourAdapter = new ForecastHourAdapter(forecastHourList);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(layoutManager);
@@ -91,7 +91,7 @@ public class DailyFragment extends Fragment {
             mRecyclerView.setAdapter(forecastHourAdapter);
         }
 
-        setText();
+//        setText();
 
         return view;
     }
@@ -104,15 +104,15 @@ public class DailyFragment extends Fragment {
             mRecyclerView.removeAllViews();
     }
 
-    private void setText() {
-        location.setText(mProviderData.getLocation());
-        Picasso.with(getContext()).load(mProviderData.getImage()).into(image); // FIXME: 18/09/2016 non devo cambiare immagine ad ogni richiesta
-        condition.setText(mProviderData.getCondition());
-        temperature.setText(mProviderData.getTemperature());
-        wind.setText(mProviderData.getWind());
-        humidity.setText(mProviderData.getHumidity());
-        pressure.setText(mProviderData.getPressure());
-        sunrise.setText(mProviderData.getSunrise());
-        sunset.setText(mProviderData.getSunset());
-    }
+//    private void setText() {
+//        location.setText(mProviderData.getLocation());
+//        Picasso.with(getContext()).load(mProviderData.getImage()).into(image); // FIXME: 18/09/2016 non devo cambiare immagine ad ogni richiesta
+//        condition.setText(mProviderData.getCondition());
+//        temperature.setText(mProviderData.getTemperature());
+//        wind.setText(mProviderData.getWind());
+//        humidity.setText(mProviderData.getHumidity());
+//        pressure.setText(mProviderData.getPressure());
+//        sunrise.setText(mProviderData.getSunrise());
+//        sunset.setText(mProviderData.getSunset());
+//    }
 }
