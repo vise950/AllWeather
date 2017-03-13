@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.dev.nicola.allweather.MainActivity;
+import com.dev.nicola.allweather.ui.activity.MainActivity;
 import com.dev.nicola.allweather.R;
 
 /**

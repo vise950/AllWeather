@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather;
+package com.dev.nicola.allweather.utils;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -11,7 +11,6 @@ import com.billing.utils.IabHelper;
 import com.billing.utils.IabResult;
 import com.billing.utils.Inventory;
 import com.billing.utils.Purchase;
-import com.dev.nicola.allweather.utils.PreferencesUtils;
 
 /**
  * Created by Nicola on 27/09/2016.
@@ -182,12 +181,12 @@ public class MyBilling {
 
     private void setIsProVersion() {
         isProVersion = true;
-        PreferencesUtils.setPreferences(activity.getApplicationContext(), "isProVersion", isProVersion);
+//        PreferencesUtils.INSTANCE.setPreferences(activity.getApplicationContext(), "isProVersion", isProVersion);
     }
 
     private void setIsNotProVersion() {
         isProVersion = false;
-        PreferencesUtils.setPreferences(activity.getApplicationContext(), "isProVersion", isProVersion);
+//        PreferencesUtils.INSTANCE.setPreferences(activity.getApplicationContext(), "isProVersion", isProVersion);
     }
 
 

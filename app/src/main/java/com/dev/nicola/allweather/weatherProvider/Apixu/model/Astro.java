@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.provider.Apixu.model;
+package com.dev.nicola.allweather.weatherProvider.Apixu.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
