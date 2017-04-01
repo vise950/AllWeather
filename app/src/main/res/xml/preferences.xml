@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-        android:title="@string/pref_first_category">
+    <PreferenceCategory android:title="@string/pref_first_category">
 
         <ListPreference
             android:defaultValue="@string/default_pref_temperature"
@@ -10,7 +9,7 @@
             android:entryValues="@array/temperature_value"
             android:key="@string/key_pref_temperature"
             android:summary="%s"
-            android:title="@string/pref_temperature"/>
+            android:title="@string/pref_temperature" />
 
         <ListPreference
             android:defaultValue="@string/default_pref_speed"
@@ -18,7 +17,7 @@
             android:entryValues="@array/speed_value"
             android:key="@string/key_pref_speed"
             android:summary="%s"
-            android:title="@string/pref_speed"/>
+            android:title="@string/pref_speed" />
 
         <ListPreference
             android:defaultValue="@string/default_pref_time"
@@ -26,19 +25,11 @@
             android:entryValues="@array/time_value"
             android:key="@string/key_pref_time"
             android:summary="%s"
-            android:title="@string/pref_time"/>
+            android:title="@string/pref_time" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/pref_second_category">
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_pref_use_gps"
-            android:summary="@string/pref_use_gps_desc"
-            android:title="@string/pref_use_gps"/>
-
+    <PreferenceCategory android:title="@string/pref_second_category">
 
         <ListPreference
             android:defaultValue="@string/default_pref_theme"
@@ -46,13 +37,15 @@
             android:entryValues="@array/theme_value"
             android:key="@string/key_pref_theme"
             android:summary="%s"
-            android:title="@string/pref_theme"/>
+            android:title="@string/pref_theme" />
 
         <ListPreference
-            android:defaultValue="@string/default_pref_provider"
-            android:key="@string/key_pref_provider"
+            android:defaultValue="@string/default_pref_weather_provider"
+            android:entries="@array/provider_unit"
+            android:entryValues="@array/provider_value"
+            android:key="@string/key_pref_weather_provider"
             android:summary="%s"
-            android:title="@string/pref_provider"/>
+            android:title="@string/pref_provider" />
 
     </PreferenceCategory>
 

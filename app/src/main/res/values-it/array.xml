@@ -90,24 +90,18 @@
     </string-array>
 
     <string-array name="time_unit">
-        <item>0-12</item>
-        <item>0-24</item>
+        <item>0–12</item>
+        <item>0–24</item>
     </string-array>
 
     <string-array name="theme_unit">
-        <item>Automatico</item>
         <item>Chiaro</item>
         <item>Scuro</item>
     </string-array>
 
-    <string-array name="provider_unit_pro">
-        <item>ForecastIO</item>
+    <string-array name="provider_unit">
+        <item>DarkSky</item>
         <item>Apixu</item>
         <item>Yahoo</item>
     </string-array>
-
-    <string-array name="provider_unit_free">
-        <item>ForecastIO</item>
-    </string-array>
-
 </resources>

@@ -101,8 +101,8 @@
     </string-array>
 
     <string-array name="time_unit">
-        <item>0-12</item>
-        <item>0-24</item>
+        <item>0–12</item>
+        <item>0–24</item>
     </string-array>
     <string-array name="time_value" translatable="false">
         <item>12</item>
@@ -110,32 +110,22 @@
     </string-array>
 
     <string-array name="theme_unit">
-        <item>Auto</item>
         <item>Light</item>
         <item>Dark</item>
     </string-array>
     <string-array name="theme_value" translatable="false">
-        <item>auto</item>
         <item>light</item>
         <item>dark</item>
     </string-array>
 
-    <string-array name="provider_unit_pro">
-        <item>ForecastIO</item>
+    <string-array name="provider_unit">
+        <item>DarkSky</item>
         <item>Apixu</item>
         <item>Yahoo</item>
     </string-array>
-    <string-array name="provider_value_pro" translatable="false">
-        <item>forecastIO</item>
+    <string-array name="provider_value" translatable="false">
+        <item>darkSky</item>
         <item>apixu</item>
         <item>yahoo</item>
     </string-array>
-
-    <string-array name="provider_unit_free">
-        <item>ForecastIO</item>
-    </string-array>
-    <string-array name="provider_value_free" translatable="false">
-        <item>forecastIO</item>
-    </string-array>
-
 </resources>

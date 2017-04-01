@@ -1,14 +1,22 @@
 <resources>
 
     <string name="app_name">AllWeather</string>
-
-    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-5053914526798733/4551790409</string>
-
+    
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
-    <string name="activity_dialog">Loading...</string>
+    <string name="key_pref_temperature" translatable="false">temperature</string>
+    <string name="key_pref_speed" translatable="false">speed</string>
+    <string name="key_pref_time" translatable="false">time</string>
+    <string name="key_pref_theme" translatable="false">theme</string>
+    <string name="key_pref_weather_provider" translatable="false">weather_provider</string>
 
+    <string name="default_pref_temperature" translatable="false">celsius</string>
+    <string name="default_pref_speed" translatable="false">kmh</string>
+    <string name="default_pref_time" translatable="false">24</string>
+    <string name="default_pref_theme" translatable="false">light</string>
+    <string name="default_pref_weather_provider" translatable="false">darkSky</string>
+    
     <string name="tab1_title">NOW</string>
     <string name="tab2_title">WEEK</string>
 
@@ -20,23 +28,20 @@
     <string name="pref_speed">Speed</string>
     <string name="pref_time">Time</string>
     <string name="pref_second_category">General</string>
-    <string name="pref_use_gps">Improve weather data</string>
-    <string name="pref_use_gps_desc">Use gps for improve location</string>
     <string name="pref_theme">Theme</string>
     <string name="pref_provider">Weather provider</string>
 
     <string name="hint_search_view">Search place</string>
     <string name="no_result_suggestion">No result</string>
 
-    <string name="snackbar_1">I don\'t have access to the location\nWould you like to give me permission?</string>
-    <string name="snackbar_2">Geolocation is not active\nDo you want to activate it?</string>
-    <string name="snackbar_3">No internet connection</string>
-    <string name="snackbar_4">Cannot contact the server at this time</string>
-    <string name="diaolog_connection_disable">Enable Wifi or data connection</string>
-    <string name="dialog_preference_yahoo">Yahoo don\'t support the hourly forecast</string>
+    <string name="error_server_problem">Cannot contact the server at this time</string>
+    <string name="error_yahoo">Yahoo don\'t support the hourly forecast</string>
+    <string name="error_data_refresh">Last data already available</string>
+    <string name="error_load_suggestion">"Fail to load suggestions"</string>
     <string name="pro_version_title">Pro features:</string>
     <string name="pro_version_message">"-Unlock all weather provider"</string>
     <string name="already_pro_version">Already pro</string>
+    <string name="error_desc"><b>Oops something was wrong</b>\n\nMake sure you are connected to the Internet and have the active localization</string>
 
     <string name="action_OK">OK</string>
     <string name="action_retry">RETRY</string>

@@ -11,8 +11,6 @@
     <uses-feature android:name="android.hardware.location.network"/>
     <uses-feature android:name="android.hardware.location.gps"/>
 
-    <!--android:name="android.support.multidex.MultiDexApplication"-->
-
     <application
         android:name=".application.Init"
         android:allowBackup="true"
@@ -22,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/MyTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/MyThemeNoActionBar">
             <intent-filter>
@@ -31,13 +29,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AppPreferences"
+            android:name=".preferences.AppPreferences"
             android:label="@string/action_settings"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="sensorPortrait"/>
-        <activity
-            android:name=".InAppPurchaseActivity"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".ui.activity.MainActivity"
             android:screenOrientation="sensorPortrait"/>
 
 

@@ -16,16 +16,19 @@
 #   public *;
 #}
 
-#Gson
--keepattributes Signature
--keepattributes *Annotation*
--keep class sun.misc.Unsafe { *; }
--keep class com.dubai.fa.model.** { *; }
--keep class * implements com.google.gson.TypeAdapterFactory
--keep class * implements com.google.gson.JsonSerializer
--keep class * implements com.google.gson.JsonDeserializer
+-ignorewarnings
+-keep class * {
+    public private *;
+}
 
-#OkHttp
+#Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+# OkHttp
 -keepattributes Signature
 -keepattributes *Annotation*
 -keep class okhttp3.** { *; }
@@ -33,24 +36,11 @@
 -dontwarn okhttp3.**
 -dontwarn okio.**
 
-#Butterknife
--keep public class * implements butterknife.Unbinder { public <init>(...); }
--keep class butterknife.*
--keepclasseswithmembernames class * { @butterknife.* <methods>; }
--keepclasseswithmembernames class * { @butterknife.* <fields>; }
-
-#Picasso
--dontwarn com.squareup.okhttp.**
-
-#Turn off Logging
--assumenosideeffects class android.util.Log {
-    public static *** d(...);
-    public static *** v(...);
-    public static *** i(...);
-    public static *** e(...);
-    public static *** w(...);
-    public static *** wtf(...);
+# Retrofit 2
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
 }
-
-#In-app billing
-#-keep class com.billing.utils.**

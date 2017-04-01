@@ -2,8 +2,6 @@
 <resources>
     <string name="app_name">AllWeather</string>
 
-    <string name="activity_dialog">Chargement...</string>
-
     <string name="tab1_title">AUJOURD\'HUI</string>
     <string name="tab2_title">SEMAINE</string>
 
@@ -15,23 +13,20 @@
     <string name="pref_speed">Vitesse</string>
     <string name="pref_time">Temps</string>
     <string name="pref_second_category">Générales</string>
-    <string name="pref_use_gps">Améliorer les données météorologiques</string>
-    <string name="pref_use_gps_desc">Utilisation gps pour améliorer la emplacement</string>
     <string name="pref_theme">Thème</string>
     <string name="pref_provider">Fournisseur de temps</string>
 
     <string name="hint_search_view">Recherche placer</string>
-    <string name="no_result_suggestion">aucun résultat</string>
+    <string name="no_result_suggestion">Aucun résultat</string>
 
-    <string name="snackbar_1">Je n\’ai pas accès à l’emplacement\nVous souhaitez me donner la permission ?</string>
-    <string name="snackbar_2">Géolocalisation n\’est pas active\nVous voulez l’activer ?</string>
-    <string name="snackbar_3">Pas de connexion internet</string>
-    <string name="snackbar_4">Impossible de contacter le serveur en ce moment</string>
-    <string name="diaolog_connection_disable">Activez la connexion Wifi ou de données</string>
-    <string name="dialog_preference_yahoo">Yahoo ne supporte pas les prévisions horaires</string>
+    <string name="error_server_problem">Impossible de contacter le serveur en ce moment</string>
+    <string name="error_yahoo">Yahoo ne supporte pas les prévisions horaires</string>
+    <string name="error_data_refresh">Dernières données déjà disponibles</string>
+    <string name="error_load_suggestion">"Ne se chargent des suggestions"</string>
     <string name="pro_version_title">Fonctionnalités pro:</string>
     <string name="pro_version_message">"-Débloquer tous les fournisseur de météo"</string>
     <string name="already_pro_version">Déjà pro</string>
+    <string name="error_desc"><b>Oups a été quelque chose de mal</b>\n\nAssurez-vous que vous êtes connecté à internet et avez une localisation active</string>
 
     <string name="action_OK">OK</string>
     <string name="action_retry">RETENTER</string>

@@ -19,8 +19,8 @@ package com.android.vending.billing;
 import android.os.Bundle;
 
 /**
- * InAppBillingService is the service that provides in-app billing version 3 and beyond.
- * This service provides the following features:
+ * InAppBillingService is the serviceMaps that provides in-app billing version 3 and beyond.
+ * This serviceMaps provides the following features:
  * 1. Provides a new API to get details of in-app items published for the app including
  *    price, type, title and description.
  * 2. The purchase flow is synchronous and purchase information is available immediately

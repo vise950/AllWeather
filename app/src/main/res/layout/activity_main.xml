@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.v4.widget.DrawerLayout
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
@@ -7,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
-    tools:context=".MainActivity"
+    tools:context=".ui.activity.MainActivity"
     tools:openDrawer="start">
 
     <include
@@ -15,10 +16,6 @@
         android:layout_height="match_parent"
         layout="@layout/content_main"/>
 
-    <com.lapism.searchview.SearchView
-        android:id="@+id/search_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"

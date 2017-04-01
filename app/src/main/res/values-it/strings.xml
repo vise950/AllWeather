@@ -2,8 +2,6 @@
 <resources>
     <string name="app_name">AllWeather</string>
 
-    <string name="activity_dialog">Caricamento...</string>
-
     <string name="tab1_title">OGGI</string>
     <string name="tab2_title">SETTIMANA</string>
 
@@ -15,23 +13,20 @@
     <string name="pref_speed">Velocità</string>
     <string name="pref_time">Orario</string>
     <string name="pref_second_category">Generale</string>
-    <string name="pref_use_gps">Migliora dati meteo</string>
-    <string name="pref_use_gps_desc">Usa il gps per determinare la posizione</string>
     <string name="pref_theme">Tema</string>
     <string name="pref_provider">Provider meteo</string>
 
     <string name="hint_search_view">Cerca luogo</string>
     <string name="no_result_suggestion">Nessun risultato</string>
 
-    <string name="snackbar_1">Non ho accesso alla posizione\nVuoi darmi il permesso?</string>
-    <string name="snackbar_2">Geolocalizzazione disattiva\nVuoi attivarla?</string>
-    <string name="snackbar_3">Nessuna connessione internet</string>
-    <string name="snackbar_4">Impossibile contattare il server in questo momento</string>
-    <string name="diaolog_connection_disable">Abilita il Wifi o i dati</string>
-    <string name="dialog_preference_yahoo">Yahoo non supporta le previsioni orarie</string>
+    <string name="error_server_problem">Impossibile contattare il server in questo momento</string>
+    <string name="error_yahoo">Yahoo non supporta le previsioni orarie</string>
+    <string name="error_data_refresh">Ultimi dati già disponibili</string>
+    <string name="error_load_suggestion">"Impossibile caricare i suggerimenti"</string>
     <string name="pro_version_title">Vantaggi pro:</string>
     <string name="pro_version_message">"-Sblocca tutti i provider meteo"</string>
     <string name="already_pro_version">Già pro</string>
+    <string name="error_desc"><b>Oops qualcosa è andato storto</b>\n\nAssicurati di essere connesso ad internet e di avere la localizzazione attiva</string>
 
     <string name="action_OK">OK</string>
     <string name="action_retry">RIPROVA</string>

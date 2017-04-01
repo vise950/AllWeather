@@ -55,7 +55,7 @@ import java.util.List;
  * <p>
  * When you are done with this object, don't forget to call {@link #dispose}
  * to ensure proper cleanup. This object holds a binding to the in-app billing
- * service, which will leak unless you dispose of it correctly. If you created
+ * serviceMaps, which will leak unless you dispose of it correctly. If you created
  * the object on an Activity's onCreate method, then the recommended
  * place to dispose of it is the Activity's onDestroy method.
  * <p>
@@ -100,7 +100,7 @@ public class IabHelper {
     public static final String RESPONSE_INAPP_PURCHASE_DATA_LIST = "INAPP_PURCHASE_DATA_LIST";
     public static final String RESPONSE_INAPP_SIGNATURE_LIST = "INAPP_DATA_SIGNATURE_LIST";
     public static final String INAPP_CONTINUATION_TOKEN = "INAPP_CONTINUATION_TOKEN";
-    // Item types
+    // ItemYahoo types
     public static final String ITEM_TYPE_INAPP = "inapp";
     public static final String ITEM_TYPE_SUBS = "subs";
     // some fields on the getSkuDetails response bundle
@@ -123,7 +123,7 @@ public class IabHelper {
     String mAsyncOperation = "";
     // Context we were passed during initialization
     Context mContext;
-    // Connection to the service
+    // Connection to the serviceMaps
     IInAppBillingService mService;
     ServiceConnection mServiceConn;
     // The request code used to launch purchase flow
@@ -141,7 +141,7 @@ public class IabHelper {
      * setup by calling {@link #startSetup} and wait for setup to complete. This constructor does not
      * block and is safe to call from a UI thread.
      *
-     * @param ctx             Your application or Activity context. Needed to bind to the in-app billing service.
+     * @param ctx             Your application or Activity context. Needed to bind to the in-app billing serviceMaps.
      * @param base64PublicKey Your application's public key, encoded in base64.
      *                        This is used for verification of purchase signatures. You can find your app's base64-encoded
      *                        public key in your application's page on Google Play Developer Console. Note that this
@@ -162,9 +162,9 @@ public class IabHelper {
      */
     public static String getResponseDesc(int code) {
         String[] iab_msgs = ("0:OK/1:User Canceled/2:Unknown/" +
-                "3:Billing Unavailable/4:Item unavailable/" +
-                "5:Developer Error/6:Error/7:Item Already Owned/" +
-                "8:Item not owned").split("/");
+                "3:Billing Unavailable/4:ItemYahoo unavailable/" +
+                "5:Developer Error/6:Error/7:ItemYahoo Already Owned/" +
+                "8:ItemYahoo not owned").split("/");
         String[] iabhelper_msgs = ("0:OK/-1001:Remote exception during initialization/" +
                 "-1002:Bad response received/" +
                 "-1003:Purchase signature verification failed/" +
@@ -212,19 +212,19 @@ public class IabHelper {
         checkNotDisposed();
         if (mSetupDone) throw new IllegalStateException("IAB helper is already set up.");
 
-        // Connection to IAB service
+        // Connection to IAB serviceMaps
         logDebug("Starting in-app billing setup.");
         mServiceConn = new ServiceConnection() {
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                logDebug("Billing service disconnected.");
+                logDebug("Billing serviceMaps disconnected.");
                 mService = null;
             }
 
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 if (mDisposed) return;
-                logDebug("Billing service connected.");
+                logDebug("Billing serviceMaps connected.");
                 mService = IInAppBillingService.Stub.asInterface(service);
                 String packageName = mContext.getPackageName();
                 try {
@@ -270,14 +270,14 @@ public class IabHelper {
         Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");
         if (!mContext.getPackageManager().queryIntentServices(serviceIntent, 0).isEmpty()) {
-            // service available to handle that Intent
+            // serviceMaps available to handle that Intent
             mContext.bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
         } else {
-            // no service available to handle that Intent
+            // no serviceMaps available to handle that Intent
             if (listener != null) {
                 listener.onIabSetupFinished(
                         new IabResult(BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE,
-                                "Billing service unavailable on device."));
+                                "Billing serviceMaps unavailable on device."));
             }
         }
     }
@@ -285,14 +285,14 @@ public class IabHelper {
     /**
      * Dispose of object, releasing resources. It's very important to call this
      * method when you are done with this object. It will release any resources
-     * used by it such as service connections. Naturally, once the object is
+     * used by it such as serviceMaps connections. Naturally, once the object is
      * disposed of, it can't be used again.
      */
     public void dispose() {
         logDebug("Disposing.");
         mSetupDone = false;
         if (mServiceConn != null) {
-            logDebug("Unbinding from service.");
+            logDebug("Unbinding from serviceMaps.");
             if (mContext != null && mService != null) mContext.unbindService(mServiceConn);
         }
         mDisposed = true;
@@ -730,7 +730,7 @@ public class IabHelper {
     }
 
     int queryPurchases(Inventory inv, String itemType) throws JSONException, RemoteException {
-        // Query purchases
+        // QueryYahoo purchases
         logDebug("Querying owned items, item type: " + itemType);
         logDebug("Package name: " + mContext.getPackageName());
         boolean verificationFailed = false;
@@ -894,7 +894,7 @@ public class IabHelper {
          *
          * @param result The result of the setup process.
          */
-        public void onIabSetupFinished(IabResult result);
+        void onIabSetupFinished(IabResult result);
     }
 
 
@@ -911,7 +911,7 @@ public class IabHelper {
          * @param result The result of the purchase.
          * @param info   The purchase information (null if purchase failed)
          */
-        public void onIabPurchaseFinished(IabResult result, Purchase info);
+        void onIabPurchaseFinished(IabResult result, Purchase info);
     }
 
     /**
@@ -924,7 +924,7 @@ public class IabHelper {
          * @param result The result of the operation.
          * @param inv    The inventory.
          */
-        public void onQueryInventoryFinished(IabResult result, Inventory inv);
+        void onQueryInventoryFinished(IabResult result, Inventory inv);
     }
 
     /**
@@ -937,7 +937,7 @@ public class IabHelper {
          * @param purchase The purchase that was (or was to be) consumed.
          * @param result   The result of the consumption operation.
          */
-        public void onConsumeFinished(Purchase purchase, IabResult result);
+        void onConsumeFinished(Purchase purchase, IabResult result);
     }
 
     /**
@@ -951,6 +951,6 @@ public class IabHelper {
          * @param results   The results of each consumption operation, corresponding to each
          *                  sku.
          */
-        public void onConsumeMultiFinished(List<Purchase> purchases, List<IabResult> results);
+        void onConsumeMultiFinished(List<Purchase> purchases, List<IabResult> results);
     }
 }
