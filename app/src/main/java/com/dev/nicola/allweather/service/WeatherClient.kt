@@ -28,7 +28,7 @@ class WeatherClient(val context: Context) {
                     .build()
 
             val retrofit = Retrofit.Builder()
-                    .baseUrl(Utils.ServiceHepler.ulrProvider(context))
+                    .baseUrl(Utils.ServiceHelper.ulrProvider(context))
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

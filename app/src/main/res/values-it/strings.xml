@@ -28,7 +28,6 @@
     <string name="already_pro_version">Già pro</string>
     <string name="error_desc"><b>Oops qualcosa è andato storto</b>\n\nAssicurati di essere connesso ad internet e di avere la localizzazione attiva</string>
 
-    <string name="action_OK">OK</string>
     <string name="action_retry">RIPROVA</string>
     <string name="action_cancel">Annulla</string>
 
