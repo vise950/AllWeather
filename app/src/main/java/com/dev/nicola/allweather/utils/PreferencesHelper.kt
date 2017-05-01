@@ -17,7 +17,7 @@ object PreferencesHelper {
 
     val DEFAULT_PREF_TEMPERATURE: String = "celsius"
     val DEFAULT_PREF_SPEED: String = "kmh"
-    val DEFAULT_PREF_TIME: Int = 24
+    val DEFAULT_PREF_TIME: String = "24"
     val DEFAULT_PREF_THEME: String = "light"
     val DEFAULT_PREF_WEATHER_PROVIDER: String = "darkSky"
 

@@ -14,40 +14,41 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences
 import android.view.MotionEvent
 import android.view.View
+import com.dev.nicola.allweather.BuildConfig
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.adapter.FragmentAdapter
 import com.dev.nicola.allweather.preferences.AppPreferences
-import com.dev.nicola.allweather.service.MapsGoogleApiClient
-import com.dev.nicola.allweather.service.WeatherClient
+import com.dev.nicola.allweather.retrofit.MapsGoogleApiClient
+import com.dev.nicola.allweather.retrofit.WeatherRequest
 import com.dev.nicola.allweather.utils.*
-import com.dev.nicola.allweather.weatherProvider.Apixu.model.RootApixu
-import com.dev.nicola.allweather.weatherProvider.DarkSky.model.RootDarkSky
-import com.dev.nicola.allweather.weatherProvider.Yahoo.model.RootYahoo
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.android.synthetic.main.placeholder_something_was_wrong.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private var prefTheme: String? = null
     private var prefWeatherProvider: String? = null
+    private var prefTemp: String? = null
+    private var prefSpeed: String? = null
+    private var prefTime: String? = null
     private var goToSetting = false
-    private var firstRun = true
     private var offlineMode = false
 
     private val searchResult: ArrayList<PredictionResult> = ArrayList()
 
+    private var fragmentAdapter: FragmentAdapter? = null
+
     private var googleApiClient: GoogleApiClient? = null
     private var location: Location? = null
+    private var locationName: String? = null
     private var locationRequest: LocationRequest? = null
     private val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 10000
     private val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2
@@ -68,31 +69,32 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         buildGoogleClient()
 
         billing = Billing(this)
-        billing!!.onCreate()
-
+        billing?.onCreate()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        billing!!.onActivityResult(requestCode, resultCode, data)
+        billing?.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onResume() {
         super.onResume()
 
-        goToSetting.log("setting")
-
         if (!goToSetting) {
             Handler().postDelayed({
-                initialCheckUp()
+                initCheckUp()
             }, 1500)
         } else {
-            //fixme change theme
-            if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME, prefTheme!!) as Boolean) {
+            if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME, prefTheme.toString()) ?: false) {
                 recreate()
             }
-
-            if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER, PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER, prefWeatherProvider!!) as Boolean) {
+            if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER,
+                    PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER, prefWeatherProvider.toString()) ?: false) {
                 getData(location?.latitude, location?.longitude)
+            }
+            if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TEMPERATURE, PreferencesHelper.DEFAULT_PREF_TEMPERATURE, prefTemp.toString()) ?: false ||
+                    PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_SPEED, PreferencesHelper.DEFAULT_PREF_SPEED, prefSpeed.toString()) ?: false ||
+                    PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TIME, PreferencesHelper.DEFAULT_PREF_TIME, prefTime.toString()) ?: false) {
+                fragmentAdapter?.notifyDataSetChanged()
             }
             goToSetting = false
         }
@@ -100,14 +102,14 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
     override fun onPause() {
         super.onPause()
-        if (googleApiClient!!.isConnected) {
+        if (googleApiClient?.isConnected ?: false) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
         }
     }
 
     override fun onStop() {
         super.onStop()
-        if (googleApiClient!!.isConnected) {
+        if (googleApiClient?.isConnected ?: false) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
             googleApiClient?.disconnect()
         }
@@ -115,14 +117,10 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
     override fun onDestroy() {
         super.onDestroy()
-        if (billing != null) {
-            billing!!.onDestroy()
-        }
-
+        billing?.onDestroy()
         realm?.close()
         realm = null
     }
-
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -136,36 +134,38 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         }
     }
 
-
-    private fun initialCheckUp() {
-        if (PreferencesHelper.isFirstLaunch(this) as Boolean && (!Utils.isLocationEnable(this) || !Utils.isConnectedToInternet(this))) {
+    private fun initCheckUp() {
+        if (PreferencesHelper.isFirstLaunch(this) ?: false && (!Utils.isLocationEnable(this) || !Utils.isConnectedToInternet(this))) {
 
             getSharedPreferences(MainActivity::class.java.name, Context.MODE_PRIVATE).edit().clear().apply()
             getDefaultSharedPreferences(this).edit().clear().apply()
 
             progress_dialog_container.visibility = View.GONE
-            placeholder_something_wrong.visibility = View.VISIBLE
-            retry_button.setOnClickListener {
-                placeholder_something_wrong.visibility = View.GONE
-                progress_dialog_container.visibility = View.VISIBLE
-                onResume()
-            }
+            SnackBarHelper.noInternetOrLocationActive(this,
+                    {
+                        progress_dialog_container.visibility = View.VISIBLE
+                        onResume()
+                    })
         } else {
             PreferencesHelper.setPreferences(this, PreferencesHelper.KEY_FIRST_LAUNCH, false)
             if (!Utils.isLocationEnable(this) || !Utils.isConnectedToInternet(this)) {
                 offlineMode = true
-                initialSetup()
+                initSetup()
             } else {
                 offlineMode = false
                 googleApiClient?.reconnect()
-                initialSetup()
+                initSetup()
             }
         }
     }
 
-    private fun initialSetup() {
-        firstRun = true
-        getPreferences()
+    //todo ogni avvio (tranne la prima volta) carico i dari offline e se è possibile faccio la richiesta in background e carioo i nuovi (si perdono max 4,5 sec)
+    //todo aggingere animazioni qundo viene caricato il layout
+    private fun initSetup() {
+        if (BuildConfig.DEBUG) {
+            PreferencesHelper.setPreferences(this, PreferencesHelper.KEY_PREF_PRO_VERSION, true)
+        }
+
         setDrawer()
         setNavigationView()
         setSearchView()
@@ -173,61 +173,45 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         if (offlineMode) {
             setViewPager()
             progress_dialog_container.visibility = View.GONE
-            //todo show alert
+            SnackBarHelper.offline(this)
         }
+        getPreferences()
     }
 
 
     private fun getPreferences() {
         prefTheme = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME) as String
         prefWeatherProvider = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER, PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER) as String
+        prefTemp = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_TEMPERATURE, PreferencesHelper.DEFAULT_PREF_TEMPERATURE) as String
+        prefSpeed = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_SPEED, PreferencesHelper.DEFAULT_PREF_SPEED) as String
+        prefTime = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_TIME, PreferencesHelper.DEFAULT_PREF_TIME) as String
     }
 
 
     private fun getData(latitude: Double?, longitude: Double?) {
-        var call: Observable<RootDarkSky>? = null
-        var call1: Observable<RootApixu>? = null
-        var call2: Observable<RootYahoo>? = null
-//        var id: String? = null
-
-        when (PreferencesHelper.getWeatherProvider(this)) {
-            WeatherProvider.DARK_SKY -> {
-//                call = WeatherClient(this).service.getDarkSkyData(latitude!!, longitude!!)
-                call1 = WeatherClient(this).service.getApixuData("latitude!!, longitude!!")
-//                call2 = WeatherClient(this).service.getYahooData("select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text="sossano")")
-//                id = WeatherProvider.DARK_SKY.value
-            }
-        }
-
-        call1!!.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ data ->
-                    realm?.executeTransactionAsync({
-                        //                        data.id = id
-                        it.copyToRealmOrUpdate(data)
-                    }, {
+        realm?.let {
+            WeatherRequest.getWeatherData(this, it, latitude, longitude,
+                    onSuccess = {
                         progress_dialog_container?.visibility = View.GONE
                         refresh_layout?.isRefreshing = false
                         setViewPager()
                         PreferencesHelper.setPreferences(this, PreferencesHelper.KEY_LAST_UPDATE, System.currentTimeMillis())
-                    }, {
-                        it.log("realm Error")
+                    },
+                    onRealmError = {
+                        "realm error".log()
+                    },
+                    onError = {
+                        "call error".log()
+                        progress_dialog_container?.visibility = View.GONE
+                        SnackBarHelper.serverError(this, {
+                            progress_dialog_container?.visibility = View.VISIBLE
+                            getData(location?.latitude, location?.longitude)
+                        })
+                        setViewPager()
                     })
-                }, { error ->
-                    error.log("Error call")
-                    progress_dialog_container?.visibility = View.GONE
-                    SnackBarHelper.serverError(this, {
-                        progress_dialog_container?.visibility = View.VISIBLE
-                        getData(location?.latitude, location?.longitude)
-                    })
-                    setViewPager()
-                })
+        }
     }
 
-
-    /**
-     * Drawer
-     */
     private fun setDrawer() {
         drawer_layout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             override fun onDrawerOpened(drawerView: View?) {
@@ -242,10 +226,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         })
     }
 
-
-    /**
-     * Navigation View
-     */
     private fun setNavigationView() {
         navigation_view.setNavigationItemSelectedListener {
             Handler().postDelayed({
@@ -269,10 +249,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         }
     }
 
-
-    /**
-     * Search View
-     */
     private fun setSearchView() {
         var clickedItem = false
 
@@ -320,17 +296,16 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         }
     }
 
-    private fun searchSuggestion(query: String) {
+    private fun searchSuggestion(query: String?) {
         if (searchResult.isNotEmpty()) {
             searchResult.clear()
         }
-
-        MapsGoogleApiClient.service.getPrediction(query).subscribeOn(Schedulers.newThread())
+        MapsGoogleApiClient.service.getPrediction(query.toString()).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ data ->
-                    if (data.predictions!!.isNotEmpty()) {
-                        data.predictions.forEachIndexed { index, data ->
-                            if (index in 1..4) {
+                    if (data?.predictions?.isNotEmpty() ?: false) {
+                        data?.predictions?.forEachIndexed { index, data ->
+                            if (index in 0..3) {
                                 searchResult.add(PredictionResult(Utils.trimString(data.description.toString())))
                             }
                         }
@@ -347,12 +322,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
                 })
     }
 
-
-    /**
-     *  View Pager
-     */
     private fun setViewPager() {
-        val fragmentAdapter = FragmentAdapter(supportFragmentManager, this)
+        fragmentAdapter = FragmentAdapter(supportFragmentManager, this)
         view_pager.adapter = fragmentAdapter
         tab_layout.setupWithViewPager(view_pager)
 
@@ -365,13 +336,10 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         }
     }
 
-
-    /**
-     *  Swipe to refresh
-     */
     private fun setSwipeToRefresh() {
+        val time = 60000L * 10 // 60000 = 1 minute
         refresh_layout.setOnRefreshListener {
-            if ((PreferencesHelper.getPreferences(this, PreferencesHelper.KEY_LAST_UPDATE, 0L) as Long) < Utils.localTimeMillis - 600000L) {
+            if ((PreferencesHelper.getPreferences(this, PreferencesHelper.KEY_LAST_UPDATE, 0L) as Long) < Utils.TimeHelper.localTimeMillis - time) {
                 getData(location?.latitude, location?.longitude)
             } else {
                 SnackBarHelper.dataRefresh(this)
@@ -392,21 +360,21 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
     private fun createLocationRequest() {
         locationRequest = LocationRequest()
-        locationRequest!!.interval = UPDATE_INTERVAL_IN_MILLISECONDS
-        locationRequest!!.fastestInterval = FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
-        locationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest?.interval = UPDATE_INTERVAL_IN_MILLISECONDS
+        locationRequest?.fastestInterval = FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
+        locationRequest?.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
     private fun getDeviceLocation() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient)
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
-            if (location != null) {
+            location?.let {
                 if (!offlineMode) {
                     getData(location?.latitude, location?.longitude)
                 }
-
-                Utils.LocationHelper.getLocationName(location!!.latitude, location!!.longitude, {
+                Utils.LocationHelper.getLocationName(location?.latitude ?: 100.0, location?.longitude ?: 100.0, {
+                    locationName = it
                     search_view.setSearchText(it)
                 }, {
                     search_view.setSearchText(resources.getString(R.string.no_result_suggestion))
@@ -421,13 +389,9 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         getDeviceLocation()
     }
 
-    override fun onConnectionSuspended(i: Int) {
+    override fun onConnectionSuspended(i: Int) {}
 
-    }
-
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {
-
-    }
+    override fun onConnectionFailed(connectionResult: ConnectionResult) {}
 
     override fun onLocationChanged(location: Location?) {
         this.location = location

@@ -1,211 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:scrollbars="vertical">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical">
+    <!-- todo parallax nell'header?? -->
 
+    <ImageView
+        android:id="@+id/image_daily_fragment"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:contentDescription="@string/desc_image"
+        android:scaleType="fitXY"
+        android:src="@drawable/header_drawer"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
+    <TextView
+        android:id="@+id/condition_daily_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_6dp"
+        android:paddingStart="@dimen/margin_12dp"
+        android:text="@string/test"
+        android:maxEms="8"
+        android:textColor="@color/primary_text_light"
+        android:textSize="@dimen/text_size_24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/image_daily_fragment"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/temperature_daily_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_6dp"
+        android:layout_marginEnd="@dimen/margin_12dp"
+        android:text="@string/test"
+        android:textColor="@color/primary_text_light"
+        android:textSize="@dimen/text_size_45sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/image_daily_fragment"
+        app:layout_constraintRight_toRightOf="@+id/image_daily_fragment" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/forecast_daily_fragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_6dp"
+        android:layout_marginRight="@dimen/margin_6dp"
+        android:layout_marginTop="@dimen/margin_6dp"
+        android:elevation="@dimen/elevation_2dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_daily_fragment"
+        tools:targetApi="lollipop">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/forecast_hour_recycle_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollHorizontally="true">
+            android:layout_height="match_parent"
+            android:fadeScrollbars="false"
+            android:scrollbarSize="3dp"
+            android:scrollbarThumbHorizontal="@color/accent"
+            android:scrollbars="horizontal" />
+    </android.support.v7.widget.CardView>
 
+    <TextView
+        android:id="@+id/wind_label_daily_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_18dp"
+        android:layout_marginTop="@dimen/margin_18dp"
+        android:text="@string/wind_label"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_daily_fragment" />
 
-            <RelativeLayout
-                android:id="@+id/header_daily_fragment"
-                android:layout_width="wrap_content"
-                android:layout_height="170dp">
+    <TextView
+        android:id="@+id/wind_daily_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_18dp"
+        android:text="@string/test"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/wind_label_daily_fragment"
+        app:layout_constraintRight_toRightOf="parent" />
 
-                <ImageView
-                    android:id="@+id/image_daily_fragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/header_drawer" />
+    <TextView
+        android:id="@+id/humidity_label_daily_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_18dp"
+        android:layout_marginTop="@dimen/margin_12dp"
+        android:text="@string/humidity_label"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wind_label_daily_fragment" />
 
-                <TextView
-                    android:id="@+id/condition_daily_fragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
-                    android:paddingBottom="8dp"
-                    android:paddingStart="8dp"
-                    android:text="Sereno"
-                    android:textColor="@color/primary_text"
-                    android:textSize="20sp" />
+    <TextView
+        android:id="@+id/humidity_daily_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_18dp"
+        android:text="@string/test"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/humidity_label_daily_fragment"
+        app:layout_constraintRight_toRightOf="parent" />
 
-                <TextView
-                    android:id="@+id/temperature_daily_fragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/condition_daily_fragment"
-                    android:layout_alignBottom="@+id/condition_daily_fragment"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="20dp"
-                    android:text="25°"
-                    android:textColor="@color/primary_text"
-                    android:textSize="46sp"
-                    android:textStyle="bold" />
+    <TextView
+        android:id="@+id/pressure_label_daily_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_18dp"
+        android:layout_marginTop="@dimen/margin_12dp"
+        android:text="@string/pressure_label"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/humidity_label_daily_fragment" />
 
+    <TextView
+        android:id="@+id/pressure_daily_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_18dp"
+        android:text="@string/test"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/pressure_label_daily_fragment"
+        app:layout_constraintRight_toRightOf="parent" />
 
-            </RelativeLayout>
+    <TextView
+        android:id="@+id/sunrise_label_daily_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_18dp"
+        android:layout_marginTop="@dimen/margin_12dp"
+        android:text="@string/sunrise_label"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pressure_label_daily_fragment" />
 
+    <TextView
+        android:id="@+id/sunrise_daily_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_18dp"
+        android:text="@string/test"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/sunrise_label_daily_fragment"
+        app:layout_constraintRight_toRightOf="parent" />
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/forecast_daily_fragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/header_daily_fragment"
-                android:layout_margin="10dp"
-                android:elevation="12dp">
+    <TextView
+        android:id="@+id/sunset_label_daily_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_18dp"
+        android:layout_marginTop="@dimen/margin_12dp"
+        android:text="@string/sunset_label"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sunrise_label_daily_fragment" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/forecast_hour_recycle_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fadeScrollbars="false"
-                    android:scrollbarSize="3dp"
-                    android:scrollbars="horizontal" />
+    <TextView
+        android:id="@+id/sunset_daily_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_18dp"
+        android:text="@string/test"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/sunset_label_daily_fragment"
+        app:layout_constraintRight_toRightOf="parent" />
 
-            </android.support.v7.widget.CardView>
+    <ImageView
+        android:id="@+id/provider_logo"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="@dimen/margin_6dp"
+        android:contentDescription="@string/desc_image"
+        android:src="@drawable/ic_darksky_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-
-            <RelativeLayout
-                android:id="@+id/label_daily_fragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/forecast_daily_fragment"
-                android:layout_margin="24dp">
-
-                <!--<TextView-->
-                <!--android:id="@+id/temperature_label_daily_fragment"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentStart="true"-->
-                <!--android:layout_margin="6dp"-->
-                <!--android:text="@string/temperature_label"-->
-                <!--android:textSize="18sp"/>-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/temperature_daily_fragment"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_margin="6dp"-->
-                <!--android:text="25°"-->
-                <!--android:textSize="18sp"/>-->
-
-
-                <TextView
-                    android:id="@+id/wind_label_daily_fragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:text="@string/wind_label"
-                    android:textSize="18sp" />
-                <!--android:layout_below="@id/temperature_label_daily_fragment"-->
-
-
-                <TextView
-                    android:id="@+id/wind_daily_fragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="6dp"
-                    android:text="4.3m/s"
-                    android:textSize="18sp" />
-                <!--android:layout_below="@id/temperature_label_daily_fragment"-->
-
-
-                <TextView
-                    android:id="@+id/humidity_label_daily_fragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/wind_label_daily_fragment"
-                    android:layout_margin="6dp"
-                    android:text="@string/humidity_label"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/humidity_daily_fragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@id/wind_label_daily_fragment"
-                    android:layout_margin="6dp"
-                    android:text="75%"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/pressure_label_daily_fragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/humidity_label_daily_fragment"
-                    android:layout_margin="6dp"
-                    android:text="@string/pressure_label"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/pressure_daily_fragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@id/humidity_label_daily_fragment"
-                    android:layout_margin="6dp"
-                    android:text="1024 mb"
-                    android:textSize="18sp" />
-
-
-                <TextView
-                    android:id="@+id/sunrise_label_daily_fragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/pressure_label_daily_fragment"
-                    android:layout_margin="6dp"
-                    android:text="@string/sunrise_label"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/sunrise_daily_fragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@id/pressure_label_daily_fragment"
-                    android:layout_margin="6dp"
-                    android:text="7:54"
-                    android:textSize="18sp" />
-
-
-                <TextView
-                    android:id="@+id/sunset_label_daily_fragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/sunrise_label_daily_fragment"
-                    android:layout_margin="6dp"
-                    android:text="@string/sunset_label"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/sunset_daily_fragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@id/sunrise_label_daily_fragment"
-                    android:layout_margin="6dp"
-                    android:text="21:54"
-                    android:textSize="18sp" />
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-    </ScrollView>
-
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

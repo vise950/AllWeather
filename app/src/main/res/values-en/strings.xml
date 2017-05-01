@@ -28,7 +28,6 @@
     <string name="already_pro_version">Already pro</string>
     <string name="error_desc"><b>Oops something was wrong</b>\n\nMake sure you are connected to the Internet and have the active localization</string>
 
-    <string name="action_OK">OK</string>
     <string name="action_retry">RETRY</string>
     <string name="action_cancel">Cancel</string>
 

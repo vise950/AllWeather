@@ -9,12 +9,7 @@ import com.billing.utils.Purchase
 import com.dev.nicola.allweather.BuildConfig
 import com.dev.nicola.allweather.R
 
-/**
- * Created by Nicola on 27/09/2016.
- */
-
 class Billing(private val activity: Activity) {
-
 
     private val base64EncodedPublicKey = BuildConfig.PLAY_STORE_LICENSE_KEY
     private val SKU_PRO_VERSION = "com.nicola.dev.allweather_pro"

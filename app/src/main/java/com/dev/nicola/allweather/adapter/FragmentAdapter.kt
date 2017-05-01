@@ -4,10 +4,9 @@ import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-
+import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.ui.fragment.DailyFragment
 import com.dev.nicola.allweather.ui.fragment.ForecastFragment
-import com.dev.nicola.allweather.R
 
 class FragmentAdapter(fm: FragmentManager, private val context: Context) : FragmentStatePagerAdapter(fm) {
 
@@ -31,5 +30,9 @@ class FragmentAdapter(fm: FragmentManager, private val context: Context) : Fragm
             1 -> return context.getString(R.string.tab2_title)
         }
         return null
+    }
+
+    override fun getItemPosition(`object`: Any?): Int {
+        return POSITION_NONE
     }
 }

@@ -9,6 +9,7 @@ import android.view.MenuItem
 import com.dev.nicola.allweather.utils.PreferencesHelper
 import com.dev.nicola.allweather.utils.SnackBarHelper
 import com.dev.nicola.allweather.utils.Utils
+import com.dev.nicola.allweather.utils.WeatherProvider
 
 class AppPreferences : AppCompatActivity() {
 
@@ -42,19 +43,17 @@ class AppPreferences : AppCompatActivity() {
 
             val provider = findPreference(PreferencesHelper.KEY_PREF_WEATHER_PROVIDER) as ListPreference
             provider.setOnPreferenceChangeListener { preference, value ->
-                if (value == "yahoo") {
-                    SnackBarHelper.yahooProvider(activity)
+                if (value == WeatherProvider.YAHOO.value) {
+                    SnackBarHelper.yahooProvider(activity, view)
                 }
                 true
             }
-
             provider.isEnabled = isProVersion
 
-            //fixme change theme
             val theme = findPreference(PreferencesHelper.KEY_PREF_THEME)
             theme.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, value ->
                 // entra se clicco su un item del dialog (anche se è lo stesso) quindi controllo se il value nuovo e diverso da quello vecchio
-                if (PreferencesHelper.isPreferenceChange(activity, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.KEY_PREF_THEME, value.toString()) as Boolean) {
+                if (PreferencesHelper.isPreferenceChange(activity, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.KEY_PREF_THEME, value.toString()) ?: false) {
                     activity.recreate()
                 }
                 true

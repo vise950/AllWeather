@@ -28,7 +28,6 @@
     <string name="already_pro_version">Déjà pro</string>
     <string name="error_desc"><b>Oups a été quelque chose de mal</b>\n\nAssurez-vous que vous êtes connecté à internet et avez une localisation active</string>
 
-    <string name="action_OK">OK</string>
     <string name="action_retry">RETENTER</string>
     <string name="action_cancel">Annuler</string>
 

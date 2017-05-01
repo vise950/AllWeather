@@ -7,14 +7,17 @@ import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.support.v7.app.AppCompatDelegate
 import com.dev.nicola.allweather.R
-import com.dev.nicola.allweather.service.MapsGoogleApiClient
-import com.dev.nicola.allweather.service.WeatherClient
+import com.dev.nicola.allweather.retrofit.MapsGoogleApiClient
+import com.dev.nicola.allweather.retrofit.WeatherClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 import java.text.DecimalFormat
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
+
 
 class Utils {
 
@@ -31,7 +34,7 @@ class Utils {
         }
 
         fun changeTheme(context: Context) {
-            when (PreferencesHelper.getPreferences(context, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME)) {
+            when (PreferencesHelper.getDefaultPreferences(context, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME)) {
                 "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
@@ -45,18 +48,6 @@ class Utils {
             }
             return s
         }
-
-        val localTimeHour: Int
-            get() {
-                val calendar = Calendar.getInstance()
-                return calendar.get(Calendar.HOUR_OF_DAY)
-            }
-
-        val localTimeMillis: Long
-            get() {
-                val calendar = Calendar.getInstance()
-                return calendar.timeInMillis
-            }
 
         fun getHeaderImage(resources: Resources): String {
             val imageUrl: String
@@ -77,9 +68,9 @@ class Utils {
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ data ->
-                        if (data.result!!.isNotEmpty()) {
-                            data.result[0].addressComponents?.forEach {
-                                if (it.types?.get(0)?.equals("locality") as Boolean || it.types[0] == "administrative_area_level_3") {
+                        if (data?.result?.isNotEmpty() ?: false) {
+                            data?.result?.get(0)?.addressComponents?.forEach {
+                                if (it.types?.get(0) == "locality" || it.types?.get(0) == "administrative_area_level_3") {
                                     onSuccess?.invoke(it.longName.toString())
                                 }
                             }
@@ -94,10 +85,10 @@ class Utils {
             MapsGoogleApiClient.service.getCoordinates(cityName).subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ data ->
-                        if (data.result!!.isNotEmpty()) {
+                        if (data?.result?.isNotEmpty() ?: false) {
                             val location = Location(LocationManager.PASSIVE_PROVIDER)
-                            location.latitude = data.result[0].geometry?.location?.lat!!
-                            location.longitude = data.result[0].geometry?.location?.lng!!
+                            location.latitude = data?.result?.get(0)?.geometry?.location?.lat ?: 0.0
+                            location.longitude = data?.result?.get(0)?.geometry?.location?.lng ?: 0.0
                             onSuccess?.invoke(location)
                         }
                     }, { error ->
@@ -109,43 +100,42 @@ class Utils {
 
     object TimeHelper {
 
-        fun getHourFormat(time: Long, sTime: String?, units: String): String {
-            var date: Date? = null
+        fun formatTime(time: Long, sTime: String?, pref: String): String? {
+            val dateTime: DateTime?
+            var dtf: DateTimeFormatter? = null
             if (sTime != null) {
-                val c = Calendar.getInstance()
-                val df = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
-                val d = df.format(c.time)
-                val dt = SimpleDateFormat("dd-MMM-yyyy h:mm a", Locale.getDefault())
-                try {
-                    date = dt.parse(d + " " + sTime)
-                } catch (e: ParseException) {
-                    e.printStackTrace()
-                }
-
+                val df = DateTimeFormat.forPattern("h:mm a")
+                dateTime = df.parseDateTime(sTime)
             } else {
-                date = Date(time * 1000L)
+                dateTime = DateTime(time * 1000L, DateTimeZone.forTimeZone(TimeZone.getDefault()))
             }
 
-            var hour: SimpleDateFormat? = null
-
-            /*  h is used for AM/PM times (1-12).
-                H is used for 24 hour times (1-24).
-                a is the AM/PM marker
-                m is minute in hour
-                Two h's will print a leading zero: 01:13 PM. One h will print without the leading zero: 1:13 PM.
-            */
-            when (units) {
-                "12" -> hour = SimpleDateFormat("h:mm a", Locale.getDefault())
-                "24" -> hour = SimpleDateFormat("H:mm", Locale.getDefault())
+            when (pref) {
+                "12" -> dtf = DateTimeFormat.forPattern("h:mm a")
+                "24" -> dtf = DateTimeFormat.forPattern("H:mm")
             }
-            return hour!!.format(date)
+            return dtf?.print(dateTime)
         }
 
+        fun getOfflineTime(time: Long?): String? {
+            val dtf = DateTimeFormat.forPattern("dd/MM H:mm")
+            return dtf.print(time ?: 0L)
+        }
 
-        fun getDay(resources: Resources, i: Int): String {
+        fun getHour(pref: String, i: Int): String? {
+            val dt = DateTime().plusHours(i)
+            var dtf: DateTimeFormatter? = null
+            when (pref) {
+                "12" -> dtf = DateTimeFormat.forPattern("h:00 a")
+                "24" -> dtf = DateTimeFormat.forPattern("H:00")
+            }
+            return dtf?.print(dt)
+        }
+
+        fun getDate(context: Context, i: Int): String {
             val n = (86400000 * i).toLong() // n = 24h in millis * giorno  ex. 24h * 2 = dopodomani
-            val days = resources.getStringArray(R.array.days)
-            val months = resources.getStringArray(R.array.months)
+            val days = context.resources.getStringArray(R.array.days)
+            val months = context.resources.getStringArray(R.array.months)
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = calendar.timeInMillis + n //aggiungo n giorni ad oggi
             calendar.timeZone = TimeZone.getDefault()
@@ -155,13 +145,34 @@ class Utils {
             val month = calendar.get(Calendar.MONTH)
             return days[dayIndex - 1] + " " + day + " " + months[month]
         }
+
+        val today: Int
+            get() {
+                return Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+            }
+
+        val localTimeHour: Int
+            get() {
+                return Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+            }
+
+        val localTimeMillis: Long
+            get() {
+                return Calendar.getInstance().timeInMillis
+            }
     }
 
 
     object ConverterHelper {
-        fun temperature(temperature: Double, units: String): String {
-            when (units) {
-                "celsius" -> return DecimalFormat("#").format((temperature - 32) * 5 / 9) + "°"
+        fun temperature(temperature: Double, pref: String, default: String? = null): String {
+            when (pref) {
+                "celsius" -> {
+                    if (default == pref) {
+                        return DecimalFormat("#").format((temperature)) + "°"
+                    } else {
+                        return DecimalFormat("#").format((temperature - 32) * 5 / 9) + "°"
+                    }
+                }
                 "kelvin" -> return DecimalFormat("#").format((temperature + 459.67) * 5 / 9) + "°"
                 else -> return DecimalFormat("#").format((temperature)) + "°"
             }
@@ -176,14 +187,17 @@ class Utils {
         }
 
         fun windDirection(degrees: Int): String {
-            val cardinal = arrayOf("N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW")
-            val n = (degrees / 22.5 + 0.5).toInt()
-            return cardinal[n % cardinal.size]
+            if (degrees != -1) {
+                val cardinal = arrayOf("N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW")
+                val n = (degrees / 22.5 + 0.5).toInt()
+                return cardinal[n % cardinal.size]
+            } else {
+                return "error"
+            }
         }
 
         fun weatherIcon(condition: String): Int {
             val icon: Int
-
             when (condition) {
                 "1000", "clear-day", "32" -> icon = R.drawable.clear_day
                 "clear-night", "31" -> icon = R.drawable.clear_night
@@ -203,7 +217,7 @@ class Utils {
 
     }
 
-    object ServiceHepler {
+    object ServiceHelper {
         fun ulrProvider(context: Context): String? {
             var url: String? = null
             when (PreferencesHelper.getWeatherProvider(context)) {
@@ -211,7 +225,6 @@ class Utils {
                 WeatherProvider.APIXU -> url = WeatherClient.WeatherUrl.APIXU_BASE_URL
                 WeatherProvider.YAHOO -> url = WeatherClient.WeatherUrl.YAHOO_BASE_URL
             }
-            url.log("url")
             return url
         }
     }
