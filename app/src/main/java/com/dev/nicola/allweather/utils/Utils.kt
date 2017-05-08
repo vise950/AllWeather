@@ -49,12 +49,42 @@ class Utils {
             return s
         }
 
-        fun getHeaderImage(resources: Resources): String {
+        fun getHeaderImage(resources: Resources, sunset: Long?, sunrise: Long?, sSunset: String? = null, sSunrise: String? = null): String {
             val imageUrl: String
+            val time = Utils.TimeHelper.localTimeMillis
             val headerWallpaper = resources.getStringArray(R.array.header_wallpaper)
 
+            val sunriseWall = resources.getStringArray(R.array.sunrise_wallpaper)
+            val sunsetWall = resources.getStringArray(R.array.sunset_wallpaper)
+            val dayWall = resources.getStringArray(R.array.day_wallpaper)
+            val nightWall = resources.getStringArray(R.array.night_wallpaper)
+
+            val sunrise1: Long?
+            val sunset1: Long?
             val random = (Math.random() * headerWallpaper.size).toInt()
-            imageUrl = headerWallpaper[random]
+//            imageUrl = headerWallpaper[random]
+
+            if (!sSunrise.isNullOrBlank() && !sSunset.isNullOrBlank()) {
+                sunrise1 = TimeHelper.timeStringToLong(sSunrise)
+                sunset1 = TimeHelper.timeStringToLong(sSunset)
+            } else {
+                sunrise1 = sunrise
+                sunset1 = sunset
+            }
+
+            if (time >= sunrise1 ?: 0L - 1800L && time <= sunrise1 ?: 0L + 1800L) {
+                imageUrl = sunriseWall[random]
+            } else {
+                if (time > sunrise1 ?: 0L + 1800L && time < sunset1 ?: 0L - 1800L) {
+                    imageUrl = dayWall[random]
+                } else {
+                    if (time >= sunset1 ?: 0L - 1800L && time <= sunset1 ?: 0L + 1800L) {
+                        imageUrl = sunsetWall[random]
+                    } else {
+                        imageUrl = nightWall[random]
+                    }
+                }
+            }
 
             return imageUrl
         }
@@ -130,6 +160,15 @@ class Utils {
                 "24" -> dtf = DateTimeFormat.forPattern("H:00")
             }
             return dtf?.print(dt)
+        }
+
+        fun timeStringToLong(time: String? = null): Long? {
+            val calendar = Calendar.getInstance()
+            val dtf = DateTimeFormat.forPattern("dd-MM-yyyy")
+            val date = dtf.print(calendar.timeInMillis)
+            val dtf1 = DateTimeFormat.forPattern("dd-MM-yyyy h:mm a")
+            val d = dtf1.parseDateTime(date)
+            return d.millis
         }
 
         fun getDate(context: Context, i: Int): String {

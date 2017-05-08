@@ -3,7 +3,6 @@ package com.dev.nicola.allweather.utils
 import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AlertDialog
-import android.widget.Toast
 import com.billing.utils.IabHelper
 import com.billing.utils.Purchase
 import com.dev.nicola.allweather.BuildConfig
@@ -19,9 +18,9 @@ class Billing(private val activity: Activity) {
 
     fun onCreate() {
         mHelper = IabHelper(activity, base64EncodedPublicKey)
-        mHelper!!.enableDebugLogging(true)
+        mHelper?.enableDebugLogging(true)
 
-        mHelper!!.startSetup(IabHelper.OnIabSetupFinishedListener { result ->
+        mHelper?.startSetup(IabHelper.OnIabSetupFinishedListener { result ->
             if (!result.isSuccess) {
                 error("Problem setting up in-app billing: " + result)
                 return@OnIabSetupFinishedListener
@@ -30,7 +29,7 @@ class Billing(private val activity: Activity) {
             if (mHelper == null)
                 return@OnIabSetupFinishedListener
 
-            mHelper!!.queryInventoryAsync(gotInventoryListener)
+            mHelper?.queryInventoryAsync(gotInventoryListener)
         })
     }
 
@@ -38,14 +37,12 @@ class Billing(private val activity: Activity) {
         if (mHelper == null) {
             return true
         }
-        return mHelper!!.handleActivityResult(requestCode, resultCode, data)
+        return mHelper?.handleActivityResult(requestCode, resultCode, data) as Boolean
     }
 
     fun onDestroy() {
-        if (mHelper != null) {
-            mHelper!!.dispose()
-            mHelper = null
-        }
+        mHelper?.dispose()
+        mHelper = null
     }
 
     private val gotInventoryListener = IabHelper.QueryInventoryFinishedListener { result, inventory ->
@@ -122,22 +119,23 @@ class Billing(private val activity: Activity) {
 
     private fun purchaseProVersion() {
         activity.runOnUiThread {
-            mHelper!!.launchPurchaseFlow(activity, SKU_PRO_VERSION, RC_REQUEST, purchaseFinishedListener, payload)
+            mHelper?.launchPurchaseFlow(activity, SKU_PRO_VERSION, RC_REQUEST, purchaseFinishedListener, payload)
         }
     }
 
 //    fun consume(skuName: String) {
-//        mHelper!!.queryInventoryAsync(true) { result, inventory ->
+//        mHelper?.queryInventoryAsync(true) { result, inventory ->
 //            if (inventory.getSkuDetails(skuName) != null) {
-//                mHelper!!.consumeAsync(inventory.getPurchase(skuName), null)
+//                mHelper?.consumeAsync(inventory.getPurchase(skuName), null)
 //            }
 //        }
 //    }
 
     private fun error(message: String) {
-        activity.runOnUiThread {
-            Toast.makeText(activity.applicationContext, message, Toast.LENGTH_LONG).show()
-        }
+//        activity.runOnUiThread {
+//            Toast.makeText(activity.applicationContext, message, Toast.LENGTH_LONG).show()
+//        }
+        message.log("in app error")
     }
 
 

@@ -49,8 +49,8 @@ class DailyFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        setUpRecyclerView()
-//        setUpLayout()
+        setUpRecyclerView()
+        setUpLayout()
     }
 
     override fun onDestroyView() {
@@ -118,12 +118,11 @@ class DailyFragment : Fragment() {
     }
 
     private fun setUpLayout() {
+
+        Glide.with(activity).load(Utils.getHeaderImage(resources)).placeholder(R.drawable.header_drawer).into(image_daily_fragment)
+
         when (PreferencesHelper.getWeatherProvider(activity)) {
             WeatherProvider.DARK_SKY -> {
-
-                //todo come faccio l'immagine header??
-                Glide.with(activity).load(Utils.getHeaderImage(resources)).placeholder(R.drawable.header_drawer).into(image_daily_fragment)
-
                 darkSkyData?.let {
                     condition_daily_fragment.text = darkSkyData?.currently?.summary ?: getString(R.string.error_no_text)
                     temperature_daily_fragment.text = Utils.ConverterHelper.temperature(darkSkyData?.currently?.temperature ?: 0.0, prefTemp)
@@ -137,22 +136,17 @@ class DailyFragment : Fragment() {
                     sunrise_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunriseTime ?: 0L, null, prefTime)
                     sunset_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunsetTime ?: 0L, null, prefTime)
                 }
-                //fixme theme
-//                when (PreferencesHelper.getDefaultPreferences(activity, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME)) {
-//                    "light" -> Glide.with(activity).load(R.drawable.ic_darksky_dark).into(provider_logo)
-//                    "dark" -> Glide.with(activity).load(R.drawable.ic_darksky_light).into(provider_logo)
-//                }
 
-                Glide.with(activity).load(R.drawable.ic_darksky_dark).into(provider_logo)
+                when (PreferencesHelper.getDefaultPreferences(activity, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME)) {
+                    "light" -> Glide.with(activity).load(R.drawable.ic_darksky_dark).into(provider_logo)
+                    "dark" -> Glide.with(activity).load(R.drawable.ic_darksky_light).into(provider_logo)
+                }
                 provider_logo.setOnClickListener {
                     openBrowser("https://darksky.net/poweredby/")
                 }
             }
 
             WeatherProvider.APIXU -> {
-
-                Glide.with(this).load(Utils.getHeaderImage(resources)).placeholder(R.drawable.header_drawer).into(image_daily_fragment)
-
                 apixuData?.let {
                     condition_daily_fragment.text = apixuData?.current?.currentConditionApixu?.text ?: getString(R.string.error_no_text)
                     temperature_daily_fragment.text = Utils.ConverterHelper.temperature(apixuData?.current?.tempC ?: 0.0, prefTemp, "celsius")
@@ -171,9 +165,6 @@ class DailyFragment : Fragment() {
             }
 
             WeatherProvider.YAHOO -> {
-
-                Glide.with(this).load(Utils.getHeaderImage(resources)).placeholder(R.drawable.header_drawer).into(image_daily_fragment)
-
                 yahooData?.let {
                     condition_daily_fragment.text = yahooData?.query?.results?.channel?.item?.condition?.text ?: getString(R.string.error_no_text)
                     temperature_daily_fragment.text = Utils.ConverterHelper.temperature(yahooData?.query?.results?.channel?.item?.condition?.temp?.toDouble() ?: 0.0, prefTemp)

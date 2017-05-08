@@ -17,10 +17,15 @@ class WeatherRequest {
     companion object {
 
         //todo bisogna ridurre il codice utilizzando una sola variable call con cast
-        fun getWeatherData(context: Context, realm: Realm, latitude: Double?, longitude: Double?, onSuccess: (() -> Unit)?, onRealmError: (() -> Unit)?, onError: (() -> Unit)?) {
+        fun getWeatherData(context: Context, realm: Realm, latitude: Double?, longitude: Double?, onSuccess: (() -> Unit)?, onRealmError: ((Throwable) -> Unit)?, onError: ((Throwable) -> Unit)?) {
 //            var call: Observable<Any>? = null
+//            call?.cast(RootDarkSky::class.java)
+//            WeatherClient(context).service.getDarkSkyData(latitude ?: 100.0, longitude ?: 100.0)
 //            when (PreferencesHelper.getWeatherProvider(context)) {
-//                WeatherProvider.DARK_SKY -> call = WeatherClient(context).service.getDarkSkyData(latitude!!, longitude!!) as Observable<RootDarkSky>
+//                WeatherProvider.DARK_SKY -> {
+//                    call?.cast(RootDarkSky::class.java)
+//                    call = WeatherClient(context).service.getDarkSkyData(latitude ?: 100.0, longitude ?: 100.0)
+//                }
 //                WeatherProvider.APIXU -> call = WeatherClient(context).service.getApixuData(latitude.toString() + "," + longitude.toString()) as Observable<RootApixu>
 //                WeatherProvider.YAHOO -> call = WeatherClient(context).service.getYahooData("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"$name\")")as Observable<RootYahoo>
 //            }
@@ -31,7 +36,7 @@ class WeatherRequest {
 
             when (PreferencesHelper.getWeatherProvider(context)) {
                 WeatherProvider.DARK_SKY -> {
-                    callDarkSky = WeatherClient(context).service.getDarkSkyData(latitude ?: 0.0, longitude ?: 0.0)
+                    callDarkSky = WeatherClient(context).service.getDarkSkyData(latitude ?: 100.0, longitude ?: 100.0)
                     callDarkSky.subscribeOn(Schedulers.newThread())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ data ->
@@ -40,10 +45,10 @@ class WeatherRequest {
                                 }, {
                                     onSuccess?.invoke()
                                 }, {
-                                    onRealmError?.invoke()
+                                    onRealmError?.invoke(it)
                                 })
                             }, {
-                                onError?.invoke()
+                                onError?.invoke(it)
                             })
                 }
 
@@ -57,10 +62,10 @@ class WeatherRequest {
                                 }, {
                                     onSuccess?.invoke()
                                 }, {
-                                    onRealmError?.invoke()
+                                    onRealmError?.invoke(it)
                                 })
                             }, {
-                                onError?.invoke()
+                                onError?.invoke(it)
                             })
                 }
 
@@ -75,10 +80,10 @@ class WeatherRequest {
                                     }, {
                                         onSuccess?.invoke()
                                     }, {
-                                        onRealmError?.invoke()
+                                        onRealmError?.invoke(it)
                                     })
                                 }, {
-                                    onError?.invoke()
+                                    onError?.invoke(it)
                                 })
 
                     })

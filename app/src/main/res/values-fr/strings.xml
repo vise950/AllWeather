@@ -26,7 +26,8 @@
     <string name="pro_version_title">Fonctionnalités pro:</string>
     <string name="pro_version_message">"-Débloquer tous les fournisseur de météo"</string>
     <string name="already_pro_version">Déjà pro</string>
-    <string name="error_desc"><b>Oups a été quelque chose de mal</b>\n\nAssurez-vous que vous êtes connecté à internet et avez une localisation active</string>
+    <string name="error_no_internet_or_location">Internet connection or location disable.\nPlease active it.</string>
+    <string name="offline_mode">Data last update on %1$s.\nCheck internet connection or location and refresh.</string>
 
     <string name="action_retry">RETENTER</string>
     <string name="action_cancel">Annuler</string>

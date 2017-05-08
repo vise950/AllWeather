@@ -26,7 +26,8 @@
     <string name="pro_version_title">Vantaggi pro:</string>
     <string name="pro_version_message">"-Sblocca tutti i provider meteo"</string>
     <string name="already_pro_version">Già pro</string>
-    <string name="error_desc"><b>Oops qualcosa è andato storto</b>\n\nAssicurati di essere connesso ad internet e di avere la localizzazione attiva</string>
+    <string name="error_no_internet_or_location">Internet connection or location disable.\nPlease active it.</string>
+    <string name="offline_mode">Data last update on %1$s.\nCheck internet connection or location and refresh.</string>
 
     <string name="action_retry">RIPROVA</string>
     <string name="action_cancel">Annulla</string>

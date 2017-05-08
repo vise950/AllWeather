@@ -24,22 +24,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <com.arlib.floatingsearchview.FloatingSearchView
-            android:id="@+id/search_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:elevation="@dimen/elevation_8dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            app:floatingSearch_close_search_on_keyboard_dismiss="true"
-            app:floatingSearch_dimBackground="true"
-            app:floatingSearch_leftActionMode="showHamburger"
-            app:floatingSearch_searchBarMarginLeft="@dimen/margin_6dp"
-            app:floatingSearch_searchBarMarginRight="@dimen/margin_6dp"
-            app:floatingSearch_searchBarMarginTop="@dimen/margin_2dp"
-            app:floatingSearch_searchHint="Search place..."
-            app:floatingSearch_showSearchKey="false"
-            app:floatingSearch_suggestionsListAnimDuration="250" />
+        <include
+            android:id="@+id/search_view_light"
+            layout="@layout/search_view_light" />
+
+        <include
+            android:id="@+id/search_view_dark"
+            layout="@layout/search_view_dark"
+            android:visibility="gone" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
@@ -75,17 +67,5 @@
                 android:layout_below="@id/tab_layout" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
-
-        <include
-            android:id="@+id/progress_dialog_container"
-            layout="@layout/progress_dialog"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
     </android.support.constraint.ConstraintLayout>
 </android.support.design.widget.CoordinatorLayout>

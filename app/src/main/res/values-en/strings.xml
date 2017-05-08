@@ -21,12 +21,13 @@
 
     <string name="error_server_problem">Cannot contact the server at this time</string>
     <string name="error_yahoo">Yahoo dosen\'t support the hourly forecast</string>
-    <string name="error_data_refresh">Last data already available</string>
+    <string name="error_data_refresh">Lasted data already available</string>
     <string name="error_load_suggestion">"Fail to load suggestions"</string>
     <string name="pro_version_title">Pro features:</string>
     <string name="pro_version_message">"-Unlock all weather provider"</string>
     <string name="already_pro_version">Already pro</string>
-    <string name="error_desc"><b>Oops something was wrong</b>\n\nMake sure you are connected to the Internet and have the active localization</string>
+    <string name="error_no_internet_or_location">Internet connection or location disable.\nPlease active it.</string>
+    <string name="offline_mode">Data last update on %1$s.\nCheck internet connection or location and refresh.</string>
 
     <string name="action_retry">RETRY</string>
     <string name="action_cancel">Cancel</string>

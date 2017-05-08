@@ -38,19 +38,55 @@
         <item>http://i.imgur.com/apnPmn2.png</item>
         <item>http://i.imgur.com/LFdDnzF.png</item>
         <item>http://i.imgur.com/LSvsyZt.png</item>
-        <!--<item>http://i.imgur.com/8dcKDtP.png</item>-->
-        <!--<item>http://i.imgur.com/RtI77DR.png</item>-->
-        <!--<item>http://i.imgur.com/cUYV4vL.png</item>-->
-        <!--<item>http://i.imgur.com/Zkx3EKT.png</item>-->
-        <!--<item>http://i.imgur.com/QBM9MOc.png</item>-->
-        <!--<item>http://i.imgur.com/fcxx2tV.png</item>-->
-        <!--<item>http://i.imgur.com/T5g4YFx.png</item>-->
-        <!--<item>http://i.imgur.com/76Ko2q5.png</item>-->
-        <!--<item>http://i.imgur.com/sFLLciy.png</item>-->
-        <!--<item>http://i.imgur.com/bRvxqgQ.png</item>-->
-        <!--<item>http://i.imgur.com/8KUOiyb.png</item>-->
-        <!--<item>http://i.imgur.com/La8hBLk.png</item>-->
-        <!--<item>http://i.imgur.com/9IHTvRe.png</item>-->
+    </string-array>
+
+
+    <string-array name="sunset_wallpaper" translatable="false">
+        <item>http://i.imgur.com/RCpOe2b.png</item>
+        <item>http://i.imgur.com/bxKqGXQ.png</item>
+        <item>http://i.imgur.com/TFz5WO4.png</item>
+        <item>http://i.imgur.com/FTmiWfV.png</item>
+        <item>http://i.imgur.com/QGgGXlk.png</item>
+        <item>http://i.imgur.com/J4udaTF.png</item>
+        <item>http://i.imgur.com/k1utT9y.png</item>
+        <item>http://i.imgur.com/YGe43Us.png</item>
+        <item>http://i.imgur.com/WJpeR5S.png</item>
+    </string-array>
+
+    <string-array name="day_wallpaper" translatable="false">
+        <item>http://i.imgur.com/EWWa6pV.png</item>
+        <item>http://i.imgur.com/tDGMKtX.png</item>
+        <item>http://i.imgur.com/0lkl2xF.png</item>
+        <item>http://i.imgur.com/IyE6DKE.png</item>
+        <item>http://i.imgur.com/V8RgQcX.png</item>
+        <item>http://i.imgur.com/m7jNmxy.png</item>
+        <item>http://i.imgur.com/TbuyD3H.png</item>
+        <item>http://i.imgur.com/2YCc6Jx.png</item>
+        <item>http://i.imgur.com/ZzxsKWT.png</item>
+    </string-array>
+
+    <string-array name="sunrise_wallpaper" translatable="false">
+        <item>http://i.imgur.com/JaCI3qC.png</item>
+        <item>http://i.imgur.com/82GHmks.png</item>
+        <item>http://i.imgur.com/hpmtMJa.png</item>
+        <item>http://i.imgur.com/3nCv82h.png</item>
+        <item>http://i.imgur.com/VN3zjxZ.png</item>
+        <item>http://i.imgur.com/rRgA4LF.png</item>
+        <item>http://i.imgur.com/txh2gNd.png</item>
+        <item>http://i.imgur.com/PhgCF7y.png</item>
+        <item>http://i.imgur.com/T9vY5N2.png</item>
+    </string-array>
+
+    <string-array name="night_wallpaper" translatable="false">
+        <item>http://i.imgur.com/F6qPsD6.png</item>
+        <item>http://i.imgur.com/N1atFxN.png</item>
+        <item>http://i.imgur.com/jzuI1Yk.png</item>
+        <item>http://i.imgur.com/l8Wro4p.png</item>
+        <item>http://i.imgur.com/ZixInrf.png</item>
+        <item>http://i.imgur.com/9ON38dI.png</item>
+        <item>http://i.imgur.com/apnPmn2.png</item>
+        <item>http://i.imgur.com/LFdDnzF.png</item>
+        <item>http://i.imgur.com/LSvsyZt.png</item>
     </string-array>
 
 </resources>
