@@ -37,42 +37,8 @@ class WeatherRequest {
             when (PreferencesHelper.getWeatherProvider(context)) {
                 WeatherProvider.DARK_SKY -> {
                     callDarkSky = WeatherClient(context).service.getDarkSkyData(latitude ?: 100.0, longitude ?: 100.0)
-                    callDarkSky.subscribeOn(Schedulers.newThread())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ data ->
-                                realm.executeTransactionAsync({
-                                    it.copyToRealmOrUpdate(data)
-                                }, {
-                                    onSuccess?.invoke()
-                                }, {
-                                    onRealmError?.invoke(it)
-                                })
-                            }, {
-                                onError?.invoke(it)
-                            })
-                }
-
-                WeatherProvider.APIXU -> {
-                    callApixu = WeatherClient(context).service.getApixuData(latitude.toString() + "," + longitude.toString())
-                    callApixu.subscribeOn(Schedulers.newThread())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ data ->
-                                realm.executeTransactionAsync({
-                                    it.copyToRealmOrUpdate(data)
-                                }, {
-                                    onSuccess?.invoke()
-                                }, {
-                                    onRealmError?.invoke(it)
-                                })
-                            }, {
-                                onError?.invoke(it)
-                            })
-                }
-
-                WeatherProvider.YAHOO -> {
-                    Utils.LocationHelper.getLocationName(latitude ?: 0.0, longitude ?: 0.0, {
-                        callYahoo = WeatherClient(context).service.getYahooData("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"$it\")")
-                        callYahoo!!.subscribeOn(Schedulers.newThread())
+                    callDarkSky.let {
+                        it.subscribeOn(Schedulers.newThread())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({ data ->
                                     realm.executeTransactionAsync({
@@ -85,7 +51,46 @@ class WeatherRequest {
                                 }, {
                                     onError?.invoke(it)
                                 })
+                    }
+                }
 
+                WeatherProvider.APIXU -> {
+                    callApixu = WeatherClient(context).service.getApixuData(latitude.toString() + "," + longitude.toString())
+                    callApixu.let {
+                        it.subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe({ data ->
+                                    realm.executeTransactionAsync({
+                                        it.copyToRealmOrUpdate(data)
+                                    }, {
+                                        onSuccess?.invoke()
+                                    }, {
+                                        onRealmError?.invoke(it)
+                                    })
+                                }, {
+                                    onError?.invoke(it)
+                                })
+                    }
+                }
+
+                WeatherProvider.YAHOO -> {
+                    Utils.LocationHelper.getLocationName(latitude ?: 0.0, longitude ?: 0.0, {
+                        callYahoo = WeatherClient(context).service.getYahooData("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"$it\")")
+                        callYahoo?.let {
+                            it.subscribeOn(Schedulers.newThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe({ data ->
+                                        realm.executeTransactionAsync({
+                                            it.copyToRealmOrUpdate(data)
+                                        }, {
+                                            onSuccess?.invoke()
+                                        }, {
+                                            onRealmError?.invoke(it)
+                                        })
+                                    }, {
+                                        onError?.invoke(it)
+                                    })
+                        }
                     })
                 }
             }

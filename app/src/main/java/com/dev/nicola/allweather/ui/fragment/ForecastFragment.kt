@@ -17,6 +17,8 @@ import com.dev.nicola.allweather.model.Yahoo.RootYahoo
 import com.dev.nicola.allweather.utils.PreferencesHelper
 import com.dev.nicola.allweather.utils.Utils
 import com.dev.nicola.allweather.utils.WeatherProvider
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import io.realm.Realm
 import kotlinx.android.synthetic.main.forecast_fragment.*
 import kotlin.properties.Delegates
@@ -34,6 +36,8 @@ class ForecastFragment : Fragment() {
         super.onCreate(savedInstanceState)
         realm = Realm.getDefaultInstance()
         prefTemp = PreferencesHelper.getDefaultPreferences(activity, PreferencesHelper.KEY_PREF_TEMPERATURE, PreferencesHelper.DEFAULT_PREF_TEMPERATURE) as String
+
+        MobileAds.initialize(activity, getString(R.string.banner_ad_unit_id))
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -43,11 +47,19 @@ class ForecastFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpRecyclerView()
+
+        if (PreferencesHelper.isProVersion(activity) ?: false) {
+            ad_view?.visibility = View.GONE
+        } else {
+            val adRequest = AdRequest.Builder().build()
+            ad_view.loadAd(adRequest)
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         realm?.close()
+        ad_view?.destroy()
     }
 
     private fun setUpRecyclerView() {
@@ -55,7 +67,7 @@ class ForecastFragment : Fragment() {
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         forecast_day_recycle_view.layoutManager = layoutManager
         forecast_day_recycle_view.itemAnimator = DefaultItemAnimator()
-        forecast_day_recycle_view.addItemDecoration(DividerItemDecoration(activity,LinearLayoutManager.VERTICAL))
+        forecast_day_recycle_view.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
         forecast_day_recycle_view.adapter = forecastDayAdapter
     }
 

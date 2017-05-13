@@ -15,6 +15,8 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.arlib.floatingsearchview.FloatingSearchView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dev.nicola.allweather.BuildConfig
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.adapter.FragmentAdapter
@@ -31,6 +33,7 @@ import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -60,13 +63,12 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     private var realm: Realm? = null
 
     private var billing: Billing? = null
+    private var amazonAnalyrics: AnalyticsHelper? = null
 
     private var search_view: FloatingSearchView by Delegates.notNull()
 
     //fixme il cambio tema perde la location dalla searchView
     //fixme se non ritorna nessun dato dalla richiesta (ma non va in error) caricare ultimi dati di quel provider con snackbar che avvisa del problema server
-    //todo immagine header in base all'orario
-    //todo sistemare traduzioni
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +85,9 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
         billing = Billing(this)
         billing?.onCreate()
+
+        amazonAnalyrics = AnalyticsHelper(this)
+        amazonAnalyrics?.create()
     }
 
     override fun onResume() {
@@ -109,6 +114,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
             }
             goToSetting = false
         }
+
+        amazonAnalyrics?.resume()
     }
 
     override fun onPause() {
@@ -116,6 +123,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         if (googleApiClient?.isConnected ?: false) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
         }
+
+        amazonAnalyrics?.pause()
     }
 
     override fun onStop() {
@@ -234,6 +243,11 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     }
 
     private fun setNavigationView() {
+        Glide.with(this).load(Utils.getMonthImage(this))
+                .placeholder(R.drawable.header_drawer)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(nav_header_img)
+
         navigation_view.setNavigationItemSelectedListener {
             Handler().postDelayed({
                 when (it.itemId) {
@@ -385,6 +399,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
                     getData(location?.latitude, location?.longitude)
                 }
                 Utils.LocationHelper.getLocationName(location?.latitude ?: 100.0, location?.longitude ?: 100.0, {
+                    "search view set text".log()
+                    it.log("text")
                     locationName = it
                     search_view.setSearchText(it)
                 }, {

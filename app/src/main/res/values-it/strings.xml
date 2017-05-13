@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AllWeather</string>
 
     <string name="tab1_title">OGGI</string>
     <string name="tab2_title">SETTIMANA</string>
@@ -12,22 +11,22 @@
     <string name="pref_temperature">Temperatura</string>
     <string name="pref_speed">Velocità</string>
     <string name="pref_time">Orario</string>
-    <string name="pref_second_category">Generale</string>
+    <string name="pref_second_category">Personalizzazione</string>
     <string name="pref_theme">Tema</string>
     <string name="pref_provider">Provider meteo</string>
 
-    <string name="hint_search_view">Cerca luogo</string>
+    <string name="hint_search_view">Cerca luogo…</string>
     <string name="no_result_suggestion">Nessun risultato</string>
 
-    <string name="error_server_problem">Impossibile contattare il server in questo momento</string>
-    <string name="error_yahoo">Yahoo non supporta le previsioni orarie</string>
-    <string name="error_data_refresh">Ultimi dati già disponibili</string>
-    <string name="error_load_suggestion">"Impossibile caricare i suggerimenti"</string>
+    <string name="error_server_problem">Impossibile contattare il server in questo momento.</string>
+    <string name="error_yahoo">Yahoo non supporta le previsioni orarie.</string>
+    <string name="error_data_refresh">Ultimi dati già disponibili.</string>
+    <string name="error_load_suggestion">Impossibile caricare i suggerimenti</string>
     <string name="pro_version_title">Vantaggi pro:</string>
-    <string name="pro_version_message">"-Sblocca tutti i provider meteo"</string>
-    <string name="already_pro_version">Già pro</string>
-    <string name="error_no_internet_or_location">Internet connection or location disable.\nPlease active it.</string>
-    <string name="offline_mode">Data last update on %1$s.\nCheck internet connection or location and refresh.</string>
+    <string name="pro_version_message">-Sblocca tutti i provider meteo</string>
+    <string name="already_pro_version">Già pro.</string>
+    <string name="error_no_internet_or_location">Connessione Internet o GPS disabilitati.\nPerfavore abilitarli.</string>
+    <string name="offline_mode">Ultimi dati aggiornati il %1$s.\nControlla connessione Internet o GPS e refresha.</string>
 
     <string name="action_retry">RIPROVA</string>
     <string name="action_cancel">Annulla</string>

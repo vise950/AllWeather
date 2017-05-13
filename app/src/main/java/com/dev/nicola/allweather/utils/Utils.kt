@@ -1,7 +1,6 @@
 package com.dev.nicola.allweather.utils
 
 import android.content.Context
-import android.content.res.Resources
 import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
@@ -49,44 +48,37 @@ class Utils {
             return s
         }
 
-        fun getHeaderImage(resources: Resources, sunset: Long?, sunrise: Long?, sSunset: String? = null, sSunrise: String? = null): String {
+        fun getHourImage(context: Context, sunset: Long?, sunrise: Long?): String {
             val imageUrl: String
             val time = Utils.TimeHelper.localTimeMillis
-            val headerWallpaper = resources.getStringArray(R.array.header_wallpaper)
 
-            val sunriseWall = resources.getStringArray(R.array.sunrise_wallpaper)
-            val sunsetWall = resources.getStringArray(R.array.sunset_wallpaper)
-            val dayWall = resources.getStringArray(R.array.day_wallpaper)
-            val nightWall = resources.getStringArray(R.array.night_wallpaper)
+            val sunriseWall = context.resources.getStringArray(R.array.sunrise_wallpaper)
+            val dayWall = context.resources.getStringArray(R.array.day_wallpaper)
+            val sunsetWall = context.resources.getStringArray(R.array.sunset_wallpaper)
+            val nightWall = context.resources.getStringArray(R.array.night_wallpaper)
 
-            val sunrise1: Long?
-            val sunset1: Long?
-            val random = (Math.random() * headerWallpaper.size).toInt()
-//            imageUrl = headerWallpaper[random]
+            val random = (Math.random() * sunriseWall.size).toInt()
 
-            if (!sSunrise.isNullOrBlank() && !sSunset.isNullOrBlank()) {
-                sunrise1 = TimeHelper.timeStringToLong(sSunrise)
-                sunset1 = TimeHelper.timeStringToLong(sSunset)
-            } else {
-                sunrise1 = sunrise
-                sunset1 = sunset
-            }
-
-            if (time >= sunrise1 ?: 0L - 1800L && time <= sunrise1 ?: 0L + 1800L) {
+            if (time >= sunrise ?: 0L - 1800L && time <= sunrise ?: 0L + 1800L) {
                 imageUrl = sunriseWall[random]
             } else {
-                if (time > sunrise1 ?: 0L + 1800L && time < sunset1 ?: 0L - 1800L) {
+                if (time > sunrise ?: 0L + 1800L && time < sunset ?: 0L - 1800L) {
                     imageUrl = dayWall[random]
                 } else {
-                    if (time >= sunset1 ?: 0L - 1800L && time <= sunset1 ?: 0L + 1800L) {
+                    if (time >= sunset ?: 0L - 1800L && time <= sunset ?: 0L + 1800L) {
                         imageUrl = sunsetWall[random]
                     } else {
                         imageUrl = nightWall[random]
                     }
                 }
             }
-
             return imageUrl
+        }
+
+        fun getMonthImage(context: Context):String{
+            val monthWall=context.resources.getStringArray(R.array.months_wallpaper)
+            val month = Calendar.getInstance().get(Calendar.MONTH)
+            return monthWall[month]
         }
     }
 
@@ -130,16 +122,9 @@ class Utils {
 
     object TimeHelper {
 
-        fun formatTime(time: Long, sTime: String?, pref: String): String? {
-            val dateTime: DateTime?
+        fun formatTime(time: Long, pref: String): String? {
             var dtf: DateTimeFormatter? = null
-            if (sTime != null) {
-                val df = DateTimeFormat.forPattern("h:mm a")
-                dateTime = df.parseDateTime(sTime)
-            } else {
-                dateTime = DateTime(time * 1000L, DateTimeZone.forTimeZone(TimeZone.getDefault()))
-            }
-
+            val dateTime = DateTime(time * 1000L, DateTimeZone.forTimeZone(TimeZone.getDefault()))
             when (pref) {
                 "12" -> dtf = DateTimeFormat.forPattern("h:mm a")
                 "24" -> dtf = DateTimeFormat.forPattern("H:mm")
@@ -160,15 +145,6 @@ class Utils {
                 "24" -> dtf = DateTimeFormat.forPattern("H:00")
             }
             return dtf?.print(dt)
-        }
-
-        fun timeStringToLong(time: String? = null): Long? {
-            val calendar = Calendar.getInstance()
-            val dtf = DateTimeFormat.forPattern("dd-MM-yyyy")
-            val date = dtf.print(calendar.timeInMillis)
-            val dtf1 = DateTimeFormat.forPattern("dd-MM-yyyy h:mm a")
-            val d = dtf1.parseDateTime(date)
-            return d.millis
         }
 
         fun getDate(context: Context, i: Int): String {

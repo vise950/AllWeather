@@ -15,7 +15,6 @@
         android:layout_height="match_parent"
         layout="@layout/content_main"/>
 
-
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="320dp"

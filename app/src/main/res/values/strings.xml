@@ -1,12 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">AllWeather</string>
+    <string name="app_name" translatable="false">AllWeather</string>
+
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-5053914526798733/4551790409</string>
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
     <string name="desc_image" translatable="false">image</string>
-    <string name="test" translatable="false">test</string>
+    <string name="empty" translatable="false">""</string>
 
     <string name="key_pref_temperature" translatable="false">temperature</string>
     <string name="key_pref_speed" translatable="false">speed</string>
@@ -30,22 +33,22 @@
     <string name="pref_temperature">Temperature</string>
     <string name="pref_speed">Speed</string>
     <string name="pref_time">Time</string>
-    <string name="pref_second_category">General</string>
+    <string name="pref_second_category">Customization</string>
     <string name="pref_theme">Theme</string>
     <string name="pref_provider">Weather provider</string>
 
-    <string name="hint_search_view">Search place...</string>
+    <string name="hint_search_view">Search place…</string>
     <string name="no_result_suggestion">No result</string>
 
-    <string name="error_server_problem">Cannot contact the server at this time</string>
-    <string name="error_yahoo">Yahoo don\'t support the hourly forecast</string>
-    <string name="error_data_refresh">Lasted data already available</string>
-    <string name="error_load_suggestion">"Fail to load suggestions"</string>
+    <string name="error_server_problem">Cannot contact the server at this time.</string>
+    <string name="error_yahoo">Yahoo don\'t support the hourly forecast.</string>
+    <string name="error_data_refresh">Lasted data already available.</string>
+    <string name="error_load_suggestion">Fail to load suggestions</string>
     <string name="pro_version_title">Pro features:</string>
-    <string name="pro_version_message">"-Unlock all weather provider"</string>
-    <string name="already_pro_version">Already pro</string>
-    <string name="error_no_internet_or_location">Internet connection or location disable.\nPlease active it.</string>
-    <string name="offline_mode">Data last update on %1$s.\nCheck internet connection or location and refresh.</string>
+    <string name="pro_version_message">-Unlock all weather provider</string>
+    <string name="already_pro_version">Already pro.</string>
+    <string name="error_no_internet_or_location">Internet connection or GPS disabled.\nPlease active it.</string>
+    <string name="offline_mode">Data last update on %1$s.\nCheck internet connection or GPS and refresh.</string>
     <string name="error_no_text" translatable="false">Error</string>
 
     <string name="action_OK" translatable="false">OK</string>

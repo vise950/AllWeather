@@ -1,92 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="header_wallpaper" translatable="false">
-        <item>http://i.imgur.com/RCpOe2b.png</item>
-        <item>http://i.imgur.com/bxKqGXQ.png</item>
-        <item>http://i.imgur.com/TFz5WO4.png</item>
-        <item>http://i.imgur.com/FTmiWfV.png</item>
-        <item>http://i.imgur.com/QGgGXlk.png</item>
-        <item>http://i.imgur.com/J4udaTF.png</item>
-        <item>http://i.imgur.com/k1utT9y.png</item>
-        <item>http://i.imgur.com/YGe43Us.png</item>
-        <item>http://i.imgur.com/WJpeR5S.png</item>
-        <item>http://i.imgur.com/EWWa6pV.png</item>
-        <item>http://i.imgur.com/tDGMKtX.png</item>
-        <item>http://i.imgur.com/0lkl2xF.png</item>
-        <item>http://i.imgur.com/IyE6DKE.png</item>
-        <item>http://i.imgur.com/V8RgQcX.png</item>
-        <item>http://i.imgur.com/m7jNmxy.png</item>
-        <item>http://i.imgur.com/TbuyD3H.png</item>
-        <item>http://i.imgur.com/2YCc6Jx.png</item>
-        <item>http://i.imgur.com/ZzxsKWT.png</item>
-        <item>http://i.imgur.com/JaCI3qC.png</item>
-        <item>http://i.imgur.com/82GHmks.png</item>
-        <item>http://i.imgur.com/hpmtMJa.png</item>
-        <item>http://i.imgur.com/3nCv82h.png</item>
-        <item>http://i.imgur.com/VN3zjxZ.png</item>
-        <item>http://i.imgur.com/rRgA4LF.png</item>
-        <item>http://i.imgur.com/txh2gNd.png</item>
-        <item>http://i.imgur.com/PhgCF7y.png</item>
-        <item>http://i.imgur.com/T9vY5N2.png</item>
-        <item>http://i.imgur.com/F6qPsD6.png</item>
-        <item>http://i.imgur.com/N1atFxN.png</item>
-        <item>http://i.imgur.com/jzuI1Yk.png</item>
-        <item>http://i.imgur.com/l8Wro4p.png</item>
-        <item>http://i.imgur.com/ZixInrf.png</item>
-        <item>http://i.imgur.com/9ON38dI.png</item>
-        <item>http://i.imgur.com/apnPmn2.png</item>
-        <item>http://i.imgur.com/LFdDnzF.png</item>
-        <item>http://i.imgur.com/LSvsyZt.png</item>
-    </string-array>
-
-
-    <string-array name="sunset_wallpaper" translatable="false">
-        <item>http://i.imgur.com/RCpOe2b.png</item>
-        <item>http://i.imgur.com/bxKqGXQ.png</item>
-        <item>http://i.imgur.com/TFz5WO4.png</item>
-        <item>http://i.imgur.com/FTmiWfV.png</item>
-        <item>http://i.imgur.com/QGgGXlk.png</item>
-        <item>http://i.imgur.com/J4udaTF.png</item>
-        <item>http://i.imgur.com/k1utT9y.png</item>
-        <item>http://i.imgur.com/YGe43Us.png</item>
-        <item>http://i.imgur.com/WJpeR5S.png</item>
+    <string-array name="sunrise_wallpaper" translatable="false">
+        <item>http://i.imgur.com/S3oNu24h.png</item>
+        <item>http://i.imgur.com/5SEFlZSh.png</item>
+        <item>http://i.imgur.com/nZcqIM5h.png</item>
+        <item>http://i.imgur.com/cX8CJGth.png</item>
+        <item>http://i.imgur.com/nfC3wujh.png</item>
+        <item>http://i.imgur.com/90ZAaoZh.png</item>
+        <item>http://i.imgur.com/wtNkDhUh.png</item>
+        <item>http://i.imgur.com/Br2J2VVh.png</item>
+        <item>http://i.imgur.com/4Jk7RNLh.png</item>
+        <item>http://i.imgur.com/wus9LRbh.png</item>
+        <item>http://i.imgur.com/rvz3gC6h.png</item>
+        <item>http://i.imgur.com/xonebzBh.png</item>
+        <item>http://i.imgur.com/LMmggHHh.png</item>
+        <item>http://i.imgur.com/lBiT3Ymh.png</item>
+        <item>http://i.imgur.com/xtyuU28h.png</item>
+        <item>http://i.imgur.com/VBHE7jUh.png</item>
+        <item>http://i.imgur.com/be6lNPph.png</item>
+        <item>http://i.imgur.com/6kwKVlYh.png</item>
+        <item>http://i.imgur.com/y30qr4Uh.png</item>
+        <item>http://i.imgur.com/5WDLByIh.png</item>
     </string-array>
 
     <string-array name="day_wallpaper" translatable="false">
-        <item>http://i.imgur.com/EWWa6pV.png</item>
-        <item>http://i.imgur.com/tDGMKtX.png</item>
-        <item>http://i.imgur.com/0lkl2xF.png</item>
-        <item>http://i.imgur.com/IyE6DKE.png</item>
-        <item>http://i.imgur.com/V8RgQcX.png</item>
-        <item>http://i.imgur.com/m7jNmxy.png</item>
-        <item>http://i.imgur.com/TbuyD3H.png</item>
-        <item>http://i.imgur.com/2YCc6Jx.png</item>
-        <item>http://i.imgur.com/ZzxsKWT.png</item>
+        <item>http://i.imgur.com/oK4cvTkh.png</item>
+        <item>http://i.imgur.com/awfDOsEh.png</item>
+        <item>http://i.imgur.com/9mBRoSoh.png</item>
+        <item>http://i.imgur.com/D0GMc4Kh.png</item>
+        <item>http://i.imgur.com/dugteMfh.png</item>
+        <item>http://i.imgur.com/0IOE2Lzh.png</item>
+        <item>http://i.imgur.com/OysjSgSh.png</item>
+        <item>http://i.imgur.com/azuldxxh.png</item>
+        <item>http://i.imgur.com/ngwjxAVh.png</item>
+        <item>http://i.imgur.com/zWRZNLdh.png</item>
+        <item>http://i.imgur.com/LnXUP6Eh.png</item>
+        <item>http://i.imgur.com/Si7aki3h.png</item>
+        <item>http://i.imgur.com/V9n6Xjdh.png</item>
+        <item>http://i.imgur.com/GSnc5i4h.png</item>
+        <item>http://i.imgur.com/rTR2OzSh.png</item>
+        <item>http://i.imgur.com/Usmua3eh.png</item>
+        <item>http://i.imgur.com/eZHKH8xh.png</item>
+        <item>http://i.imgur.com/A8RYQszh.png</item>
+        <item>http://i.imgur.com/33qSCVXh.png</item>
+        <item>http://i.imgur.com/6xIAbzhh.png</item>
     </string-array>
 
-    <string-array name="sunrise_wallpaper" translatable="false">
-        <item>http://i.imgur.com/JaCI3qC.png</item>
-        <item>http://i.imgur.com/82GHmks.png</item>
-        <item>http://i.imgur.com/hpmtMJa.png</item>
-        <item>http://i.imgur.com/3nCv82h.png</item>
-        <item>http://i.imgur.com/VN3zjxZ.png</item>
-        <item>http://i.imgur.com/rRgA4LF.png</item>
-        <item>http://i.imgur.com/txh2gNd.png</item>
-        <item>http://i.imgur.com/PhgCF7y.png</item>
-        <item>http://i.imgur.com/T9vY5N2.png</item>
+    <string-array name="sunset_wallpaper" translatable="false">
+        <item> http://i.imgur.com/suc0Uf7h.png</item>
+        <item> http://i.imgur.com/032b8Bfh.png</item>
+        <item> http://i.imgur.com/5MITTjJh.png</item>
+        <item> http://i.imgur.com/mAWzjeph.png</item>
+        <item> http://i.imgur.com/vTwCXrlh.png</item>
+        <item> http://i.imgur.com/2ZGrYd6h.png</item>
+        <item> http://i.imgur.com/NCfDZN3h.png</item>
+        <item> http://i.imgur.com/B1Zr8ZXh.png</item>
+        <item> http://i.imgur.com/6FE206yh.png</item>
+        <item> http://i.imgur.com/XmfYVnhh.png</item>
+        <item> http://i.imgur.com/LT6U2a2h.png</item>
+        <item> http://i.imgur.com/XrVlMPIh.png</item>
+        <item> http://i.imgur.com/FW9AXWKh.png</item>
+        <item> http://i.imgur.com/P36Pe7fh.png</item>
+        <item> http://i.imgur.com/rNngjevh.png</item>
+        <item> http://i.imgur.com/8rA0kHgh.png</item>
+        <item> http://i.imgur.com/Ov7neDwh.png</item>
+        <item> http://i.imgur.com/ZJEaLQhh.png</item>
+        <item> http://i.imgur.com/kPPqodsh.png</item>
+        <item> http://i.imgur.com/JlvNhL6h.png</item>
     </string-array>
 
     <string-array name="night_wallpaper" translatable="false">
-        <item>http://i.imgur.com/F6qPsD6.png</item>
-        <item>http://i.imgur.com/N1atFxN.png</item>
-        <item>http://i.imgur.com/jzuI1Yk.png</item>
-        <item>http://i.imgur.com/l8Wro4p.png</item>
-        <item>http://i.imgur.com/ZixInrf.png</item>
-        <item>http://i.imgur.com/9ON38dI.png</item>
-        <item>http://i.imgur.com/apnPmn2.png</item>
-        <item>http://i.imgur.com/LFdDnzF.png</item>
-        <item>http://i.imgur.com/LSvsyZt.png</item>
+        <item> http://i.imgur.com/cuxZlZuh.png</item>
+        <item> http://i.imgur.com/c0vQMr1h.png</item>
+        <item> http://i.imgur.com/v3V0K2gh.png</item>
+        <item> http://i.imgur.com/tGfLSS9h.png</item>
+        <item> http://i.imgur.com/9i9iFNMh.png</item>
+        <item> http://i.imgur.com/Qx3OZvkh.png</item>
+        <item> http://i.imgur.com/shgjORBh.png</item>
+        <item> http://i.imgur.com/48md93ch.png</item>
+        <item> http://i.imgur.com/y1gcnjCh.png</item>
+        <item> http://i.imgur.com/3j9JzwYh.png</item>
+        <item> http://i.imgur.com/InivLPXh.png</item>
+        <item> http://i.imgur.com/lTJVrgFh.png</item>
+        <item> http://i.imgur.com/d49hdV5h.png</item>
+        <item> http://i.imgur.com/w0qtHU1h.png</item>
+        <item> http://i.imgur.com/9UaBTFhh.png</item>
+        <item> http://i.imgur.com/xCxqmmKh.png</item>
+        <item> http://i.imgur.com/8GkQotxh.png</item>
+        <item> http://i.imgur.com/Do7ItLqh.png</item>
+        <item> http://i.imgur.com/lpYtM2Sh.png</item>
+        <item> http://i.imgur.com/eLSVHgqh.png</item>
+    </string-array>
+
+    <string-array name="months_wallpaper" translatable="false">
+        <item>http://i.imgur.com/bIeeIuyh.jpg</item>
+        <item>http://i.imgur.com/lXTS4T1h.jpg</item>
+        <item>http://i.imgur.com/8eN5sF4h.jpg</item>
+        <item>http://i.imgur.com/QieMlN5h.jpg</item>
+        <item>http://i.imgur.com/Szj9yzmh.jpg</item>
+        <item>http://i.imgur.com/7TyCoUeh.jpg</item>
+        <item>http://i.imgur.com/937V4m7h.jpg</item>
+        <item>http://i.imgur.com/iRN4O0Ch.jpg</item>
+        <item>http://i.imgur.com/nUQcpFXh.jpg</item>
+        <item>http://i.imgur.com/JbNoyKYh.jpg</item>
+        <item>http://i.imgur.com/VCdlEb2h.jpg</item>
+        <item>http://i.imgur.com/XwCYAsTh.jpg</item>
     </string-array>
 
 </resources>

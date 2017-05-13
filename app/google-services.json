@@ -1,35 +1,47 @@
 {
   "project_info": {
-    "project_number": "968680245926",
-    "project_id": "firebase-allweather"
+    "project_number": "317003579362",
+    "firebase_url": "https://admob-app-id-3075057204.firebaseio.com",
+    "project_id": "admob-app-id-3075057204",
+    "storage_bucket": "admob-app-id-3075057204.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:968680245926:android:3cadc11edbfe9e65",
+        "mobilesdk_app_id": "1:317003579362:android:3cadc11edbfe9e65",
         "android_client_info": {
           "package_name": "com.dev.nicola.allweather"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "317003579362-a1hepp7tpa53pt4acmd47hcuj9a7ept0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dev.nicola.allweather",
+            "certificate_hash": "e5b155ecd9cd54ebecc18f2428f4a5b30a85a0ff"
+          }
+        },
+        {
+          "client_id": "317003579362-vtgtbud0et8nustum63btar4h0jmuls3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyA6w4VMIXWbdsro41IE_EX4zA9ezfEwzQc"
+          "current_key": "AIzaSyBkrszWsRkp5ueUONPUpHjHcdklB2stM-A"
         }
       ],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-80525186-1"
-          }
+          "status": 1
         },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

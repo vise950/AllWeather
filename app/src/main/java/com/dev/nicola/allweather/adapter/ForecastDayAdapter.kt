@@ -11,22 +11,22 @@ import com.bumptech.glide.Glide
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.model.ForecastDay
 
+
 class ForecastDayAdapter(private val context: Context, private val mForecastDayList: ArrayList<ForecastDay>) : RecyclerView.Adapter<ForecastDayAdapter.ForecastViewHolder>() {
 
-    inner class ForecastViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ForecastViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var date_txt = view.findViewById(R.id.date_forecast_day) as TextView
         var condition_txt = view.findViewById(R.id.condition_forecast_day) as TextView
         var temperature_txt = view.findViewById(R.id.temperature_forecast_day) as TextView
         var icon_img = view.findViewById(R.id.icon_forecast_day) as ImageView
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_forecast_day, parent, false)
-        return ForecastViewHolder(itemView)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastDayAdapter.ForecastViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_forecast_day, parent, false)
+        return ForecastViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ForecastViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ForecastDayAdapter.ForecastViewHolder, position: Int) {
         val forecastDay = mForecastDayList[position]
         holder.date_txt.text = forecastDay.date
         holder.condition_txt.text = forecastDay.condition

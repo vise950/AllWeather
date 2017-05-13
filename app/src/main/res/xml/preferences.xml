@@ -30,7 +30,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_second_category">
-
         <ListPreference
             android:defaultValue="@string/default_pref_theme"
             android:entries="@array/theme_unit"
@@ -46,7 +45,6 @@
             android:key="@string/key_pref_weather_provider"
             android:summary="%s"
             android:title="@string/pref_provider" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.adapter.ForecastHourAdapter
 import com.dev.nicola.allweather.model.Apixu.RootApixu
@@ -119,7 +120,14 @@ class DailyFragment : Fragment() {
 
     private fun setUpLayout() {
 
-        Glide.with(activity).load(Utils.getHeaderImage(resources)).placeholder(R.drawable.header_drawer).into(image_daily_fragment)
+        //uso sunrise e sunset di darkSky perchè sono long è risulta più facile "lavorarci" rispetto alle string
+        darkSkyData?.let {
+            Glide.with(activity)
+                    .load(Utils.getHourImage(activity, darkSkyData?.daily?.data?.get(0)?.sunriseTime, darkSkyData?.daily?.data?.get(0)?.sunriseTime))
+                    .placeholder(R.drawable.header_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(image_daily_fragment)
+        }
 
         when (PreferencesHelper.getWeatherProvider(activity)) {
             WeatherProvider.DARK_SKY -> {
@@ -133,8 +141,8 @@ class DailyFragment : Fragment() {
                             darkSkyData?.currently?.humidity ?: getString(R.string.error_no_text))
                     pressure_daily_fragment.text = String.format(resources.getString(R.string.pressure),
                             darkSkyData?.currently?.pressure ?: getString(R.string.error_no_text))
-                    sunrise_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunriseTime ?: 0L, null, prefTime)
-                    sunset_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunsetTime ?: 0L, null, prefTime)
+                    sunrise_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunriseTime ?: 0L, prefTime)
+                    sunset_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunsetTime ?: 0L, prefTime)
                 }
 
                 when (PreferencesHelper.getDefaultPreferences(activity, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME)) {
@@ -157,8 +165,8 @@ class DailyFragment : Fragment() {
                             apixuData?.current?.humidity ?: getString(R.string.error_no_text))
                     pressure_daily_fragment.text = String.format(resources.getString(R.string.pressure),
                             apixuData?.current?.pressureMb ?: getString(R.string.error_no_text))
-                    sunrise_daily_fragment.text = Utils.TimeHelper.formatTime(0, apixuData?.forecast?.forecastday?.get(0)?.astroApixu?.sunrise, prefTime)
-                    sunset_daily_fragment.text = Utils.TimeHelper.formatTime(0, apixuData?.forecast?.forecastday?.get(0)?.astroApixu?.sunset, prefTime)
+                    sunrise_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunriseTime ?: 0L, prefTime)
+                    sunset_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunsetTime ?: 0L, prefTime)
                 }
                 //todo add logo
                 provider_logo.visibility = View.GONE
@@ -175,8 +183,8 @@ class DailyFragment : Fragment() {
                             yahooData?.query?.results?.channel?.atmosphereYahoo?.humidity ?: getString(R.string.error_no_text))
                     pressure_daily_fragment.text = String.format(resources.getString(R.string.pressure),
                             yahooData?.query?.results?.channel?.atmosphereYahoo?.humidity ?: getString(R.string.error_no_text))
-                    sunrise_daily_fragment.text = Utils.TimeHelper.formatTime(0, yahooData?.query?.results?.channel?.astronomyYahoo?.sunrise, prefTime)
-                    sunset_daily_fragment.text = Utils.TimeHelper.formatTime(0, yahooData?.query?.results?.channel?.astronomyYahoo?.sunset, prefTime)
+                    sunrise_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunriseTime ?: 0L, prefTime)
+                    sunset_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunsetTime ?: 0L, prefTime)
                 }
 
                 Glide.with(activity).load(R.drawable.ic_yahoo).into(provider_logo)
