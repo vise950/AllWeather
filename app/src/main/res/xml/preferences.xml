@@ -27,7 +27,7 @@
             android:summary="%s"
             android:title="@string/pref_time" />
 
-    <!--</PreferenceCategory>-->
+    </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_second_category">
         <ListPreference

@@ -32,11 +32,6 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_navigation">
 
-        <include
-            android:id="@+id/progress"
-            layout="@layout/progress_dialog"
-            android:visibility="gone" />
-
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
