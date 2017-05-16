@@ -424,3 +424,79 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         this.location = location
     }
 }
+        setBottomNavigationView()
+    /**
+     * - NEVER commit() transactions after onPause() on pre-Honeycomb, and onStop() on post-Honeycomb
+     * - Be careful when committing transactions inside Activity lifecycle methods. Use onCreate(), onResumeFragments() and onPostResume()
+     * - Use commitAllowingStateLoss() only as a last resort
+     * - Avoid performing transactions inside asynchronous callback methods
+     */
+    @SuppressLint("CommitTransaction")
+    private fun loadUi() {
+        fragmentManager = supportFragmentManager
+        fragment = LocationFragment()
+        transaction = fragmentManager!!.beginTransaction()
+        transaction!!.add(R.id.main_container, fragment).commitAllowingStateLoss()
+        //todo crash with dark theme (i don't know why XD)
+    }
+    /**
+     *  Bottom Navigation
+     */
+    @SuppressLint("NewApi", "CommitTransaction")
+    private fun setBottomNavigationView() {
+
+        bottom_navigation.menu.getItem(DEFAULT_ITEM).isChecked = true
+
+            val id = item.itemId
+        bottom_navigation.setOnNavigationItemSelectedListener { item ->
+
+            when (id) {
+                R.id.action_favorites -> {
+//                    circularReveal('l', R.color.test1)
+                    fragment = FavouriteFragment()
+                }
+
+//                    circularReveal('c', R.color.test2)
+                R.id.action_location -> {
+                    fragment = LocationFragment()
+                }
+
+                R.id.action_map -> {
+                    fragment = MapFragment()
+//                    circularReveal('r', R.color.test3)
+                }
+            }
+            transaction = fragmentManager!!.beginTransaction()
+            transaction!!.replace(R.id.main_container, fragment).commit()
+            true
+        }
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    internal fun circularReveal(position: Char, toColor: Int) {
+        var x = 0
+        var y = 0
+
+        when (position) {
+            'l' -> {
+                x = bottom_navigation.measuredWidth / 6
+                y = bottom_navigation.measuredHeight / 2
+            }
+            'c' -> {
+                x = bottom_navigation.measuredWidth / 2
+                y = bottom_navigation.measuredHeight / 2
+            }
+            'r' -> {
+                y = bottom_navigation.measuredHeight / 2
+                x = bottom_navigation.measuredWidth - bottom_navigation.measuredWidth / 6
+            }
+        }
+
+        val finalRadius = Math.max(bottom_navigation.width, bottom_navigation.height)
+        val anim = ViewAnimationUtils.createCircularReveal(bottom_navigation, x, y, 0f, finalRadius.toFloat())
+        anim.interpolator = AccelerateDecelerateInterpolator()
+        bottom_navigation.itemBackgroundResource = toColor
+        anim.duration = 800
+        anim.start()
+    }

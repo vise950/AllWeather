@@ -11,4 +11,11 @@
     <color name="transparent">#00000000</color>
     <color name="dark_grey">#424242</color>
     <color name="white">#EEEEEE</color>
+    <color name="checked">#009688</color>
+    <color name="unchecked">#FFFFFF</color>
+    <color name="md_red_500">#F44336</color>
+    <color name="md_pink_500">#E91E63</color>
+    <color name="md_purple_500">#9C27B0</color>
+    <color name="md_deep_purple_500">#673AB7</color>
+    <color name="md_indigo_500">#3F51B5</color>
 </resources>

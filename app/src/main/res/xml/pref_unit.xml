@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="@string/default_pref_temperature"
+        android:entries="@array/temperature_unit"
+        android:entryValues="@array/temperature_value"
+        android:key="@string/key_pref_temperature"
+        android:summary="%s"
+        android:title="@string/pref_temperature"/>
+
+    <ListPreference
+        android:defaultValue="@string/default_pref_speed"
+        android:entries="@array/speed_unit"
+        android:entryValues="@array/speed_value"
+        android:key="@string/key_pref_speed"
+        android:summary="%s"
+        android:title="@string/pref_speed"/>
+
+    <ListPreference
+        android:defaultValue="@string/default_pref_time"
+        android:entries="@array/time_unit"
+        android:entryValues="@array/time_value"
+        android:key="@string/key_pref_time"
+        android:summary="%s"
+        android:title="@string/pref_time"/>
+
+</PreferenceScreen>

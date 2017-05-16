@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ListPreference
+        android:defaultValue="@string/default_pref_theme"
+        android:entries="@array/theme_unit"
+        android:entryValues="@array/theme_value"
+        android:key="@string/key_pref_theme"
+        android:summary="%s"
+        android:title="@string/pref_theme"/>
+
+    <!-- todo aggiunge possibilià cambiare colori app primary,secondary e accent color-->
+
+    <com.thebluealliance.spectrum.SpectrumPreference
+        android:defaultValue="@color/md_red_500"
+        android:key="primary_color"
+        android:summary="This is pretty cool."
+        android:title="Color primary preference"
+        app:spectrum_colors="@array/colors"/>
+
+</PreferenceScreen>

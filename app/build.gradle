@@ -18,10 +18,12 @@ android {
         applicationId "com.dev.nicola.allweather"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 134
-        versionName "1.3.4"
+        versionCode 200
+        versionName "2.0"
 
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -43,6 +45,9 @@ android {
         buildTypes.each {
             it.buildConfigField 'String', 'DARKSKY_API_KEY', DarkSkyApiKey
             it.buildConfigField 'String', 'APIXU_API_KEY', ApixuApiKey
+            it.buildConfigField 'String', 'GOOGLE_KEY_LICENSE_KEY', LicenseApiKey
+            it.buildConfigField 'String', 'GOOGLE_API_AUTOCOMPLETE_KEY', GoogleApiAutocompleteKey
+            it.buildConfigField 'String', 'GOOGLE_API_MAPS_KEY', GoogleApiMapsKey
             it.buildConfigField 'String', 'PLAY_STORE_LICENSE_KEY', LicenseApiKey
             it.buildConfigField 'String', 'GOOGLE_API_AUTOCOMPLETE_KEY', GoogleApiAutocompleteKey
             it.buildConfigField 'String', 'AMAZON_ANALYTICS_ID', AmazonMobileAnalyticsAppID
@@ -88,6 +93,9 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofit_version"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofit_version"
     compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofit_version"
+    //android play services library
+    compile "com.google.android.gms:play-services-location:$rootProject.ext.play_services_version"
+    compile "com.google.android.gms:play-services-maps:$rootProject.ext.play_services_version"
 
     //Joda Time
     compile 'joda-time:joda-time:2.9.9'
@@ -107,6 +115,11 @@ dependencies {
 
     //Amazon Analytics
     compile 'com.amazonaws:aws-android-sdk-mobileanalytics:2.4.2'
+
+    compile 'com.thebluealliance:spectrum:0.7.1'
+
+    //Rx
+    compile 'com.github.anadea:rxbus:1.0.1'
 
 }
 
