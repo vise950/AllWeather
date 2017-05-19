@@ -46,7 +46,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_map, container, false)
+        return inflater?.inflate(R.layout.fragment_map, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -63,8 +63,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(map: GoogleMap?) {
         "onMapReady".log()
         this.map = map
-        setMapUi(map!!)
-        setMapOverlay(map, TEMPERATURE_LAYER_URL)
+        map?.let {
+            setMapUi(it)
+            setMapOverlay(it, TEMPERATURE_LAYER_URL)
+        }
     }
 
     @Subscribe
@@ -90,7 +92,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 //        map.mapType = GoogleMap.MAP_TYPE_TERRAIN
 //        map.mapType = GoogleMap.MAP_TYPE_NONE
 //        if (PreferencesUtils.getDefaultPreferences(context, resources.getString(R.string.key_pref_theme), resources.getString(R.string.default_pref_theme)) as String =="dark"){
-            map.setMapStyle(MapStyleOptions.loadRawResourceStyle(context,R.raw.maps_dark_style))
+        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.maps_dark_style))
 //        }
 
     }
@@ -99,8 +101,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         tileOverlay = map.addTileOverlay(TileOverlayOptions().tileProvider(getMapLayer(layerMapType)).transparency(0.5f))
     }
 
-    private fun updateMapOverlay(){
-        if (tileOverlay?.isVisible!!){
+    private fun updateMapOverlay() {
+        if (tileOverlay?.isVisible!!) {
             tileOverlay?.remove()
             tileOverlay?.clearTileCache()
         }
@@ -211,5 +213,4 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
         return tileProvider
     }
-
 }
