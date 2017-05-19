@@ -9,14 +9,11 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.*
 
-/**
- * Created by Nicola on 18/02/2017.
- */
 interface MapsGoogleApiService {
 
     companion object {
         private const val URL_AUTOCOMPLETE = "maps/api/place/autocomplete/json"
-        private const val API_KEY = BuildConfig.GOOGLE_API_AUTOCOMPLETE_KEY
+        private const val API_KEY = BuildConfig.GOOGLE_API_KEY
         private const val URL_GEOCODE = "maps/api/geocode/json"
     }
 

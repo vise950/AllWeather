@@ -44,7 +44,7 @@ android {
             it.buildConfigField 'String', 'DARKSKY_API_KEY', DarkSkyApiKey
             it.buildConfigField 'String', 'APIXU_API_KEY', ApixuApiKey
             it.buildConfigField 'String', 'PLAY_STORE_LICENSE_KEY', LicenseApiKey
-            it.buildConfigField 'String', 'GOOGLE_API_AUTOCOMPLETE_KEY', GoogleApiAutocompleteKey
+            it.buildConfigField 'String', 'GOOGLE_API_KEY', GoogleApiKey
             it.buildConfigField 'String', 'AMAZON_ANALYTICS_ID', AmazonMobileAnalyticsAppID
             it.buildConfigField 'String', 'AMAZON_COGNITO_ID', AmazonCognitoIdentityPoolID
         }
