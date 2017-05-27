@@ -68,60 +68,58 @@ android {
         exclude 'META-INF/rxjava.properties'
         return
     }
-}
 
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    //Support library
-    //noinspection GradleCompatible
-    compile "com.android.support:appcompat-v7:$rootProject.ext.support_version"
-    compile "com.android.support:support-v4:$rootProject.ext.support_version"
-    compile "com.android.support:design:$rootProject.ext.support_version"
-    compile "com.android.support:cardview-v7:$rootProject.ext.support_version"
-    compile "com.android.support:recyclerview-v7:$rootProject.ext.support_version"
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:multidex:1.0.1'
 
-    //Play services library
-    compile "com.google.android.gms:play-services-location:$rootProject.ext.play_services_version"
-    compile "com.google.android.gms:play-services-ads:$rootProject.ext.play_services_version"
+    dependencies {
+        compile fileTree(include: ['*.jar'], dir: 'libs')
+        //Support library
+        //noinspection GradleCompatible
+        compile "com.android.support:appcompat-v7:$rootProject.ext.support_version"
+        compile "com.android.support:support-v4:$rootProject.ext.support_version"
+        compile "com.android.support:design:$rootProject.ext.support_version"
+        compile "com.android.support:cardview-v7:$rootProject.ext.support_version"
+        compile "com.android.support:recyclerview-v7:$rootProject.ext.support_version"
+        compile 'com.android.support.constraint:constraint-layout:1.0.2'
+        compile 'com.android.support:multidex:1.0.1'
 
-    //Network
-    compile "com.squareup.okhttp3:okhttp:$rootProject.ext.okHttp_version"
-    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.okHttp_version"
-    compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofit_version"
-    compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofit_version"
-    compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofit_version"
-    //android play services library
-    compile "com.google.android.gms:play-services-location:$rootProject.ext.play_services_version"
-    compile "com.google.android.gms:play-services-maps:$rootProject.ext.play_services_version"
+        //Play services library
+        compile "com.google.android.gms:play-services-location:$rootProject.ext.play_services_version"
+        compile "com.google.android.gms:play-services-ads:$rootProject.ext.play_services_version"
 
-    //Joda Time
-    compile 'joda-time:joda-time:2.9.9'
+        //Network
+        compile "com.squareup.okhttp3:okhttp:$rootProject.ext.okHttp_version"
+        compile "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.okHttp_version"
+        compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofit_version"
+        compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofit_version"
+        compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofit_version"
 
-    //Image loader
-    compile "com.github.bumptech.glide:glide:$rootProject.ext.glide_version"
+        //Joda Time
+        compile 'joda-time:joda-time:2.9.9'
 
-    //SearchView
-    compile "com.github.arimorty:floatingsearchview:$rootProject.ext.searchView_version"
+        //Image loader
+        compile "com.github.bumptech.glide:glide:$rootProject.ext.glide_version"
 
-    //Kotlin
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+        //SearchView
+        compile "com.github.arimorty:floatingsearchview:$rootProject.ext.searchView_version"
 
-    //Rx
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
+        //Kotlin
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    //Amazon Analytics
-    compile 'com.amazonaws:aws-android-sdk-mobileanalytics:2.4.2'
+        //Rx
+        compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+        compile 'io.reactivex.rxjava2:rxjava:2.0.1'
 
-    compile 'com.thebluealliance:spectrum:0.7.1'
+        //Amazon Analytics
+        compile 'com.amazonaws:aws-android-sdk-mobileanalytics:2.4.2'
 
-    //Rx
-    compile 'com.github.anadea:rxbus:1.0.1'
+        compile 'com.thebluealliance:spectrum:0.7.1'
 
-}
+        //Rx
+        compile 'com.github.anadea:rxbus:1.0.1'
 
-repositories {
-    mavenCentral()
+    }
+
+    repositories {
+        mavenCentral()
+    }
 }

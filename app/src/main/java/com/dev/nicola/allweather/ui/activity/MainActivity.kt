@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         realm = Realm.getDefaultInstance()
 
         buildGoogleClient()
+        googleApiClient?.connect()
 
         billing = Billing(this)
         billing?.onCreate()
