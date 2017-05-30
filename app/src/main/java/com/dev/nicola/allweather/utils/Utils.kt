@@ -51,32 +51,35 @@ class Utils {
         fun getHourImage(context: Context, sunset: Long?, sunrise: Long?): String {
             val imageUrl: String
             val time = Utils.TimeHelper.localTimeMillis
+            val delay = 60000 * 20 //1 minute * n min delay
+            val mSunset = sunset?.times(1000)
+            val mSunrise = sunrise?.times(1000)
 
             val sunriseWall = context.resources.getStringArray(R.array.sunrise_wallpaper)
             val dayWall = context.resources.getStringArray(R.array.day_wallpaper)
             val sunsetWall = context.resources.getStringArray(R.array.sunset_wallpaper)
             val nightWall = context.resources.getStringArray(R.array.night_wallpaper)
 
-            val random = (Math.random() * sunriseWall.size).toInt()
+            val r = (Math.random() * sunriseWall.size).toInt()
 
-            if (time >= sunrise ?: 0L - 1800L && time <= sunrise ?: 0L + 1800L) {
-                imageUrl = sunriseWall[random]
+            if (time >= (mSunrise ?: 0L).minus(delay) && time <= (mSunrise ?: 0L).plus(delay)) {
+                imageUrl = sunriseWall[r]
             } else {
-                if (time > sunrise ?: 0L + 1800L && time < sunset ?: 0L - 1800L) {
-                    imageUrl = dayWall[random]
+                if (time > (mSunrise ?: 0L).plus(delay) && time < (mSunset ?: 0L).minus(delay)) {
+                    imageUrl = dayWall[r]
                 } else {
-                    if (time >= sunset ?: 0L - 1800L && time <= sunset ?: 0L + 1800L) {
-                        imageUrl = sunsetWall[random]
+                    if (time >= (mSunset ?: 0L).minus(delay) && time <= (mSunset ?: 0L).plus(delay)) {
+                        imageUrl = sunsetWall[r]
                     } else {
-                        imageUrl = nightWall[random]
+                        imageUrl = nightWall[r]
                     }
                 }
             }
             return imageUrl
         }
 
-        fun getMonthImage(context: Context):String{
-            val monthWall=context.resources.getStringArray(R.array.months_wallpaper)
+        fun getMonthImage(context: Context): String {
+            val monthWall = context.resources.getStringArray(R.array.months_wallpaper)
             val month = Calendar.getInstance().get(Calendar.MONTH)
             return monthWall[month]
         }
@@ -243,5 +246,4 @@ class Utils {
             return url
         }
     }
-
 }

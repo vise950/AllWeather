@@ -7,7 +7,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "io.realm:realm-gradle-plugin:3.1.4"
+        classpath "io.realm:realm-gradle-plugin:3.3.1"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -29,14 +29,14 @@ ext {
     support_version = '25.3.1'
 
     //play services
-    play_services_version = '10.2.4'
+    play_services_version = '10.2.6'
 
     //network
-    okHttp_version = '3.7.0'
-    retrofit_version='2.2.0'
+    okHttp_version = '3.8.0'
+    retrofit_version='2.3.0'
 
     //image loader
-    glide_version='3.7.0'
+    glide_version='3.8.0'
 
     //searchview
     searchView_version = '2.0.4'

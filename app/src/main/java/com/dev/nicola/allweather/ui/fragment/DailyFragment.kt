@@ -17,9 +17,7 @@ import com.dev.nicola.allweather.model.Apixu.RootApixu
 import com.dev.nicola.allweather.model.DarkSky.RootDarkSky
 import com.dev.nicola.allweather.model.ForecastHour
 import com.dev.nicola.allweather.model.Yahoo.RootYahoo
-import com.dev.nicola.allweather.utils.PreferencesHelper
-import com.dev.nicola.allweather.utils.Utils
-import com.dev.nicola.allweather.utils.WeatherProvider
+import com.dev.nicola.allweather.utils.*
 import io.realm.Realm
 import kotlinx.android.synthetic.main.daily_fragment.*
 import kotlin.properties.Delegates
@@ -72,7 +70,9 @@ class DailyFragment : Fragment() {
         when (PreferencesHelper.getWeatherProvider(activity)) {
             WeatherProvider.DARK_SKY -> {
                 forecast_hour_recycle_view.visibility = View.VISIBLE
-                darkSkyData = realm?.where(RootDarkSky::class.java)?.findFirst()
+                if (!(darkSkyData?.isLoaded ?: false)) {
+                    darkSkyData = realm?.fetchDarkSky()
+                }
                 darkSkyData?.let {
                     darkSkyData?.hourly?.data?.forEachIndexed { index, data ->
                         if (index in 1..25) {
@@ -88,7 +88,9 @@ class DailyFragment : Fragment() {
                 forecast_hour_recycle_view.visibility = View.VISIBLE
                 var indexHour = Utils.TimeHelper.localTimeHour
                 var item = 1
-                apixuData = realm?.where(RootApixu::class.java)?.findFirst()
+                if (!(apixuData?.isLoaded ?: false)) {
+                    apixuData = realm?.fetchApixu()
+                }
                 apixuData?.let {
                     apixuData?.forecast?.forecastday?.forEach {
                         it.hour?.forEachIndexed { index, data ->
@@ -112,7 +114,9 @@ class DailyFragment : Fragment() {
 
             WeatherProvider.YAHOO -> {
                 forecast_hour_recycle_view.visibility = View.GONE
-                yahooData = realm?.where(RootYahoo::class.java)?.findFirst()
+                if (!(yahooData?.isLoaded ?: false)) {
+                    yahooData = realm?.fetchYahoo()
+                }
             }
         }
         return forecastHourList
@@ -120,17 +124,25 @@ class DailyFragment : Fragment() {
 
     private fun setUpLayout() {
 
-        //uso sunrise e sunset di darkSky perchè sono long è risulta più facile "lavorarci" rispetto alle string
+        if (!(darkSkyData?.isLoaded ?: false)) {
+            darkSkyData = realm?.fetchDarkSky()
+        }
         darkSkyData?.let {
             Glide.with(activity)
-                    .load(Utils.getHourImage(activity, darkSkyData?.daily?.data?.get(0)?.sunriseTime, darkSkyData?.daily?.data?.get(0)?.sunriseTime))
+                    .load(Utils.getHourImage(activity, darkSkyData?.daily?.data?.get(0)?.sunsetTime, darkSkyData?.daily?.data?.get(0)?.sunriseTime))
                     .placeholder(R.drawable.header_placeholder)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(image_daily_fragment)
+
+            sunrise_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunriseTime ?: 0L, prefTime)
+            sunset_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunsetTime ?: 0L, prefTime)
         }
 
         when (PreferencesHelper.getWeatherProvider(activity)) {
             WeatherProvider.DARK_SKY -> {
+                if (!(darkSkyData?.isLoaded ?: false)) {
+                    darkSkyData = realm?.fetchDarkSky()
+                }
                 darkSkyData?.let {
                     condition_daily_fragment.text = darkSkyData?.currently?.summary ?: getString(R.string.error_no_text)
                     temperature_daily_fragment.text = Utils.ConverterHelper.temperature(darkSkyData?.currently?.temperature ?: 0.0, prefTemp)
@@ -141,8 +153,6 @@ class DailyFragment : Fragment() {
                             darkSkyData?.currently?.humidity ?: getString(R.string.error_no_text))
                     pressure_daily_fragment.text = String.format(resources.getString(R.string.pressure),
                             darkSkyData?.currently?.pressure ?: getString(R.string.error_no_text))
-                    sunrise_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunriseTime ?: 0L, prefTime)
-                    sunset_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunsetTime ?: 0L, prefTime)
                 }
 
                 when (PreferencesHelper.getDefaultPreferences(activity, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME)) {
@@ -155,6 +165,9 @@ class DailyFragment : Fragment() {
             }
 
             WeatherProvider.APIXU -> {
+                if (!(apixuData?.isLoaded ?: false)) {
+                    apixuData = realm?.fetchApixu()
+                }
                 apixuData?.let {
                     condition_daily_fragment.text = apixuData?.current?.currentConditionApixu?.text ?: getString(R.string.error_no_text)
                     temperature_daily_fragment.text = Utils.ConverterHelper.temperature(apixuData?.current?.tempC ?: 0.0, prefTemp, "celsius")
@@ -165,14 +178,15 @@ class DailyFragment : Fragment() {
                             apixuData?.current?.humidity ?: getString(R.string.error_no_text))
                     pressure_daily_fragment.text = String.format(resources.getString(R.string.pressure),
                             apixuData?.current?.pressureMb ?: getString(R.string.error_no_text))
-                    sunrise_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunriseTime ?: 0L, prefTime)
-                    sunset_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunsetTime ?: 0L, prefTime)
                 }
                 //todo add logo
                 provider_logo.visibility = View.GONE
             }
 
             WeatherProvider.YAHOO -> {
+                if (!(yahooData?.isLoaded ?: false)) {
+                    yahooData = realm?.fetchYahoo()
+                }
                 yahooData?.let {
                     condition_daily_fragment.text = yahooData?.query?.results?.channel?.item?.condition?.text ?: getString(R.string.error_no_text)
                     temperature_daily_fragment.text = Utils.ConverterHelper.temperature(yahooData?.query?.results?.channel?.item?.condition?.temp?.toDouble() ?: 0.0, prefTemp)
@@ -183,8 +197,6 @@ class DailyFragment : Fragment() {
                             yahooData?.query?.results?.channel?.atmosphereYahoo?.humidity ?: getString(R.string.error_no_text))
                     pressure_daily_fragment.text = String.format(resources.getString(R.string.pressure),
                             yahooData?.query?.results?.channel?.atmosphereYahoo?.humidity ?: getString(R.string.error_no_text))
-                    sunrise_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunriseTime ?: 0L, prefTime)
-                    sunset_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunsetTime ?: 0L, prefTime)
                 }
 
                 Glide.with(activity).load(R.drawable.ic_yahoo).into(provider_logo)
