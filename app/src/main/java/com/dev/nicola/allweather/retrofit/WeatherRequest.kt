@@ -1,9 +1,9 @@
 package com.dev.nicola.allweather.retrofit
 
 import android.content.Context
-import com.dev.nicola.allweather.model.Apixu.RootApixu
-import com.dev.nicola.allweather.model.DarkSky.RootDarkSky
-import com.dev.nicola.allweather.model.Yahoo.RootYahoo
+import com.dev.nicola.allweather.model.apixu.RootApixu
+import com.dev.nicola.allweather.model.darkSky.RootDarkSky
+import com.dev.nicola.allweather.model.yahoo.RootYahoo
 import com.dev.nicola.allweather.utils.PreferencesHelper
 import com.dev.nicola.allweather.utils.Utils
 import com.dev.nicola.allweather.utils.WeatherProvider

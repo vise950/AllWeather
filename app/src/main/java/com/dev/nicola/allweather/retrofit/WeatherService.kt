@@ -1,9 +1,9 @@
 package com.dev.nicola.allweather.retrofit
 
 import com.dev.nicola.allweather.BuildConfig
-import com.dev.nicola.allweather.model.Apixu.RootApixu
-import com.dev.nicola.allweather.model.DarkSky.RootDarkSky
-import com.dev.nicola.allweather.model.Yahoo.RootYahoo
+import com.dev.nicola.allweather.model.apixu.RootApixu
+import com.dev.nicola.allweather.model.darkSky.RootDarkSky
+import com.dev.nicola.allweather.model.yahoo.RootYahoo
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path

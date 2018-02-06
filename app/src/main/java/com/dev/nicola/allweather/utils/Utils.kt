@@ -20,6 +20,8 @@ import java.util.*
 
 class Utils {
 
+    //todo calculate sunrise and sunset https://www.programcreek.com/java-api-examples/index.php?source_dir=SunriseSunset-master/library/src/main/java/ca/rmen/sunrisesunset/SunriseSunset.java
+
     companion object {
 
         fun isLocationEnable(context: Context): Boolean {

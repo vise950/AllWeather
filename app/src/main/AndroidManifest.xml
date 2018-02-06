@@ -33,7 +33,7 @@
             android:name=".preferences.AppPreferences"
             android:label="@string/action_settings"
             android:parentActivityName=".ui.activity.MainActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
 
 
         <!-- This meta-data tag is required to use Google Play Services. -->
@@ -43,8 +43,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDS2UWjoTfJwpUmowlzMrq84cQYdx0AgDE"/>
-        <!-- todo improve security api key -->
+            android:value="@string/google_map_key" />
 
 
         <!--<receiver-->

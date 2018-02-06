@@ -32,7 +32,7 @@ class FragmentAdapter(fm: FragmentManager, private val context: Context) : Fragm
         return null
     }
 
-    override fun getItemPosition(`object`: Any?): Int {
+    override fun getItemPosition(position: Any): Int {
         return POSITION_NONE
     }
 }

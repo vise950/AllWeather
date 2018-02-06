@@ -1,22 +1,23 @@
 package com.dev.nicola.allweather.ui.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.adapter.ForecastHourAdapter
-import com.dev.nicola.allweather.model.Apixu.RootApixu
-import com.dev.nicola.allweather.model.DarkSky.RootDarkSky
+import com.dev.nicola.allweather.model.apixu.RootApixu
+import com.dev.nicola.allweather.model.darkSky.RootDarkSky
 import com.dev.nicola.allweather.model.ForecastHour
-import com.dev.nicola.allweather.model.Yahoo.RootYahoo
+import com.dev.nicola.allweather.model.yahoo.RootYahoo
 import com.dev.nicola.allweather.utils.PreferencesHelper
 import com.dev.nicola.allweather.utils.Utils
 import com.dev.nicola.allweather.utils.WeatherProvider
@@ -36,19 +37,26 @@ class DailyFragment : Fragment() {
     private var prefTime: String by Delegates.notNull()
     private var prefSpeed: String by Delegates.notNull()
 
+    private lateinit var ctx: Context
+    private lateinit var act: FragmentActivity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        context?.let { ctx = it }
+        activity?.let { act = it }
+
         realm = Realm.getDefaultInstance()
-        prefTemp = PreferencesHelper.getDefaultPreferences(activity, PreferencesHelper.KEY_PREF_TEMPERATURE, PreferencesHelper.DEFAULT_PREF_TEMPERATURE) as String
-        prefTime = PreferencesHelper.getDefaultPreferences(activity, PreferencesHelper.KEY_PREF_TIME, PreferencesHelper.DEFAULT_PREF_TIME) as String
-        prefSpeed = PreferencesHelper.getDefaultPreferences(activity, PreferencesHelper.KEY_PREF_SPEED, PreferencesHelper.DEFAULT_PREF_SPEED) as String
+        prefTemp = PreferencesHelper.getDefaultPreferences(act, PreferencesHelper.KEY_PREF_TEMPERATURE, PreferencesHelper.DEFAULT_PREF_TEMPERATURE) as String
+        prefTime = PreferencesHelper.getDefaultPreferences(act, PreferencesHelper.KEY_PREF_TIME, PreferencesHelper.DEFAULT_PREF_TIME) as String
+        prefSpeed = PreferencesHelper.getDefaultPreferences(act, PreferencesHelper.KEY_PREF_SPEED, PreferencesHelper.DEFAULT_PREF_SPEED) as String
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.daily_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.daily_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpRecyclerView()
         setUpLayout()
@@ -60,7 +68,7 @@ class DailyFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        val forecastHourAdapter = ForecastHourAdapter(context, getRecyclerData())
+        val forecastHourAdapter = ForecastHourAdapter(ctx, getRecyclerData())
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         forecast_hour_recycle_view.layoutManager = layoutManager
         forecast_hour_recycle_view.itemAnimator = DefaultItemAnimator()
@@ -69,7 +77,7 @@ class DailyFragment : Fragment() {
 
     private fun getRecyclerData(): ArrayList<ForecastHour> {
         val forecastHourList = ArrayList<ForecastHour>()
-        when (PreferencesHelper.getWeatherProvider(activity)) {
+        when (PreferencesHelper.getWeatherProvider(act)) {
             WeatherProvider.DARK_SKY -> {
                 forecast_hour_recycle_view.visibility = View.VISIBLE
                 darkSkyData = realm?.where(RootDarkSky::class.java)?.findFirst()
@@ -122,14 +130,14 @@ class DailyFragment : Fragment() {
 
         //uso sunrise e sunset di darkSky perchè sono long è risulta più facile "lavorarci" rispetto alle string
         darkSkyData?.let {
-            Glide.with(activity)
-                    .load(Utils.getHourImage(activity, darkSkyData?.daily?.data?.get(0)?.sunriseTime, darkSkyData?.daily?.data?.get(0)?.sunriseTime))
-                    .placeholder(R.drawable.header_placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(image_daily_fragment)
+//            Glide.with(activity)
+//                    .load(Utils.getHourImage(act, darkSkyData?.daily?.data?.get(0)?.sunriseTime, darkSkyData?.daily?.data?.get(0)?.sunriseTime))
+//                    .placeholder(R.drawable.header_placeholder)
+//                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+//                    .into(image_daily_fragment)
         }
 
-        when (PreferencesHelper.getWeatherProvider(activity)) {
+        when (PreferencesHelper.getWeatherProvider(act)) {
             WeatherProvider.DARK_SKY -> {
                 darkSkyData?.let {
                     condition_daily_fragment.text = darkSkyData?.currently?.summary ?: getString(R.string.error_no_text)
@@ -145,7 +153,7 @@ class DailyFragment : Fragment() {
                     sunset_daily_fragment.text = Utils.TimeHelper.formatTime(darkSkyData?.daily?.data?.get(0)?.sunsetTime ?: 0L, prefTime)
                 }
 
-                when (PreferencesHelper.getDefaultPreferences(activity, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME)) {
+                when (PreferencesHelper.getDefaultPreferences(act, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME)) {
                     "light" -> Glide.with(activity).load(R.drawable.ic_darksky_dark).into(provider_logo)
                     "dark" -> Glide.with(activity).load(R.drawable.ic_darksky_light).into(provider_logo)
                 }

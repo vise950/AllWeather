@@ -1,47 +1,35 @@
 buildscript {
-    ext.kotlin_version = '1.1.2-3'
+    ext.kotlin_version = '1.2.21'
+    ext.support_version = '27.0.2'
+    ext.play_services_version = '11.8.0'
+    ext.okHttp_version = '3.9.1'
+    ext.retrofit_version='2.3.0'
+    ext. glide_version='4.4.0'
+    ext. searchView_version = '2.0.4'
+
     repositories {
         jcenter()
+        google()
         mavenCentral()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "io.realm:realm-gradle-plugin:3.1.4"
+        classpath "io.realm:realm-gradle-plugin:4.3.3"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
-apply plugin: 'kotlin'
-
 allprojects {
     repositories {
         jcenter()
+        google()
+        mavenCentral()
+        maven {
+            url 'https://jitpack.io'
+        }
     }
-}
-
-ext {
-    //dependencies
-
-    //android support
-    support_version = '25.3.1'
-
-    //play services
-    play_services_version = '10.2.6'
-
-    //network
-    okHttp_version = '3.7.0'
-    retrofit_version='2.2.0'
-
-    //image loader
-    glide_version='3.7.0'
-
-    //searchview
-    searchView_version = '2.0.4'
-}
-
-sourceSets {
-    main.java.srcDirs += 'src/main/kotlin'
 }

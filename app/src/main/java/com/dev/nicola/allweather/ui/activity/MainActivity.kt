@@ -6,6 +6,8 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -28,11 +30,20 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import java.util.*
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+
+    companion object {
+        private const val FRAGMENT_FAVORITE = "fragment_favorite"
+        private const val FRAGMENT_LOCATION = "fragment_location"
+        private const val FRAGMENT_MAP = "fragment_map"
+    }
+
+    private var currentFragment: Fragment? = null
 
     private var prefTheme: String? = null
     private var prefWeatherProvider: String? = null
@@ -58,7 +69,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     private var realm: Realm? = null
 
     private var billing: Billing? = null
-    private var amazonAnalyrics: AnalyticsHelper? = null
 
     private var search_view: FloatingSearchView by Delegates.notNull()
 
@@ -73,6 +83,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
 //        setViewPager()
 //        setSwipeToRefresh()
+        initBottomBar()
 
         realm = Realm.getDefaultInstance()
 
@@ -82,8 +93,9 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         billing = Billing(this)
         billing?.onCreate()
 
-        amazonAnalyrics = AnalyticsHelper(this)
-        amazonAnalyrics?.create()
+//        if (savedInstanceState == null) {
+//            startFragment(BaseFragment.newInstance(MapFragment::class), FRAGMENT_MAP)
+//        }
     }
 
     override fun onResume() {
@@ -94,38 +106,34 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
                 initCheckUp()
             }, 1500)
         } else {
-            if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME, prefTheme.toString()) ?: false) {
+            if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME, prefTheme.toString()) == true) {
                 recreate()
             } else if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER,
-                    PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER, prefWeatherProvider.toString()) ?: false) {
+                            PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER, prefWeatherProvider.toString()) == true) {
                 PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER, PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER).log("new provider")
                 getPreferences()
 //                view_pager.removeAllViews()
                 getData(location?.latitude, location?.longitude, true)
-            } else if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TEMPERATURE, PreferencesHelper.DEFAULT_PREF_TEMPERATURE, prefTemp.toString()) ?: false ||
-                    PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_SPEED, PreferencesHelper.DEFAULT_PREF_SPEED, prefSpeed.toString()) ?: false ||
-                    PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TIME, PreferencesHelper.DEFAULT_PREF_TIME, prefTime.toString()) ?: false) {
+            } else if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TEMPERATURE, PreferencesHelper.DEFAULT_PREF_TEMPERATURE, prefTemp.toString()) == true ||
+                    PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_SPEED, PreferencesHelper.DEFAULT_PREF_SPEED, prefSpeed.toString()) == true ||
+                    PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TIME, PreferencesHelper.DEFAULT_PREF_TIME, prefTime.toString()) == true) {
                 getPreferences()
                 fragmentAdapter?.notifyDataSetChanged()
             }
             goToSetting = false
         }
-
-        amazonAnalyrics?.resume()
     }
 
     override fun onPause() {
         super.onPause()
-        if (googleApiClient?.isConnected ?: false) {
+        if (googleApiClient?.isConnected == true) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
         }
-
-        amazonAnalyrics?.pause()
     }
 
     override fun onStop() {
         super.onStop()
-        if (googleApiClient?.isConnected ?: false) {
+        if (googleApiClient?.isConnected == true) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
             googleApiClient?.disconnect()
         }
@@ -226,12 +234,12 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
     private fun setDrawer() {
         drawer_layout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
-            override fun onDrawerOpened(drawerView: View?) {
+            override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 supportInvalidateOptionsMenu()
             }
 
-            override fun onDrawerClosed(drawerView: View?) {
+            override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
                 supportInvalidateOptionsMenu()
             }
@@ -239,10 +247,10 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     }
 
     private fun setNavigationView() {
-        Glide.with(this).load(Utils.getMonthImage(this))
-                .placeholder(R.drawable.header_drawer)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(nav_header_img)
+//        Glide.with(this).load(Utils.getMonthImage(this))
+//                .placeholder(R.drawable.header_drawer)
+//                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+//                .into(nav_header_img)
 
         navigation_view.setNavigationItemSelectedListener {
             Handler().postDelayed({
@@ -270,8 +278,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         var clickedItem = false
 
         when (prefTheme) {
-            "light" -> search_view = findViewById(R.id.search_view_light) as FloatingSearchView
-            "dark" -> search_view = findViewById(R.id.search_view_dark) as FloatingSearchView
+            "light" -> search_view = findViewById<FloatingSearchView>(R.id.search_view_light)
+            "dark" -> search_view = findViewById<FloatingSearchView>(R.id.search_view_dark)
         }
 
         search_view.visibility = View.VISIBLE
@@ -324,7 +332,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         MapsGoogleApiClient.service.getPrediction(query.toString()).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ data ->
-                    if (data?.predictions?.isNotEmpty() ?: false) {
+                    if (data?.predictions?.isNotEmpty() == true) {
                         data?.predictions?.forEachIndexed { index, data ->
                             if (index in 0..3) {
                                 searchResult.add(PredictionResult(Utils.trimString(data.description.toString())))
@@ -370,7 +378,22 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 //        }
 //    }
 
-    @Synchronized private fun buildGoogleClient() {
+    private fun initBottomBar() {
+        bottom_navigation.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.action_favorites -> {
+                }
+                R.id.action_location -> {
+                }
+                R.id.action_map -> {
+                }
+            }
+            true
+        }
+    }
+
+    @Synchronized
+    private fun buildGoogleClient() {
         googleApiClient = GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -394,14 +417,15 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
                 if (!offlineMode) {
                     getData(location?.latitude, location?.longitude)
                 }
-                Utils.LocationHelper.getLocationName(location?.latitude ?: 100.0, location?.longitude ?: 100.0, {
-                    "search view set text".log()
-                    it.log("text")
-                    locationName = it
-                    search_view.setSearchText(it)
-                }, {
-                    search_view.setSearchText(resources.getString(R.string.no_result_suggestion))
-                })
+//                Utils.LocationHelper.getLocationName(location?.latitude
+//                        ?: 100.0, location?.longitude ?: 100.0, {
+//                    "search view set text".log()
+//                    it.log("text")
+//                    locationName = it
+//                    search_view.setSearchText(it)
+//                }, {
+//                    search_view.setSearchText(resources.getString(R.string.no_result_suggestion))
+//                })
             }
         } else {
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 123)
@@ -419,80 +443,20 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     override fun onLocationChanged(location: Location?) {
         this.location = location
     }
+
+
+    private fun startFragment(fragment: Fragment, tag: String, replace: Boolean = false) {
+        val transaction = supportFragmentManager.beginTransaction()
+        if (replace) {
+            if (!currentFragment?.tag.equals(tag)) {
+                transaction?.replace(R.id.fragment_container, fragment, tag)
+                currentFragment = fragment
+            }
+        } else {
+            transaction?.add(R.id.fragment_container, fragment, tag)
+            currentFragment = fragment
+        }
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction?.commit()
+    }
 }
-//        setBottomNavigationView()
-//    /**
-//     * - NEVER commit() transactions after onPause() on pre-Honeycomb, and onStop() on post-Honeycomb
-//     * - Be careful when committing transactions inside Activity lifecycle methods. Use onCreate(), onResumeFragments() and onPostResume()
-//     * - Use commitAllowingStateLoss() only as a last resort
-//     * - Avoid performing transactions inside asynchronous callback methods
-//     */
-//    @SuppressLint("CommitTransaction")
-//    private fun loadUi() {
-//        fragmentManager = supportFragmentManager
-//        fragment = LocationFragment()
-//        transaction = fragmentManager!!.beginTransaction()
-//        transaction!!.add(R.id.main_container, fragment).commitAllowingStateLoss()
-//        //todo crash with dark theme (i don't know why XD)
-//    }
-//    /**
-//     *  Bottom Navigation
-//     */
-//    @SuppressLint("NewApi", "CommitTransaction")
-//    private fun setBottomNavigationView() {
-//
-//        .menu.getItem(DEFAULT_ITEM).isChecked = true
-//
-//            val id = item.itemId
-//        bottom_navigation.setOnNavigationItemSelectedListener { item ->
-//
-//            when (id) {
-//                R.id.action_favorites -> {
-////                    circularReveal('l', R.color.test1)
-//                    fragment = FavouriteFragment()
-//                }
-//
-////                    circularReveal('c', R.color.test2)
-//                R.id.action_location -> {
-//                    fragment = LocationFragment()
-//                }
-//
-//                R.id.action_map -> {
-//                    fragment = MapFragment()
-////                    circularReveal('r', R.color.test3)
-//                }
-//            }
-//            transaction = fragmentManager!!.beginTransaction()
-//            transaction!!.replace(R.id.main_container, fragment).commit()
-//            true
-//        }
-//    }
-//
-//
-//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-//    internal fun circularReveal(position: Char, toColor: Int) {
-//        var x = 0
-//        var y = 0
-//
-//        when (position) {
-//            'l' -> {
-//                x = bottom_navigation.measuredWidth / 6
-//                y = bottom_navigation.measuredHeight / 2
-//            }
-//            'c' -> {
-//                x = bottom_navigation.measuredWidth / 2
-//                y = bottom_navigation.measuredHeight / 2
-//            }
-//            'r' -> {
-//                y = bottom_navigation.measuredHeight / 2
-//                x = bottom_navigation.measuredWidth - bottom_navigation.measuredWidth / 6
-//            }
-//        }
-//
-//        val finalRadius = Math.max(bottom_navigation.width, bottom_navigation.height)
-//        val anim = ViewAnimationUtils.createCircularReveal(bottom_navigation, x, y, 0f, finalRadius.toFloat())
-//        anim.interpolator = AccelerateDecelerateInterpolator()
-//        bottom_navigation.itemBackgroundResource = toColor
-//        anim.duration = 800
-//        anim.start()
-//    }
