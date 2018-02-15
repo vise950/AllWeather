@@ -1,15 +1,13 @@
 package com.dev.nicola.allweather.model.darkSky
 
-import com.google.gson.annotations.SerializedName
-import io.realm.RealmList
-import io.realm.RealmObject
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Embedded
 
-open class HourlyDarkSky : RealmObject() {
-
-    @SerializedName("summary")
-    var summary: String? = null
-    @SerializedName("icon")
-    var icon: String? = null
-    @SerializedName("data")
-    var data: RealmList<HourlyDataDarkSky>? = null
-}
+data class HourlyDarkSky(
+        @ColumnInfo(name = "darksky_root_hourly_summary")
+        val summary: String?,
+        @ColumnInfo(name = "darksky_root_hourly_icon")
+        val icon: String?
+//        @Embedded
+//        val data: List<HourlyDataDarkSky>?
+)

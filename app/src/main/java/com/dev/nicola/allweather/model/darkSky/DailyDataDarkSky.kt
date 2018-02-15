@@ -1,62 +1,37 @@
 package com.dev.nicola.allweather.model.darkSky
 
-import com.google.gson.annotations.SerializedName
-import io.realm.RealmObject
+import android.arch.persistence.room.ColumnInfo
 
-open class DailyDataDarkSky : RealmObject() {
-
-    @SerializedName("time")
-    var time: Long? = null
-    @SerializedName("summary")
-    var summary: String? = null
-    @SerializedName("icon")
-    var icon: String? = null
-    @SerializedName("sunriseTime")
-    var sunriseTime: Long? = null
-    @SerializedName("sunsetTime")
-    var sunsetTime: Long? = null
-    @SerializedName("moonPhase")
-    var moonPhase: Double? = null
-    @SerializedName("precipIntensity")
-    var precipIntensity: Double? = null
-    @SerializedName("precipIntensityMax")
-    var precipIntensityMax: Double? = null
-    @SerializedName("precipIntensityMaxTime")
-    var precipIntensityMaxTime: Int? = null
-    @SerializedName("precipProbability")
-    var precipProbability: Double? = null
-    @SerializedName("precipType")
-    var precipType: String? = null
-    @SerializedName("temperatureMin")
-    var temperatureMin: Double? = null
-    @SerializedName("temperatureMinTime")
-    var temperatureMinTime: Int? = null
-    @SerializedName("temperatureMax")
-    var temperatureMax: Double? = null
-    @SerializedName("temperatureMaxTime")
-    var temperatureMaxTime: Int? = null
-    @SerializedName("apparentTemperatureMin")
-    var apparentTemperatureMin: Double? = null
-    @SerializedName("apparentTemperatureMinTime")
-    var apparentTemperatureMinTime: Int? = null
-    @SerializedName("apparentTemperatureMax")
-    var apparentTemperatureMax: Double? = null
-    @SerializedName("apparentTemperatureMaxTime")
-    var apparentTemperatureMaxTime: Int? = null
-    @SerializedName("dewPoint")
-    var dewPoint: Double? = null
-    @SerializedName("humidity")
-    var humidity: Double? = null
-    @SerializedName("windSpeed")
-    var windSpeed: Double? = null
-    @SerializedName("windBearing")
-    var windBearing: Int? = null
-    @SerializedName("visibility")
-    var visibility: Double? = null
-    @SerializedName("cloudCover")
-    var cloudCover: Double? = null
-    @SerializedName("pressure")
-    var pressure: Double? = null
-    @SerializedName("ozone")
-    var ozone: Double? = null
-}
+data class DailyDataDarkSky(
+        @ColumnInfo(name = "darksky_daily_time")
+        val time: Long?,
+        @ColumnInfo(name = "darksky_daily_temperature")
+        val summary: String?,
+        @ColumnInfo(name = "darksky_daily_icon")
+        val icon: String?,
+        @ColumnInfo(name = "darksky_daily_sunrise")
+        val sunriseTime: Long?,
+        @ColumnInfo(name = "darksky_daily_sunset")
+        val sunsetTime: Long?,
+        @ColumnInfo(name = "darksky_daily_precip_intensity")
+        val precipIntensity: Double?,
+        @ColumnInfo(name = "darksky_daily_precip_probability")
+        val precipProbability: Double?,
+        @ColumnInfo(name = "darksky_daily_temperature_min")
+        val temperatureMin: Double?,
+        @ColumnInfo(name = "darksky_daily_temperature_max")
+        val temperatureMax: Double?,
+        @ColumnInfo(name = "darksky_daily_dew_point")
+        val dewPoint: Double?,
+        @ColumnInfo(name = "darksky_daily_humidity")
+        val humidity: Double?,
+        @ColumnInfo(name = "darksky_daily_wind_speed")
+        val windSpeed: Double?,
+        @ColumnInfo(name = "darksky_daily_wind_bearing")
+        val windBearing: Int?,
+        @ColumnInfo(name = "darksky_daily_visibility")
+        val visibility: Double?,
+        @ColumnInfo(name = "darksky_daily_cloud_cover")
+        val cloudCover: Double?,
+        @ColumnInfo(name = "darksky_daily_pressure")
+        val pressure: Double?)

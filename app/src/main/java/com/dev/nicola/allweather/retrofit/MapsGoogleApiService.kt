@@ -1,9 +1,9 @@
 package com.dev.nicola.allweather.retrofit
 
 import com.dev.nicola.allweather.BuildConfig
-import com.dev.nicola.allweather.model.GoolgeResponse.Coordinates
-import com.dev.nicola.allweather.model.GoolgeResponse.LocationName
-import com.dev.nicola.allweather.model.GoolgeResponse.Prediction
+import com.dev.nicola.allweather.model.goolgeResponse.Coordinates
+import com.dev.nicola.allweather.model.goolgeResponse.LocationName
+import com.dev.nicola.allweather.model.goolgeResponse.Prediction
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query

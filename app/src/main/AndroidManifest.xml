@@ -21,19 +21,23 @@
         android:supportsRtl="true"
         android:theme="@style/MyTheme">
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".ui.activity.SplashScreenActivity"
             android:screenOrientation="sensorPortrait"
-            android:theme="@style/MyThemeNoActionBar">
+            android:theme="@style/SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".preferences.AppPreferences"
-            android:label="@string/action_settings"
-            android:parentActivityName=".ui.activity.MainActivity"
-            android:screenOrientation="sensorPortrait" />
+            android:name=".ui.activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyTheme" />
+        <!--<activity-->
+        <!--android:name=".preferences.AppPreferences"-->
+        <!--android:label="@string/action_settings"-->
+        <!--android:parentActivityName=".ui.activity.MainActivity"-->
+        <!--android:screenOrientation="sensorPortrait" />-->
 
 
         <!-- This meta-data tag is required to use Google Play Services. -->

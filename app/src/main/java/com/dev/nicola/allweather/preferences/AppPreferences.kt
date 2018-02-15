@@ -53,7 +53,7 @@ class AppPreferences : AppCompatActivity() {
             val theme = findPreference(PreferencesHelper.KEY_PREF_THEME)
             theme.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, value ->
                 // entra se clicco su un item del dialog (anche se è lo stesso) quindi controllo se il value nuovo e diverso da quello vecchio
-                if (PreferencesHelper.isPreferenceChange(activity, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.KEY_PREF_THEME, value.toString()) ?: false) {
+                if (PreferencesHelper.isPreferenceChange(activity, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.KEY_PREF_THEME, value.toString()) == true) {
                     activity.recreate()
                 }
                 true

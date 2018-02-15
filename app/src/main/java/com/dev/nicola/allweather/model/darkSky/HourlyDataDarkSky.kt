@@ -1,40 +1,29 @@
 package com.dev.nicola.allweather.model.darkSky
 
-import com.google.gson.annotations.SerializedName
-import io.realm.RealmObject
+import android.arch.persistence.room.ColumnInfo
 
-open class HourlyDataDarkSky : RealmObject() {
-
-    @SerializedName("time")
-    var time: Long? = null
-    @SerializedName("summary")
-    var summary: String? = null
-    @SerializedName("icon")
-    var icon: String? = null
-    @SerializedName("precipIntensity")
-    var precipIntensity: Double? = null
-    @SerializedName("precipProbability")
-    var precipProbability: Double? = null
-    @SerializedName("precipType")
-    var precipType: String? = null
-    @SerializedName("temperature")
-    var temperature: Double? = null
-    @SerializedName("apparentTemperature")
-    var apparentTemperature: Double? = null
-    @SerializedName("dewPoint")
-    var dewPoint: Double? = null
-    @SerializedName("humidity")
-    var humidity: Double? = null
-    @SerializedName("windSpeed")
-    var windSpeed: Double? = null
-    @SerializedName("windBearing")
-    var windBearing: Int? = null
-    @SerializedName("visibility")
-    var visibility: Double? = null
-    @SerializedName("cloudCover")
-    var cloudCover: Double? = null
-    @SerializedName("pressure")
-    var pressure: Double? = null
-    @SerializedName("ozone")
-    var ozone: Double? = null
-}
+data class HourlyDataDarkSky(
+        @ColumnInfo(name = "darksky_hourly_time")
+        val time: Long?,
+        @ColumnInfo(name = "darksky_hourly_summary")
+        val summary: String?,
+        @ColumnInfo(name = "darksky_hourly_icon")
+        val icon: String?,
+        @ColumnInfo(name = "darksky_hourly_precip_intensity")
+        val precipIntensity: Double?,
+        @ColumnInfo(name = "darksky_hourly_temperature")
+        val temperature: Double?,
+        @ColumnInfo(name = "darksky_hourly_dew_point")
+        val dewPoint: Double?,
+        @ColumnInfo(name = "darksky_hourly_humidity")
+        val humidity: Double?,
+        @ColumnInfo(name = "darksky_hourly_wind_speed")
+        val windSpeed: Double?,
+        @ColumnInfo(name = "darksky_hourly_wind_bearing")
+        val windBearing: Int?,
+        @ColumnInfo(name = "darksky_hourly_visibility")
+        val visibility: Double?,
+        @ColumnInfo(name = "darksky_hourly_cloud_cover")
+        val cloudCover: Double?,
+        @ColumnInfo(name = "darksky_hourly_pressure")
+        val pressure: Double?)

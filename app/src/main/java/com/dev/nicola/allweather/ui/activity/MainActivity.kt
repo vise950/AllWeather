@@ -18,7 +18,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dev.nicola.allweather.BuildConfig
 import com.dev.nicola.allweather.R
-import com.dev.nicola.allweather.adapter.FragmentAdapter
 import com.dev.nicola.allweather.preferences.AppPreferences
 import com.dev.nicola.allweather.retrofit.MapsGoogleApiClient
 import com.dev.nicola.allweather.utils.*
@@ -57,7 +56,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
     private val searchResult: ArrayList<PredictionResult> = ArrayList()
 
-    private var fragmentAdapter: FragmentAdapter? = null
+//    private var fragmentAdapter: FragmentAdapter? = null
 
     private var googleApiClient: GoogleApiClient? = null
     private var location: Location? = null
@@ -118,7 +117,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
                     PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_SPEED, PreferencesHelper.DEFAULT_PREF_SPEED, prefSpeed.toString()) == true ||
                     PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TIME, PreferencesHelper.DEFAULT_PREF_TIME, prefTime.toString()) == true) {
                 getPreferences()
-                fragmentAdapter?.notifyDataSetChanged()
+//                fragmentAdapter?.notifyDataSetChanged()
             }
             goToSetting = false
         }
@@ -333,7 +332,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ data ->
                     if (data?.predictions?.isNotEmpty() == true) {
-                        data?.predictions?.forEachIndexed { index, data ->
+                        data.predictions.forEachIndexed { index, data ->
                             if (index in 0..3) {
                                 searchResult.add(PredictionResult(Utils.trimString(data.description.toString())))
                             }

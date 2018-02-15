@@ -1,44 +1,31 @@
 package com.dev.nicola.allweather.model.darkSky
 
-import com.google.gson.annotations.SerializedName
-import io.realm.RealmObject
+import android.arch.persistence.room.ColumnInfo
 
-open class CurrentlyDarkSky : RealmObject() {
-
-    @SerializedName("time")
-    var time: Int? = null
-    @SerializedName("summary")
-    var summary: String? = null
-    @SerializedName("icon")
-    var icon: String? = null
-    @SerializedName("nearestStormDistance")
-    var nearestStormDistance: Int? = null
-    @SerializedName("precipIntensity")
-    var precipIntensity: Double? = null
-    @SerializedName("precipIntensityError")
-    var precipIntensityError: Double? = null
-    @SerializedName("precipProbability")
-    var precipProbability: Double? = null
-    @SerializedName("precipType")
-    var precipType: String? = null
-    @SerializedName("temperature")
-    var temperature: Double? = null
-    @SerializedName("apparentTemperature")
-    var apparentTemperature: Double? = null
-    @SerializedName("dewPoint")
-    var dewPoint: Double? = null
-    @SerializedName("humidity")
-    var humidity: Double? = null
-    @SerializedName("windSpeed")
-    var windSpeed: Double? = null
-    @SerializedName("windBearing")
-    var windBearing: Int? = null
-    @SerializedName("visibility")
-    var visibility: Double? = null
-    @SerializedName("cloudCover")
-    var cloudCover: Double? = null
-    @SerializedName("pressure")
-    var pressure: Double? = null
-    @SerializedName("ozone")
-    var ozone: Double? = null
-}
+data class CurrentlyDarkSky(
+        @ColumnInfo(name = "darksky_currently_time")
+        val time: Int?,
+        @ColumnInfo(name = "darksky_currently_summary")
+        val summary: String?,
+        @ColumnInfo(name = "darksky_currently_icon")
+        val icon: String?,
+        @ColumnInfo(name = "darksky_currently_precip_intensity")
+        val precipIntensity: Double?,
+        @ColumnInfo(name = "darksky_currently_precip_probability")
+        val precipProbability: Double?,
+        @ColumnInfo(name = "darksky_currently_temperature")
+        val temperature: Double?,
+        @ColumnInfo(name = "darksky_currently_dew_point")
+        val dewPoint: Double?,
+        @ColumnInfo(name = "darksky_currently_humidity")
+        val humidity: Double?,
+        @ColumnInfo(name = "darksky_currently_wind_speed")
+        val windSpeed: Double?,
+        @ColumnInfo(name = "darksky_currently_wind_bearing")
+        val windBearing: Int?,
+        @ColumnInfo(name = "darksky_currently_visibility")
+        val visibility: Double?,
+        @ColumnInfo(name = "darksky_currently_cloud_cover")
+        val cloudCover: Double?,
+        @ColumnInfo(name = "darksky_currently_pressure")
+        val pressure: Double?)

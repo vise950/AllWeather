@@ -22,6 +22,8 @@ android {
         targetSdkVersion 27
         versionCode 200
         versionName "2.0"
+
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -54,7 +56,9 @@ android {
 
 
     dependencies {
-        compile fileTree(include: ['*.jar'], dir: 'libs')
+        implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+        implementation 'com.android.support:multidex:1.0.2'
 
         //Support library
         implementation "com.android.support:appcompat-v7:$support_version"
@@ -62,7 +66,7 @@ android {
         implementation "com.android.support:design:$support_version"
         implementation "com.android.support:cardview-v7:$support_version"
         implementation "com.android.support:recyclerview-v7:$support_version"
-        implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta4'
+        implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
 
         //Play services library
         implementation "com.google.android.gms:play-services-location:$play_services_version"
@@ -70,10 +74,12 @@ android {
         implementation "com.google.android.gms:play-services-ads:$play_services_version"
 
         // Lifecycle
-        implementation "android.arch.lifecycle:livedata:1.1.0"
-        implementation "android.arch.lifecycle:viewmodel:1.1.0"
         implementation "android.arch.lifecycle:extensions:1.1.0"
         kapt "android.arch.lifecycle:compiler:1.1.0"
+
+        // Room
+        implementation "android.arch.persistence.room:runtime:1.0.0"
+        kapt "android.arch.persistence.room:compiler:1.0.0"
 
         //Network
         implementation "com.squareup.okhttp3:okhttp:$okHttp_version"

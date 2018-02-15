@@ -3,10 +3,7 @@ package com.dev.nicola.allweather.model
 import com.google.gson.annotations.SerializedName
 
 class LocationName {
-    @SerializedName("results")
     val result: List<Result>? = null
-    @SerializedName("status")
-    val status: String? = null
 
     inner class Result {
         @SerializedName("address_components")

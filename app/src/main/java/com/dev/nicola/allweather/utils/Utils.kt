@@ -92,7 +92,7 @@ class Utils {
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ data ->
-                        if (data?.result?.isNotEmpty() ?: false) {
+                        if (data?.result?.isNotEmpty() == true) {
                             data?.result?.get(0)?.addressComponents?.forEach {
                                 if (it.types?.get(0) == "locality" || it.types?.get(0) == "administrative_area_level_3") {
                                     onSuccess?.invoke(it.longName.toString())
@@ -109,7 +109,7 @@ class Utils {
             MapsGoogleApiClient.service.getCoordinates(cityName).subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ data ->
-                        if (data?.result?.isNotEmpty() ?: false) {
+                        if (data?.result?.isNotEmpty() == true) {
                             val location = Location(LocationManager.PASSIVE_PROVIDER)
                             location.latitude = data?.result?.get(0)?.geometry?.location?.lat ?: 0.0
                             location.longitude = data?.result?.get(0)?.geometry?.location?.lng ?: 0.0

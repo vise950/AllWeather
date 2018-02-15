@@ -1,27 +1,26 @@
 package com.dev.nicola.allweather.model.darkSky
 
-import com.google.gson.annotations.SerializedName
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Embedded
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 
-@RealmClass
-open class RootDarkSky : RealmObject() {
-
-    @PrimaryKey
-    var id: String? = null
-    @SerializedName("latitude")
-    var latitude: Double? = null
-    @SerializedName("longitude")
-    var longitude: Double? = null
-    @SerializedName("timezone")
-    var timezone: String? = null
-    @SerializedName("offset")
-    var offset: Int? = null
-    @SerializedName("currently")
-    var currently: CurrentlyDarkSky? = null
-    @SerializedName("hourly")
-    var hourly: HourlyDarkSky? = null
-    @SerializedName("daily")
-    var daily: DailyDarkSky? = null
-}
+@Entity
+data class RootDarkSky(
+        @PrimaryKey
+        @ColumnInfo(name = "darksky_id")
+        val id: String,
+        @ColumnInfo(name = "darksky_latitude")
+        val latitude: Double?,
+        @ColumnInfo(name = "darksky_longitude")
+        val longitude: Double?,
+        @ColumnInfo(name = "darksky_timezone")
+        val timezone: String?,
+        @ColumnInfo(name = "darksky_offset")
+        val offset: Int?,
+        @Embedded
+        val currently: CurrentlyDarkSky?,
+        @Embedded
+        val hourly: HourlyDarkSky?,
+        @Embedded
+        val daily: DailyDarkSky?)

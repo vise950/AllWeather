@@ -1,18 +1,13 @@
-package com.dev.nicola.allweather.model.GoolgeResponse
+package com.dev.nicola.allweather.model.goolgeResponse
 
 import com.google.gson.annotations.SerializedName
 
 class LocationName {
-    @SerializedName("results")
     val result: List<Result>? = null
-    @SerializedName("status")
-    val status: String? = null
 
     inner class Result {
         @SerializedName("address_components")
         val addressComponents: List<AddressComponent>? = null
-        @SerializedName("formatted_address")
-        val formattedAddress: String? = null
     }
 
     inner class AddressComponent {

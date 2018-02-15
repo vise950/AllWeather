@@ -1,6 +1,4 @@
-package com.dev.nicola.allweather.model
-
-import com.google.gson.annotations.SerializedName
+package com.dev.nicola.allweather.model.goolgeResponse
 
 class Coordinates {
     val result: List<Result>? = null
