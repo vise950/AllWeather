@@ -33,6 +33,7 @@
             android:name=".ui.activity.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyTheme" />
+        <activity android:name=".ui.activity.HomeActivity" />
         <!--<activity-->
         <!--android:name=".preferences.AppPreferences"-->
         <!--android:label="@string/action_settings"-->

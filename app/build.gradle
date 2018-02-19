@@ -79,7 +79,7 @@ android {
 
         // Room
         implementation "android.arch.persistence.room:runtime:1.0.0"
-        kapt "android.arch.persistence.room:compiler:1.0.0"
+        kapt "android.arch.persistence.room:compiler:1.1.0-alpha1"
 
         //Network
         implementation "com.squareup.okhttp3:okhttp:$okHttp_version"
