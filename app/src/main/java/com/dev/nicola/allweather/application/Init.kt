@@ -1,36 +1,28 @@
 package com.dev.nicola.allweather.application
 
-import android.annotation.SuppressLint
 import android.app.Application
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
-import io.realm.Realm
-import io.realm.RealmConfiguration
+import com.dev.nicola.allweather.di.component.AppComponent
+import com.dev.nicola.allweather.di.component.DaggerAppComponent
+import com.dev.nicola.allweather.di.module.AppModule
 import net.danlew.android.joda.JodaTimeAndroid
 
 class Init : Application() {
 
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        private var realm: Realm? = null
-
-        fun getRealmInstance(): Realm = realm ?: run {
-            Realm.getDefaultInstance().also {
-                realm = it
-            }
-        }
-    }
+    lateinit var appComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()
-        Realm.init(this)
-        initRealm()
+        initDagger()
         JodaTimeAndroid.init(this)
     }
 
-    private fun initRealm() {
-        Realm.init(this)
-        Realm.setDefaultConfiguration(RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build())
+
+    private fun initDagger() {
+        appComponent = DaggerAppComponent.builder()
+                .appModule(AppModule(this))
+                .build()
     }
 }
 

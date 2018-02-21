@@ -5,12 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.dev.nicola.allweather.R
+import com.dev.nicola.allweather.application.Init
+import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.utils.log
+import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
+import com.dev.nicola.allweather.viewmodel.viewModel
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import kotlinx.android.synthetic.main.activity_home.*
+import javax.inject.Inject
 
 
 class HomeActivity : AppCompatActivity() {
@@ -30,9 +35,18 @@ class HomeActivity : AppCompatActivity() {
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build()
     }
 
+    private lateinit var placeViewModel: FavoritePlaceViewModel
+
+    @Inject
+    lateinit var placeRepo: FavoritePlaceRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        (application as Init).appComponent.inject(this)
+
+        placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo) }
 
         add_place_fab.setOnClickListener {
             searchPlace()
