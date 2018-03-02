@@ -1,13 +1,17 @@
 package com.dev.nicola.allweather.ui.activity
 
 import android.app.Activity
+import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
+import com.dev.nicola.allweather.adapter.FavoritePlaceAdapter
 import com.dev.nicola.allweather.application.Init
+import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
-import com.dev.nicola.allweather.utils.log
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
 import com.dev.nicola.allweather.viewmodel.viewModel
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -40,17 +44,19 @@ class HomeActivity : AppCompatActivity() {
     @Inject
     lateinit var placeRepo: FavoritePlaceRepository
 
+    private var places: List<FavoritePlace> = listOf()
+    private lateinit var placeAdapter: FavoritePlaceAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         (application as Init).appComponent.inject(this)
 
-        placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo) }
+        initUI()
 
-        add_place_fab.setOnClickListener {
-            searchPlace()
-        }
+        placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo) }
+        observeData()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -59,11 +65,12 @@ class HomeActivity : AppCompatActivity() {
             when (resultCode) {
                 Activity.RESULT_OK -> {
                     val place = PlaceAutocomplete.getPlace(this, data)
-                    "Place: " + place.name.log()
+                    "Place: " + place.name.error()
+                    placeViewModel.addPlace(FavoritePlace(place.id, place.name.toString(), place.latLng.latitude, place.latLng.longitude))
                 }
                 PlaceAutocomplete.RESULT_ERROR -> {
                     val status = PlaceAutocomplete.getStatus(this, data)
-                    status.statusMessage.log("error")
+                    status.statusMessage.error("error")
                 }
                 Activity.RESULT_CANCELED -> {
                     // The user canceled the operation.
@@ -72,14 +79,36 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun initUI() {
+        add_place_fab.setOnClickListener {
+            searchPlace()
+        }
+
+        placeAdapter = FavoritePlaceAdapter(this, places)
+        favorite_places_rv.layoutManager = LinearLayoutManager(this)
+        favorite_places_rv.adapter = placeAdapter
+
+        placeAdapter.onItemClicked = {
+            it.error("place clicked")
+        }
+    }
+
     private fun searchPlace() {
         try {
             startActivityForResult(placeAutocompleteIntent, PLACE_AUTOCOMPLETE_REQUEST_CODE)
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         } catch (e: GooglePlayServicesRepairableException) {
-            e.printStackTrace().log("error")
+            e.printStackTrace().error("error")
         } catch (e: GooglePlayServicesNotAvailableException) {
-            e.printStackTrace().log("error")
+            e.printStackTrace().error("error")
         }
+    }
+
+    private fun observeData() {
+        placeViewModel.getPlaces().observe(this, Observer {
+            it.error("places")
+            it?.let {
+                placeAdapter.updateData(it)
+            }
+        })
     }
 }

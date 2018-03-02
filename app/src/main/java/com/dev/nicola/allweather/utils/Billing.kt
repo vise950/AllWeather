@@ -3,6 +3,7 @@ package com.dev.nicola.allweather.utils
 import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AlertDialog
+import co.eggon.eggoid.extension.error
 import com.billing.utils.IabHelper
 import com.billing.utils.Purchase
 import com.dev.nicola.allweather.BuildConfig
@@ -135,7 +136,7 @@ class Billing(private val activity: Activity) {
 //        activity.runOnUiThread {
 //            Toast.makeText(activity.applicationContext, message, Toast.LENGTH_LONG).show()
 //        }
-        message.log("in app error")
+        message.error("in app error")
     }
 
 

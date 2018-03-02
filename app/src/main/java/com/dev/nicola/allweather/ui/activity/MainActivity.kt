@@ -13,6 +13,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import co.eggon.eggoid.extension.error
 import com.arlib.floatingsearchview.FloatingSearchView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -109,7 +110,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
                 recreate()
             } else if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER,
                             PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER, prefWeatherProvider.toString()) == true) {
-                PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER, PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER).log("new provider")
+                PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER, PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER).error("new provider")
                 getPreferences()
 //                view_pager.removeAllViews()
                 getData(location?.latitude, location?.longitude, true)
@@ -343,7 +344,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
                     search_view.swapSuggestions(searchResult)
                     search_view.hideProgress()
                 }, { error ->
-                    error.log("Error call")
+                    error.error("Error call")
                     searchResult.add(PredictionResult(resources.getString(R.string.error_load_suggestion)))
                     search_view.swapSuggestions(searchResult)
                     search_view.hideProgress()

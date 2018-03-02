@@ -5,9 +5,10 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/places_rv"
+        android:id="@+id/favorite_places_rv"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_margin="@dimen/activity_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,6 +20,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_add"
         app:elevation="@dimen/elevation_6dp"
+        app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:useCompatPadding="true" />

@@ -5,6 +5,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.support.v7.app.AppCompatDelegate
+import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.retrofit.MapsGoogleApiClient
 import com.dev.nicola.allweather.retrofit.WeatherClient
@@ -100,7 +101,7 @@ class Utils {
                             }
                         }
                     }, { error ->
-                        error.log("get location name error")
+                        error.error("get location name error")
                         onError?.invoke()
                     })
         }
@@ -116,7 +117,7 @@ class Utils {
                             onSuccess?.invoke(location)
                         }
                     }, { error ->
-                        error.log("get coordinates error")
+                        error.error("get coordinates error")
                     })
         }
     }

@@ -99,6 +99,15 @@ android {
         kapt 'com.google.dagger:dagger-compiler:2.13'
         provided 'javax.annotation:jsr250-api:1.0'
 
+        // Anko
+        implementation 'org.jetbrains.anko:anko-commons:0.10.4'
+        implementation 'org.jetbrains.anko:anko-coroutines:0.10.4'
+
+        //Eggoid
+        implementation 'com.github.coletz:eggoid:1.10.0'
+
+
+
         //SearchView
         implementation "com.github.arimorty:floatingsearchview:$searchView_version"
 
@@ -109,8 +118,7 @@ android {
 
         implementation 'com.thebluealliance:spectrum:0.7.1'
 
-        //Eggoid
-        implementation 'com.github.coletz:eggoid:1.10.0'
+
 
     }
 }

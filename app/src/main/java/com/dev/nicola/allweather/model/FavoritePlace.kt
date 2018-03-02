@@ -8,5 +8,6 @@ data class FavoritePlace(
         @PrimaryKey
         val id: String,
         val name: String,
-        val latitude: Long,
-        val longitude: Long)
+        val latitude: Double,
+        val longitude: Double
+)
