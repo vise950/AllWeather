@@ -2,6 +2,8 @@ package com.dev.nicola.allweather.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.SparseBooleanArray
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,9 @@ import com.dev.nicola.allweather.model.FavoritePlace
 class FavoritePlaceAdapter(private val ctx: Context, private var data: List<FavoritePlace>) : RecyclerView.Adapter<FavoritePlaceAdapter.FavoritePlaceViewHolder>() {
 
     var onItemClicked: ((String) -> Unit)? = null
+    var onItemLongClicked: ((Int, String) -> Unit)? = null
+
+    private var selectedItem = SparseBooleanArray()
 
     inner class FavoritePlaceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var placeBackground: ImageView = view.findViewById(R.id.place_weather_bg)
@@ -23,6 +28,12 @@ class FavoritePlaceAdapter(private val ctx: Context, private var data: List<Favo
 
         init {
             view.setOnClickListener { onItemClicked?.invoke(data[adapterPosition].id) }
+            view.setOnLongClickListener {
+                onItemLongClicked?.invoke(adapterPosition, data[adapterPosition].id)
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                selectedItem.add(adapterPosition)
+                true
+            }
         }
     }
 
@@ -45,5 +56,15 @@ class FavoritePlaceAdapter(private val ctx: Context, private var data: List<Favo
     fun updateData(data: List<FavoritePlace>) {
         this.data = data
         notifyDataSetChanged()
+    }
+
+    fun getSelectedItemCount(): Int = selectedItem.size
+
+    fun clearSelection(){
+
+    }
+
+    fun removeItem(){
+
     }
 }

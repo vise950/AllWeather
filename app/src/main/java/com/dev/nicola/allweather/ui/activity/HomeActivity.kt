@@ -4,8 +4,13 @@ import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.view.ActionMode
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.adapter.FavoritePlaceAdapter
@@ -26,6 +31,8 @@ class HomeActivity : AppCompatActivity() {
 
     companion object {
         const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 563
+
+        var changeStatusBarColor: ((Boolean) -> Unit)? = null
     }
 
     private val placeAutocompleteIntent by lazy {
@@ -44,8 +51,10 @@ class HomeActivity : AppCompatActivity() {
     @Inject
     lateinit var placeRepo: FavoritePlaceRepository
 
-    private var places: List<FavoritePlace> = listOf()
     private lateinit var placeAdapter: FavoritePlaceAdapter
+    private var actionMode: ActionMode? = null
+    private val actionModeCallback = ActionModeCallback()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +62,7 @@ class HomeActivity : AppCompatActivity() {
 
         (application as Init).appComponent.inject(this)
 
+        init()
         initUI()
 
         placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo) }
@@ -65,18 +75,19 @@ class HomeActivity : AppCompatActivity() {
             when (resultCode) {
                 Activity.RESULT_OK -> {
                     val place = PlaceAutocomplete.getPlace(this, data)
-                    "Place: " + place.name.error()
                     placeViewModel.addPlace(FavoritePlace(place.id, place.name.toString(), place.latLng.latitude, place.latLng.longitude))
                 }
                 PlaceAutocomplete.RESULT_ERROR -> {
                     val status = PlaceAutocomplete.getStatus(this, data)
-                    status.statusMessage.error("error")
-                }
-                Activity.RESULT_CANCELED -> {
-                    // The user canceled the operation.
+                    //todo
+                    Snackbar.make(root_view, status.statusMessage.toString(), Snackbar.LENGTH_LONG).show()
                 }
             }
         }
+    }
+
+    private fun init() {
+        changeStatusBarColor = { setStatusBarColor(it) }
     }
 
     private fun initUI() {
@@ -84,12 +95,22 @@ class HomeActivity : AppCompatActivity() {
             searchPlace()
         }
 
-        placeAdapter = FavoritePlaceAdapter(this, places)
+        initRecycler()
+    }
+
+    private fun initRecycler() {
+        placeAdapter = FavoritePlaceAdapter(this, listOf())
         favorite_places_rv.layoutManager = LinearLayoutManager(this)
         favorite_places_rv.adapter = placeAdapter
 
         placeAdapter.onItemClicked = {
             it.error("place clicked")
+        }
+
+        placeAdapter.onItemLongClicked = { position, placeId ->
+            placeId.error("place long clicked")
+            actionMode = startSupportActionMode(actionModeCallback)
+            actionMode?.title = placeAdapter.getSelectedItemCount().toString()
         }
     }
 
@@ -98,17 +119,50 @@ class HomeActivity : AppCompatActivity() {
             startActivityForResult(placeAutocompleteIntent, PLACE_AUTOCOMPLETE_REQUEST_CODE)
         } catch (e: GooglePlayServicesRepairableException) {
             e.printStackTrace().error("error")
+            Snackbar.make(root_view, "Errore", Snackbar.LENGTH_LONG).show()
         } catch (e: GooglePlayServicesNotAvailableException) {
             e.printStackTrace().error("error")
+            Snackbar.make(root_view, "Errore", Snackbar.LENGTH_LONG).show()
         }
     }
 
     private fun observeData() {
         placeViewModel.getPlaces().observe(this, Observer {
-            it.error("places")
             it?.let {
                 placeAdapter.updateData(it)
             }
         })
+    }
+
+    private fun setStatusBarColor(isActionMode: Boolean) {
+        window.statusBarColor = ContextCompat.getColor(this, if (isActionMode) R.color.action_mode else R.color.primary_dark)
+    }
+
+    private class ActionModeCallback : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            mode?.menuInflater?.inflate(R.menu.favorite_place_action, menu)
+
+//            HomeActivity.changeStatusBarColor?.invoke(true)
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return false
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+//            HomeActivity.changeStatusBarColor?.invoke(false)
+        }
+
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem): Boolean {
+            return when (item.itemId) {
+                R.id.action_delete -> {
+                    //todo remove item
+                    mode?.finish()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 }

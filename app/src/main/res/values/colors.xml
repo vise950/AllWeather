@@ -4,6 +4,7 @@
     <color name="primary_dark">#1976D2</color>
     <color name="primary_light">#BBDEFB</color>
     <color name="accent">#FFC107</color>
+
     <color name="primary_text_dark">#212121</color>
     <color name="primary_text_light">#EEEEEE</color>
     <color name="secondary_text">#757575</color>
@@ -13,9 +14,12 @@
     <color name="white">#EEEEEE</color>
     <color name="checked">#009688</color>
     <color name="unchecked">#FFFFFF</color>
+
     <color name="md_red_500">#F44336</color>
     <color name="md_pink_500">#E91E63</color>
     <color name="md_purple_500">#9C27B0</color>
     <color name="md_deep_purple_500">#673AB7</color>
     <color name="md_indigo_500">#3F51B5</color>
+
+    <color name="action_mode">#FF555555</color>
 </resources>

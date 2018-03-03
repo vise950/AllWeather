@@ -4,23 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="140dp"
+    android:layout_marginBottom="@dimen/margin_4dp"
+    android:layout_marginEnd="@dimen/margin_8dp"
+    android:layout_marginStart="@dimen/margin_8dp"
+    android:layout_marginTop="@dimen/margin_4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:stateListAnimator="@animator/lift_on_touch"
     app:cardBackgroundColor="@color/md_red_500"
     app:cardCornerRadius="2dp"
-    app:cardElevation="@dimen/elevation_2dp"
-    app:cardUseCompatPadding="true">
+    app:cardElevation="@dimen/elevation_2dp">
 
     <!-- todo background image with weather  -->
-    <android.support.v7.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/place_weather_bg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:contentDescription="@null" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/activity_margin">
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:id="@+id/place_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +39,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Sossano" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:id="@+id/place_weather_summary_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +50,7 @@
             app:layout_constraintTop_toBottomOf="@id/place_name_tv"
             tools:text="Sereno" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:id="@+id/place_temperature_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
