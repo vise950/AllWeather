@@ -22,4 +22,5 @@
     <color name="md_indigo_500">#3F51B5</color>
 
     <color name="action_mode">#FF555555</color>
+    <color name="selected">#BDBDBD</color>
 </resources>

@@ -18,5 +18,11 @@ class FavoritePlaceRepository @Inject constructor(private val dao: FavoritePlace
         }
     }
 
-    fun removePlace(placeId: String) = dao.removePlace(placeId)
+    fun removePlace(placeIds: List<String>) {
+        placeIds.forEach {
+            doAsync {
+                 dao.removePlace(it)
+            }
+        }
+    }
 }

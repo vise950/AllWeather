@@ -31,8 +31,6 @@ class HomeActivity : AppCompatActivity() {
 
     companion object {
         const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 563
-
-        var changeStatusBarColor: ((Boolean) -> Unit)? = null
     }
 
     private val placeAutocompleteIntent by lazy {
@@ -55,6 +53,7 @@ class HomeActivity : AppCompatActivity() {
     private var actionMode: ActionMode? = null
     private val actionModeCallback = ActionModeCallback()
 
+    private var isRemovedPlace = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +61,6 @@ class HomeActivity : AppCompatActivity() {
 
         (application as Init).appComponent.inject(this)
 
-        init()
         initUI()
 
         placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo) }
@@ -86,15 +84,10 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun init() {
-        changeStatusBarColor = { setStatusBarColor(it) }
-    }
-
     private fun initUI() {
         add_place_fab.setOnClickListener {
             searchPlace()
         }
-
         initRecycler()
     }
 
@@ -108,9 +101,13 @@ class HomeActivity : AppCompatActivity() {
         }
 
         placeAdapter.onItemLongClicked = { position, placeId ->
-            placeId.error("place long clicked")
-            actionMode = startSupportActionMode(actionModeCallback)
-            actionMode?.title = placeAdapter.getSelectedItemCount().toString()
+            if (placeAdapter.selectedItem.size > 0) {
+                placeAdapter.isActionModeActive = true
+                if (actionMode == null) actionMode = startSupportActionMode(actionModeCallback)
+                actionMode?.title = placeAdapter.selectedItem.size.toString()
+            } else {
+                actionMode?.finish()
+            }
         }
     }
 
@@ -126,23 +123,29 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    //todo animation when add or remove place
     private fun observeData() {
         placeViewModel.getPlaces().observe(this, Observer {
             it?.let {
-                placeAdapter.updateData(it)
+                placeAdapter.updateData(it, isRemovedPlace)
+                isRemovedPlace = false
             }
         })
+    }
+
+    private fun removePlace() {
+        isRemovedPlace = true
+        placeViewModel.removePlace(placeAdapter.selectedItem)
     }
 
     private fun setStatusBarColor(isActionMode: Boolean) {
         window.statusBarColor = ContextCompat.getColor(this, if (isActionMode) R.color.action_mode else R.color.primary_dark)
     }
 
-    private class ActionModeCallback : ActionMode.Callback {
+    inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
             mode?.menuInflater?.inflate(R.menu.favorite_place_action, menu)
-
-//            HomeActivity.changeStatusBarColor?.invoke(true)
+            setStatusBarColor(true)
             return true
         }
 
@@ -151,13 +154,15 @@ class HomeActivity : AppCompatActivity() {
         }
 
         override fun onDestroyActionMode(mode: ActionMode?) {
-//            HomeActivity.changeStatusBarColor?.invoke(false)
+            setStatusBarColor(false)
+            placeAdapter.clearSelection()
+            actionMode = null
         }
 
         override fun onActionItemClicked(mode: ActionMode?, item: MenuItem): Boolean {
             return when (item.itemId) {
                 R.id.action_delete -> {
-                    //todo remove item
+                    removePlace()
                     mode?.finish()
                     true
                 }

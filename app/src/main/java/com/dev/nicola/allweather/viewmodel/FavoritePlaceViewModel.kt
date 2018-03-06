@@ -19,8 +19,8 @@ class FavoritePlaceViewModel @Inject constructor(private val placeRepo: Favorite
         placeRepo.addPlace(favoritePlace)
     }
 
-    fun removePlace(placeId: String) {
-        placeRepo.removePlace(placeId)
+    fun removePlace(placeIds: List<String>) {
+        placeRepo.removePlace(placeIds)
     }
 
     fun getPlaces(): LiveData<List<FavoritePlace>> = placeRepo.getPlaces()
