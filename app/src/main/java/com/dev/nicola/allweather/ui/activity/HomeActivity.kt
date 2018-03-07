@@ -17,6 +17,7 @@ import com.dev.nicola.allweather.adapter.FavoritePlaceAdapter
 import com.dev.nicola.allweather.application.Init
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
+import com.dev.nicola.allweather.utils.layoutAnimation
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
 import com.dev.nicola.allweather.viewmodel.viewModel
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -49,11 +50,10 @@ class HomeActivity : AppCompatActivity() {
     @Inject
     lateinit var placeRepo: FavoritePlaceRepository
 
+    private var favoritePlace: List<FavoritePlace>? = null
     private lateinit var placeAdapter: FavoritePlaceAdapter
     private var actionMode: ActionMode? = null
     private val actionModeCallback = ActionModeCallback()
-
-    private var isRemovedPlace = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +87,7 @@ class HomeActivity : AppCompatActivity() {
     private fun initUI() {
         add_place_fab.setOnClickListener {
             searchPlace()
+            actionMode?.finish()
         }
         initRecycler()
     }
@@ -95,6 +96,7 @@ class HomeActivity : AppCompatActivity() {
         placeAdapter = FavoritePlaceAdapter(this, listOf())
         favorite_places_rv.layoutManager = LinearLayoutManager(this)
         favorite_places_rv.adapter = placeAdapter
+        favorite_places_rv.layoutAnimation()
 
         placeAdapter.onItemClicked = {
             it.error("place clicked")
@@ -123,18 +125,33 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    //todo animation when add or remove place
     private fun observeData() {
         placeViewModel.getPlaces().observe(this, Observer {
             it?.let {
-                placeAdapter.updateData(it, isRemovedPlace)
-                isRemovedPlace = false
+                favoritePlace = it
+                placeAdapter.updateData(it)
             }
         })
     }
 
+    private fun handleRemovePlace() {
+        favoritePlace?.let { placeAdapter.fakeUpdateData(it) }
+        Snackbar.make(root_view, "${placeAdapter.selectedItem.size} deleted", Snackbar.LENGTH_LONG)
+                .setAction("UNDO", {
+                    placeAdapter.notifyDataSetChanged()
+                })
+                .addCallback(object : Snackbar.Callback() {
+                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                        super.onDismissed(transientBottomBar, event)
+                        if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                            "snackbar dismissed".error()
+                            removePlace()
+                        }
+                    }
+                }).show()
+    }
+
     private fun removePlace() {
-        isRemovedPlace = true
         placeViewModel.removePlace(placeAdapter.selectedItem)
     }
 
@@ -163,6 +180,7 @@ class HomeActivity : AppCompatActivity() {
             return when (item.itemId) {
                 R.id.action_delete -> {
                     removePlace()
+//                    handleRemovePlace()
                     mode?.finish()
                     true
                 }

@@ -1,6 +1,7 @@
 package com.dev.nicola.allweather.adapter
 
 import android.content.Context
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.HapticFeedbackConstants
@@ -12,6 +13,7 @@ import android.widget.TextView
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.model.FavoritePlace
+import com.dev.nicola.allweather.utils.FavoritePlaceDiffUtil
 
 
 class FavoritePlaceAdapter(private val context: Context, private var data: List<FavoritePlace>) : RecyclerView.Adapter<FavoritePlaceAdapter.FavoritePlaceViewHolder>() {
@@ -34,8 +36,10 @@ class FavoritePlaceAdapter(private val context: Context, private var data: List<
             view.setOnClickListener {
                 if (isActionModeActive) {
                     selectItem(adapterPosition, container)
+                    onItemLongClicked?.invoke(adapterPosition, data[adapterPosition].id)
+                } else {
+                    onItemClicked?.invoke(data[adapterPosition].id)
                 }
-                onItemClicked?.invoke(data[adapterPosition].id)
             }
             view.setOnLongClickListener {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
@@ -50,6 +54,7 @@ class FavoritePlaceAdapter(private val context: Context, private var data: List<
             FavoritePlaceViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_place, parent, false))
 
     override fun onBindViewHolder(holder: FavoritePlaceViewHolder, position: Int) {
+
         data[position].let {
             holder.apply {
                 //                placeBackground
@@ -63,18 +68,21 @@ class FavoritePlaceAdapter(private val context: Context, private var data: List<
 
     override fun getItemCount(): Int = data.size
 
-    fun updateData(data: List<FavoritePlace>, isRemovedPlace: Boolean = false) {
+    fun updateData(data: List<FavoritePlace>) {
+        val diffResult = DiffUtil.calculateDiff(FavoritePlaceDiffUtil(this.data, data), true)
+        diffResult.dispatchUpdatesTo(this)
         this.data = data
-//        if (isRemovedPlace) {
-//            notifyItemRangeRemoved(selectedItemPosition.min() ?: 0, selectedItemPosition.max() ?: 0)
-//            selectedItemPosition.clear()
-//        } else {
-            notifyDataSetChanged()
-//        }
     }
 
-    private fun removeItem(){
-        
+    fun fakeUpdateData(data: List<FavoritePlace>) {
+        val fakeData = arrayListOf<FavoritePlace>().apply { addAll(data) }
+        selectedItemPosition.forEach { fakeData.removeAt(it) }
+
+        this.data.size.error("this data")
+        data.size.error("data")
+        fakeData.size.error("data")
+        val diffResult = DiffUtil.calculateDiff(FavoritePlaceDiffUtil(this.data, fakeData), true)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     private fun selectItem(position: Int, view: View) {
