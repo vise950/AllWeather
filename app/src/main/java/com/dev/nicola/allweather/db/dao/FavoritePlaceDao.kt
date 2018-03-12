@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
-import android.arch.persistence.room.Transaction
 import com.dev.nicola.allweather.model.FavoritePlace
 
 @Dao
@@ -13,12 +12,16 @@ interface FavoritePlaceDao {
     @Insert
     fun insert(place: FavoritePlace)
 
-    @Query("select * from favorite_place")
+    @Query("SELECT * FROM ${FavoritePlace.TABLE}")
     fun getPlaces(): LiveData<List<FavoritePlace>>
 
-    @Query("select * from favorite_place where id = :placeId")
+    @Query("SELECT * FROM ${FavoritePlace.TABLE} WHERE id = :placeId")
     fun getPlace(placeId: String): LiveData<FavoritePlace>
 
-    @Query("delete from favorite_place where id = :placeId")
+//    @Query("DELETE FROM ${FavoritePlace.TABLE} WHERE id IN (:placeIds)")
+//    fun removePlace(placeIds: List<String>)
+
+    //todo
+    @Query("DELETE FROM ${FavoritePlace.TABLE} WHERE id = :placeId")
     fun removePlace(placeId: String)
 }

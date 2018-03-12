@@ -4,7 +4,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 apply plugin: 'kotlin-kapt'
 
-
 android {
     signingConfigs {
         config {
@@ -52,14 +51,20 @@ android {
         }
     }
 
+    kotlin {
+        experimental {
+            coroutines 'enable'
+        }
+    }
 
     dependencies {
         implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-        implementation 'com.android.support:multidex:1.0.2'
+        implementation 'com.android.support:multidex:1.0.3'
 
         //Kotlin
         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21"
 
         //Support library
         implementation "com.android.support:appcompat-v7:$support_version"
@@ -98,10 +103,6 @@ android {
         implementation 'com.google.dagger:dagger:2.13'
         kapt 'com.google.dagger:dagger-compiler:2.13'
         provided 'javax.annotation:jsr250-api:1.0'
-
-        // Anko
-        implementation 'org.jetbrains.anko:anko-commons:0.10.4'
-        implementation 'org.jetbrains.anko:anko-coroutines:0.10.4'
 
         //Eggoid
         implementation 'com.github.coletz:eggoid:1.10.0'

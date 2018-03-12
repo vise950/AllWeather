@@ -3,6 +3,8 @@
 
     <string name="app_name" translatable="false">AllWeather</string>
 
+    <string name="card_transition" translatable="false">card transition</string>
+
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-5053914526798733/4551790409</string>
     <string name="google_map_key" translatable="false">AIzaSyDS2UWjoTfJwpUmowlzMrq84cQYdx0AgDE</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>

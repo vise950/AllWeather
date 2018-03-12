@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
@@ -25,6 +26,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.item_place.*
 import javax.inject.Inject
 
 
@@ -32,6 +34,7 @@ class HomeActivity : AppCompatActivity() {
 
     companion object {
         const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 563
+        const val PLACE_ID = "placeId"
     }
 
     private val placeAutocompleteIntent by lazy {
@@ -99,10 +102,10 @@ class HomeActivity : AppCompatActivity() {
         favorite_places_rv.layoutAnimation()
 
         placeAdapter.onItemClicked = {
-            it.error("place clicked")
+            gotoPlace(it)
         }
 
-        placeAdapter.onItemLongClicked = { position, placeId ->
+        placeAdapter.onItemLongClicked = {
             if (placeAdapter.selectedItem.size > 0) {
                 placeAdapter.isActionModeActive = true
                 if (actionMode == null) actionMode = startSupportActionMode(actionModeCallback)
@@ -134,24 +137,32 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
-    private fun handleRemovePlace() {
-        favoritePlace?.let { placeAdapter.fakeUpdateData(it) }
-        Snackbar.make(root_view, "${placeAdapter.selectedItem.size} deleted", Snackbar.LENGTH_LONG)
-                .setAction("UNDO", {
-                    placeAdapter.notifyDataSetChanged()
-                })
-                .addCallback(object : Snackbar.Callback() {
-                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                        super.onDismissed(transientBottomBar, event)
-                        if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
-                            "snackbar dismissed".error()
-                            removePlace()
-                        }
-                    }
-                }).show()
+    //todo snackbar for undo deleted places
+//    private fun handleRemovePlace() {
+//        favoritePlace?.let { placeAdapter.fakeUpdateData(it) }
+//        Snackbar.make(root_view, "${placeAdapter.selectedItem.size} deleted", Snackbar.LENGTH_LONG)
+//                .setAction("UNDO", {
+//                    placeAdapter.notifyDataSetChanged()
+//                })
+//                .addCallback(object : Snackbar.Callback() {
+//                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+//                        super.onDismissed(transientBottomBar, event)
+//                        if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+//                            "snackbar dismissed".error()
+//                            removePlace()
+//                        }
+//                    }
+//                }).show()
+//    }
+
+    private fun gotoPlace(placeId: String) {
+        ActivityOptionsCompat.makeSceneTransitionAnimation(this, place_weather_bg, place_weather_bg.transitionName).let {
+            startActivity(Intent(this, WeatherPlaceActivity::class.java).putExtra(PLACE_ID, placeId), it.toBundle())
+        }
     }
 
     private fun removePlace() {
+        placeAdapter.selectedItem.error("selected item")
         placeViewModel.removePlace(placeAdapter.selectedItem)
     }
 

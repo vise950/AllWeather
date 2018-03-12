@@ -3,7 +3,7 @@ package com.dev.nicola.allweather.repository
 import android.arch.lifecycle.LiveData
 import com.dev.nicola.allweather.db.dao.FavoritePlaceDao
 import com.dev.nicola.allweather.model.FavoritePlace
-import org.jetbrains.anko.doAsync
+import kotlinx.coroutines.experimental.async
 import javax.inject.Inject
 
 class FavoritePlaceRepository @Inject constructor(private val dao: FavoritePlaceDao) {
@@ -13,15 +13,16 @@ class FavoritePlaceRepository @Inject constructor(private val dao: FavoritePlace
     fun getPlaces(): LiveData<List<FavoritePlace>> = dao.getPlaces()
 
     fun addPlace(place: FavoritePlace) {
-        doAsync {
+        async {
             dao.insert(place)
         }
     }
 
+    //todo
     fun removePlace(placeIds: List<String>) {
         placeIds.forEach {
-            doAsync {
-                 dao.removePlace(it)
+            async {
+                dao.removePlace(it)
             }
         }
     }

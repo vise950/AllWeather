@@ -19,7 +19,7 @@ import com.dev.nicola.allweather.utils.FavoritePlaceDiffUtil
 class FavoritePlaceAdapter(private val context: Context, private var data: List<FavoritePlace>) : RecyclerView.Adapter<FavoritePlaceAdapter.FavoritePlaceViewHolder>() {
 
     var onItemClicked: ((String) -> Unit)? = null
-    var onItemLongClicked: ((Int, String) -> Unit)? = null
+    var onItemLongClicked: (() -> Unit)? = null
 
     var selectedItem = arrayListOf<String>()
     private var selectedItemPosition = arrayListOf<Int>()
@@ -36,7 +36,7 @@ class FavoritePlaceAdapter(private val context: Context, private var data: List<
             view.setOnClickListener {
                 if (isActionModeActive) {
                     selectItem(adapterPosition, container)
-                    onItemLongClicked?.invoke(adapterPosition, data[adapterPosition].id)
+                    onItemLongClicked?.invoke()
                 } else {
                     onItemClicked?.invoke(data[adapterPosition].id)
                 }
@@ -44,7 +44,7 @@ class FavoritePlaceAdapter(private val context: Context, private var data: List<
             view.setOnLongClickListener {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                 selectItem(adapterPosition, container)
-                onItemLongClicked?.invoke(adapterPosition, data[adapterPosition].id)
+                onItemLongClicked?.invoke()
                 true
             }
         }
