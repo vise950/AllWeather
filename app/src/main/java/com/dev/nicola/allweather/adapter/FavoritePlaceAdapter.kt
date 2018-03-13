@@ -1,6 +1,7 @@
 package com.dev.nicola.allweather.adapter
 
 import android.content.Context
+import android.support.v4.view.ViewCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView

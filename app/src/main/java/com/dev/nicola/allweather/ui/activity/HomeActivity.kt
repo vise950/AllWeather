@@ -156,8 +156,9 @@ class HomeActivity : AppCompatActivity() {
 //    }
 
     private fun gotoPlace(placeId: String) {
+        val intent = Intent(this, WeatherPlaceActivity::class.java).putExtra(PLACE_ID, placeId)
         ActivityOptionsCompat.makeSceneTransitionAnimation(this, place_weather_bg, place_weather_bg.transitionName).let {
-            startActivity(Intent(this, WeatherPlaceActivity::class.java).putExtra(PLACE_ID, placeId), it.toBundle())
+            startActivity(intent, it.toBundle())
         }
     }
 

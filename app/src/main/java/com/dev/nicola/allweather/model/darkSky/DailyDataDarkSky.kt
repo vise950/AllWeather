@@ -1,27 +1,32 @@
-//package com.dev.nicola.allweather.model.darkSky
-//
-//import android.arch.persistence.room.Entity
-//import android.arch.persistence.room.PrimaryKey
-//
-//@Entity(tableName = "darksky_daily")
-//data class DailyDataDarkSky constructor(
-//        @PrimaryKey(autoGenerate = true)
-//        val id: Int,
-//        val rootId: String,
-//        val time: Long,
-//        val summary: String,
-//        val icon: String,
-//        val sunriseTime: Long,
-//        val sunsetTime: Long,
-//        val precipIntensity: Double,
-//        val precipProbability: Double,
-//        val temperatureMin: Double,
-//        val temperatureMax: Double,
-//        val dewPoint: Double,
-//        val humidity: Double,
-//        val windSpeed: Double,
-//        val windBearing: Int,
-//        val visibility: Double,
-//        val cloudCover: Double,
-//        val pressure: Double
-//)
+package com.dev.nicola.allweather.model.darkSky
+
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.Index
+
+@Entity(tableName = "darksky_daily_data",
+        primaryKeys = ["latitude", "longitude"],
+        foreignKeys = [(ForeignKey(entity = RootDarkSky::class,
+                parentColumns = ["latitude", "longitude"],
+                childColumns = ["latitude", "longitude"]))],
+        indices = [(Index("latitude")), Index("longitude")])
+data class DailyDataDarkSky(
+        var latitude: Double,
+        var longitude: Double,
+        var time: Long,
+        var summary: String,
+        var icon: String,
+        var sunriseTime: Long,
+        var sunsetTime: Long,
+        var precipIntensity: Double,
+        var precipProbability: Double,
+        var temperatureMin: Double,
+        var temperatureMax: Double,
+        var dewPoint: Double,
+        var humidity: Double,
+        var windSpeed: Double,
+        var windBearing: Int,
+        var visibility: Double,
+        var cloudCover: Double,
+        var pressure: Double
+)

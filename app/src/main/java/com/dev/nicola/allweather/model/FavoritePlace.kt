@@ -4,7 +4,6 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.dev.nicola.allweather.model.FavoritePlace.Companion.TABLE
 
-
 @Entity(tableName = TABLE)
 data class FavoritePlace(
         @PrimaryKey

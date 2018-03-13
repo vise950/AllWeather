@@ -18,13 +18,13 @@
     app:cardElevation="@dimen/elevation_2dp">
 
     <!-- todo background image with weather  -->
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/place_weather_bg"
         android:layout_width="match_parent"
-        android:background="@color/md_red_500"
         android:layout_height="match_parent"
-        android:transitionName="@string/card_transition"
-        android:contentDescription="@null" />
+        android:background="@color/md_red_500"
+        android:contentDescription="@null"
+        android:transitionName="@string/card_transition" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

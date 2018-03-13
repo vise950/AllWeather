@@ -7,12 +7,17 @@ import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import javax.inject.Inject
 
-class FavoritePlaceViewModel @Inject constructor(private val placeRepo: FavoritePlaceRepository) : ViewModel() {
+class FavoritePlaceViewModel @Inject constructor(private val placeRepo: FavoritePlaceRepository, placeId: String? = null) : ViewModel() {
 
-    private val favoritePlace: MediatorLiveData<List<FavoritePlace>> = MediatorLiveData()
+    private val favoritePlaces: MediatorLiveData<List<FavoritePlace>> = MediatorLiveData()
+    private val favoritePlace: MediatorLiveData<FavoritePlace> = MediatorLiveData()
 
     init {
-        favoritePlace.addSource(getPlaces(), { favoritePlace.value = it })
+        placeId?.let {
+            favoritePlace.addSource(getPlace(it), { favoritePlace.value = it })
+        } ?: run {
+            favoritePlaces.addSource(getPlaces(), { favoritePlaces.value = it })
+        }
     }
 
     fun addPlace(favoritePlace: FavoritePlace) {
@@ -25,4 +30,5 @@ class FavoritePlaceViewModel @Inject constructor(private val placeRepo: Favorite
 
     fun getPlaces(): LiveData<List<FavoritePlace>> = placeRepo.getPlaces()
 
+    fun getPlace(placeId: String): LiveData<FavoritePlace> = placeRepo.getPlace(placeId)
 }
