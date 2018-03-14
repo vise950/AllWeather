@@ -17,5 +17,5 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun favoritePlaceDao(db: WeatherDb): FavoritePlaceDao = db.favoritePlaceDao()
+    fun providePlaceDao(db: WeatherDb): FavoritePlaceDao = db.favoritePlaceDao()
 }

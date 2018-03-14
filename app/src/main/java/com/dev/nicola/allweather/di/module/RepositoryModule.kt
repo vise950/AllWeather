@@ -10,5 +10,5 @@ import javax.inject.Singleton
 class RepositoryModule {
 
     @Provides
-    fun favoritePlaceRepo(dao: FavoritePlaceDao): FavoritePlaceRepository = FavoritePlaceRepository(dao)
+    fun providePlaceDao(dao: FavoritePlaceDao): FavoritePlaceRepository = FavoritePlaceRepository(dao)
 }

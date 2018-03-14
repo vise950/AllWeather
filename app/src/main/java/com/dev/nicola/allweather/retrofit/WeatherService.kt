@@ -2,10 +2,13 @@ package com.dev.nicola.allweather.retrofit
 
 import com.dev.nicola.allweather.BuildConfig
 import com.dev.nicola.allweather.model.apixu.RootApixu
+import com.dev.nicola.allweather.model.darkSky.RootDarkSky
 import com.dev.nicola.allweather.model.yahoo.RootYahoo
 import io.reactivex.Observable
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
+import java.util.*
 
 interface WeatherService {
 
@@ -14,13 +17,13 @@ interface WeatherService {
         private const val APIXU_API_KEY = BuildConfig.APIXU_API_KEY
     }
 
-//    @GET("forecast/$DARK_SKY_API_KEY/{latitude},{longitude}")
-//    fun getDarkSkyData(@Path("latitude") latitude: Double,
-//                       @Path("longitude") longitude: Double,
-//                       @Query("units") units: String = "us",
-//                       @Query("lang") language: String = Locale.getDefault().language,
-//                       @Query("exclude") exclude: String = "minutely,alerts,flags")
-//            : Observable<RootDarkSky>
+    @GET("forecast/$DARK_SKY_API_KEY/{latitude},{longitude}")
+    fun getDarkSkyData(@Path("latitude") latitude: Double,
+                       @Path("longitude") longitude: Double,
+                       @Query("units") units: String = "us",
+                       @Query("lang") language: String = Locale.getDefault().language,
+                       @Query("exclude") exclude: String = "minutely,alerts,flags")
+            : Observable<RootDarkSky>
 
 
     @GET("v1/forecast.json")
