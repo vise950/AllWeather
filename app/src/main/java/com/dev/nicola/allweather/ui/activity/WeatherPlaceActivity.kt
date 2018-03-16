@@ -6,9 +6,11 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.application.Init
+import com.dev.nicola.allweather.di.DarkSky
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
 import com.dev.nicola.allweather.viewmodel.viewModel
+import retrofit2.Retrofit
 import javax.inject.Inject
 
 
@@ -20,6 +22,10 @@ class WeatherPlaceActivity : AppCompatActivity() {
 
     @Inject
     lateinit var placeRepo: FavoritePlaceRepository
+
+    @Inject
+    @DarkSky
+    lateinit var retrofit: Retrofit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
