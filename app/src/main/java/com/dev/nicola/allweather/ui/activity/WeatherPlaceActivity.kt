@@ -2,30 +2,29 @@ package com.dev.nicola.allweather.ui.activity
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.application.Init
-import com.dev.nicola.allweather.di.DarkSky
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
+import com.dev.nicola.allweather.repository.WeatherRepository
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
+import com.dev.nicola.allweather.viewmodel.WeatherViewModel
 import com.dev.nicola.allweather.viewmodel.viewModel
-import retrofit2.Retrofit
 import javax.inject.Inject
 
 
-class WeatherPlaceActivity : AppCompatActivity() {
+class WeatherPlaceActivity : BaseActivity() {
 
     private lateinit var placeId: String
 
     private lateinit var placeViewModel: FavoritePlaceViewModel
+    private lateinit var weatherViewModel: WeatherViewModel
 
     @Inject
     lateinit var placeRepo: FavoritePlaceRepository
 
     @Inject
-    @DarkSky
-    lateinit var retrofit: Retrofit
+    lateinit var weatherRepo: WeatherRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +37,7 @@ class WeatherPlaceActivity : AppCompatActivity() {
         initUI()
 
         placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo, placeId) }
+        weatherViewModel = this.viewModel { WeatherViewModel(weatherRepo, disposables) }
         observeData()
     }
 

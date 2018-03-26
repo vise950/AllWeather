@@ -16,4 +16,5 @@ inline fun <reified T : ViewModel> FragmentActivity.viewModel(crossinline f: () 
 
 inline fun <VM : ViewModel> factory(crossinline f: () -> VM) = object : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T = f() as T
+
 }

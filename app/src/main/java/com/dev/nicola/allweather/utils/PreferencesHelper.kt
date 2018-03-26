@@ -64,10 +64,10 @@ object PreferencesHelper {
         return value
     }
 
-    fun getWeatherProvider(context: Context): Enum<WeatherProvider> {
-        val p = getDefaultPreferences(context, KEY_PREF_WEATHER_PROVIDER, DEFAULT_PREF_WEATHER_PROVIDER)
-        return WeatherProvider.fromString(p.toString())
-    }
+//    fun getWeatherProvider(context: Context): Enum<WeatherProvider> {
+//        val p = getDefaultPreferences(context, KEY_PREF_WEATHER_PROVIDER, DEFAULT_PREF_WEATHER_PROVIDER)
+//        return WeatherProvider.fromString(p.toString())
+//    }
 
     fun isProVersion(context: Context): Boolean? {
         return getPreferences(context, KEY_PREF_PRO_VERSION, false) as Boolean

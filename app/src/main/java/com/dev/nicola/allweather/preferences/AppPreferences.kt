@@ -43,7 +43,7 @@ class AppPreferences : AppCompatActivity() {
 
             val provider = findPreference(PreferencesHelper.KEY_PREF_WEATHER_PROVIDER) as ListPreference
             provider.setOnPreferenceChangeListener { preference, value ->
-                if (value == WeatherProvider.YAHOO.value) {
+                if (value == WeatherProvider.YAHOO) {
                     SnackBarHelper.yahooProvider(activity, view)
                 }
                 true

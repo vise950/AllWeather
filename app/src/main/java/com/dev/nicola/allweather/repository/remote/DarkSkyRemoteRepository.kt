@@ -9,7 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import retrofit2.Retrofit
 import javax.inject.Inject
 
-class DarkSkyRemoteRepository @Inject constructor(private val retrofit: Retrofit, private val dao: DarkSkyDao) {
+class DarkSkyRemoteRepository @Inject constructor(@DarkSky val retrofit: Retrofit, /*@DarkSky*/ val dao: DarkSkyDao) {
 
     fun getDarkSkyData(disposable: CompositeDisposable, lat: Double, lng: Double) {
         retrofit.create(WeatherService::class.java)

@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatDelegate
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.retrofit.MapsGoogleApiClient
-import com.dev.nicola.allweather.retrofit.WeatherClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
@@ -235,16 +234,16 @@ class Utils {
 
     }
 
-    object ServiceHelper {
-        fun ulrProvider(context: Context): String? {
-            var url: String? = null
-            when (PreferencesHelper.getWeatherProvider(context)) {
-                WeatherProvider.DARK_SKY -> url = WeatherClient.WeatherUrl.DARK_SKY_BASE_URL
-                WeatherProvider.APIXU -> url = WeatherClient.WeatherUrl.APIXU_BASE_URL
-                WeatherProvider.YAHOO -> url = WeatherClient.WeatherUrl.YAHOO_BASE_URL
-            }
-            return url
-        }
-    }
+//    object ServiceHelper {
+//        fun ulrProvider(context: Context): String? {
+//            var url: String? = null
+//            when (PreferencesHelper.getWeatherProvider(context)) {
+//                WeatherProvider.DARK_SKY -> url = WeatherClient.WeatherUrl.DARK_SKY_BASE_URL
+//                WeatherProvider.APIXU -> url = WeatherClient.WeatherUrl.APIXU_BASE_URL
+//                WeatherProvider.YAHOO -> url = WeatherClient.WeatherUrl.YAHOO_BASE_URL
+//            }
+//            return url
+//        }
+//    }
 
 }
