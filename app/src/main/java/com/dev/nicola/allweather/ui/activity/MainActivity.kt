@@ -14,13 +14,9 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import co.eggon.eggoid.extension.error
-import com.arlib.floatingsearchview.FloatingSearchView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dev.nicola.allweather.BuildConfig
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.preferences.AppPreferences
-import com.dev.nicola.allweather.retrofit.MapsGoogleApiClient
 import com.dev.nicola.allweather.utils.*
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -31,7 +27,6 @@ import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.android.synthetic.main.nav_header_main.*
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -55,8 +50,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     private var offlineMode = false
     private val time = 60000L * 10 // 60000 = 1 minute
 
-    private val searchResult: ArrayList<PredictionResult> = ArrayList()
-
 //    private var fragmentAdapter: FragmentAdapter? = null
 
     private var googleApiClient: GoogleApiClient? = null
@@ -69,8 +62,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     private var realm: Realm? = null
 
     private var billing: Billing? = null
-
-    private var search_view: FloatingSearchView by Delegates.notNull()
 
     //fixme il cambio tema perde la location dalla searchView
     //fixme se non ritorna nessun dato dalla richiesta (ma non va in error) caricare ultimi dati di quel provider con snackbar che avvisa del problema server
@@ -154,11 +145,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
-            if (search_view.isSearchBarFocused) {
-                search_view.clearSearchFocus()
-            } else {
-                super.onBackPressed()
-            }
+            super.onBackPressed()
         }
     }
 
@@ -194,7 +181,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         getPreferences()
         setDrawer()
         setNavigationView()
-        setSearchView()
     }
 
     private fun getPreferences() {
@@ -272,83 +258,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
             drawer_layout.closeDrawer(GravityCompat.START)
             true
         }
-    }
-
-    private fun setSearchView() {
-        var clickedItem = false
-
-        when (prefTheme) {
-            "light" -> search_view = findViewById<FloatingSearchView>(R.id.search_view_light)
-            "dark" -> search_view = findViewById<FloatingSearchView>(R.id.search_view_dark)
-        }
-
-        search_view.visibility = View.VISIBLE
-        search_view.attachNavigationDrawerToMenuButton(drawer_layout)
-
-        search_view.setOnFocusChangeListener { v, focus ->
-            if (!focus && !search_view.query.isNullOrEmpty()) {
-                search_view.clearQuery()
-                clickedItem = false
-            }
-        }
-
-        search_view.setOnQueryChangeListener { oldQuery, newQuery ->
-            if (!clickedItem && oldQuery != newQuery && newQuery.trim() != "" && newQuery.length > 2) {
-                searchSuggestion(newQuery)
-                search_view.showProgress()
-            } else {
-                search_view.clearSuggestions()
-            }
-        }
-
-        search_view.setOnBindSuggestionCallback { suggestionView, leftIcon, textView, item, itemPosition ->
-            if (item.body == resources.getString(R.string.no_result_suggestion) || item.body == resources.getString(R.string.no_result_suggestion)) {
-                leftIcon.setImageResource(R.drawable.ic_error_outline)
-                suggestionView.setOnClickListener {
-                    search_view.clearSuggestions()
-                    search_view.clearQuery()
-                    search_view.clearSearchFocus()
-                }
-            } else {
-                leftIcon.setImageResource(R.drawable.ic_location_city)
-                suggestionView.setOnClickListener {
-                    Utils.LocationHelper.getCoordinates(item.body, {
-                        getData(it.latitude, it.longitude)
-                        location = it
-                    })
-                    clickedItem = true
-                    search_view.setSearchText(textView.text)
-                    search_view.clearSearchFocus()
-                    search_view.clearSuggestions()
-                }
-            }
-        }
-    }
-
-    private fun searchSuggestion(query: String?) {
-        if (searchResult.isNotEmpty()) {
-            searchResult.clear()
-        }
-        MapsGoogleApiClient.service.getPrediction(query.toString()).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ data ->
-                    if (data?.predictions?.isNotEmpty() == true) {
-                        data.predictions.forEachIndexed { index, data ->
-                            if (index in 0..3) {
-                                searchResult.add(PredictionResult(Utils.trimString(data.description.toString())))
-                            }
-                        }
-                    } else {
-                        searchResult.add(PredictionResult(resources.getString(R.string.no_result_suggestion)))
-                    }
-                    search_view.swapSuggestions(searchResult)
-                    search_view.hideProgress()
-                }, { error ->
-                    error.error("Error call")
-                    searchResult.add(PredictionResult(resources.getString(R.string.error_load_suggestion)))
-                    search_view.swapSuggestions(searchResult)
-                    search_view.hideProgress()
-                })
     }
 
 //    private fun setViewPager() {

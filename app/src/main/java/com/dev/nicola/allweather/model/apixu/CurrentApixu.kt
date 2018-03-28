@@ -1,10 +1,8 @@
 package com.dev.nicola.allweather.model.apixu
 
 import com.google.gson.annotations.SerializedName
-import io.realm.RealmObject
-import io.realm.annotations.RealmClass
 
-open class CurrentApixu : RealmObject() {
+open class CurrentApixu  {
     @SerializedName("temp_c")
     var tempC: Double? = null
     @SerializedName("is_day")

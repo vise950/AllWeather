@@ -2,6 +2,7 @@ package com.dev.nicola.allweather.di.module
 
 import com.dev.nicola.allweather.application.Init
 import com.dev.nicola.allweather.di.DarkSky
+import com.dev.nicola.allweather.utils.Constant
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -50,5 +51,5 @@ class NetworkModule {
     @Singleton
     @DarkSky
     fun provideDarkSkyRetrofit(builder: Retrofit.Builder): Retrofit =
-            builder.baseUrl(Init.DARK_SKY_BASE_URL).build()
+            builder.baseUrl(Constant.DARK_SKY_BASE_URL).build()
 }

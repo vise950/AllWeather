@@ -1,11 +1,8 @@
 package com.dev.nicola.allweather.model.apixu
 
 import com.google.gson.annotations.SerializedName
-import io.realm.RealmObject
-import io.realm.annotations.RealmClass
 
-@RealmClass
-open class HourApixu : RealmObject() {
+open class HourApixu {
 
     @SerializedName("time_epoch")
     var timeEpoch: Long? = null

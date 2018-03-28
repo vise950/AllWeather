@@ -1,10 +1,8 @@
 package com.dev.nicola.allweather.model.apixu
 
 import com.google.gson.annotations.SerializedName
-import io.realm.RealmObject
-import io.realm.annotations.RealmClass
 
-open class LocationApixu : RealmObject() {
+open class LocationApixu {
 
     @SerializedName("name")
     var name: String? = null

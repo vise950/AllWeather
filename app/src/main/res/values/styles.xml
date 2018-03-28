@@ -21,25 +21,4 @@
         <item name="android:windowBackground">@drawable/splashscreen</item>
     </style>
 
-
-    <style name="SearchViewLight">
-        <item name="floatingSearch_backgroundColor">@color/white</item>
-        <item name="floatingSearch_viewTextColor">@color/dark_grey</item>
-        <item name="floatingSearch_hintTextColor">@color/dark_grey</item>
-        <item name="floatingSearch_clearBtnColor">@color/dark_grey</item>
-        <item name="floatingSearch_leftActionColor">@color/dark_grey</item>
-        <item name="floatingSearch_menuItemIconColor">@color/dark_grey</item>
-        <item name="floatingSearch_suggestionRightIconColor">@color/dark_grey</item>
-    </style>
-
-    <style name="SearchViewDark">
-        <item name="floatingSearch_backgroundColor">@color/dark_grey</item>
-        <item name="floatingSearch_viewTextColor">@color/white</item>
-        <item name="floatingSearch_hintTextColor">@color/white</item>
-        <item name="floatingSearch_clearBtnColor">@color/white</item>
-        <item name="floatingSearch_leftActionColor">@color/white</item>
-        <item name="floatingSearch_menuItemIconColor">@color/white</item>
-        <item name="floatingSearch_suggestionRightIconColor">@color/white</item>
-    </style>
-
 </resources>

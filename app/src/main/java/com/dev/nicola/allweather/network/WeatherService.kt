@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.retrofit
+package com.dev.nicola.allweather.network
 
 import com.dev.nicola.allweather.BuildConfig
 import com.dev.nicola.allweather.model.apixu.RootApixu

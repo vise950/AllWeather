@@ -5,9 +5,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.support.v7.app.AppCompatDelegate
-import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
-import com.dev.nicola.allweather.retrofit.MapsGoogleApiClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
@@ -83,44 +81,6 @@ class Utils {
             return monthWall[month]
         }
     }
-
-
-    object LocationHelper {
-
-        fun getLocationName(latitude: Double, longitude: Double, onSuccess: ((String) -> Unit)? = null, onError: (() -> Unit)? = null) {
-            MapsGoogleApiClient.service.getLocationName(latitude.toString() + "," + longitude.toString())
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ data ->
-                        if (data?.result?.isNotEmpty() == true) {
-                            data?.result?.get(0)?.addressComponents?.forEach {
-                                if (it.types?.get(0) == "locality" || it.types?.get(0) == "administrative_area_level_3") {
-                                    onSuccess?.invoke(it.longName.toString())
-                                }
-                            }
-                        }
-                    }, { error ->
-                        error.error("get location name error")
-                        onError?.invoke()
-                    })
-        }
-
-        fun getCoordinates(cityName: String, onSuccess: ((Location) -> Unit)? = null) {
-            MapsGoogleApiClient.service.getCoordinates(cityName).subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ data ->
-                        if (data?.result?.isNotEmpty() == true) {
-                            val location = Location(LocationManager.PASSIVE_PROVIDER)
-                            location.latitude = data?.result?.get(0)?.geometry?.location?.lat ?: 0.0
-                            location.longitude = data?.result?.get(0)?.geometry?.location?.lng ?: 0.0
-                            onSuccess?.invoke(location)
-                        }
-                    }, { error ->
-                        error.error("get coordinates error")
-                    })
-        }
-    }
-
 
     object TimeHelper {
 
@@ -233,17 +193,4 @@ class Utils {
         }
 
     }
-
-//    object ServiceHelper {
-//        fun ulrProvider(context: Context): String? {
-//            var url: String? = null
-//            when (PreferencesHelper.getWeatherProvider(context)) {
-//                WeatherProvider.DARK_SKY -> url = WeatherClient.WeatherUrl.DARK_SKY_BASE_URL
-//                WeatherProvider.APIXU -> url = WeatherClient.WeatherUrl.APIXU_BASE_URL
-//                WeatherProvider.YAHOO -> url = WeatherClient.WeatherUrl.YAHOO_BASE_URL
-//            }
-//            return url
-//        }
-//    }
-
 }

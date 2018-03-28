@@ -6,14 +6,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <include
-        android:id="@+id/search_view_light"
-        layout="@layout/search_view_light"/>
-
-    <include
-        android:id="@+id/search_view_dark"
-        layout="@layout/search_view_dark"
-        android:visibility="gone" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation"

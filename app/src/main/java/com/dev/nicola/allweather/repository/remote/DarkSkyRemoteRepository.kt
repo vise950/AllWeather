@@ -4,7 +4,7 @@ import co.eggon.eggoid.extension.error
 import co.eggon.eggoid.extension.network
 import com.dev.nicola.allweather.db.dao.DarkSkyDao
 import com.dev.nicola.allweather.di.DarkSky
-import com.dev.nicola.allweather.retrofit.WeatherService
+import com.dev.nicola.allweather.network.WeatherService
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.Retrofit
 import javax.inject.Inject
