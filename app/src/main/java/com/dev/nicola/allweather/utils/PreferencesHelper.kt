@@ -3,23 +3,49 @@ package com.dev.nicola.allweather.utils
 import android.content.Context
 import android.preference.PreferenceManager
 import com.dev.nicola.allweather.ui.activity.MainActivity
+import javax.inject.Inject
 
-object PreferencesHelper {
+private fun myShared(context: Context) = context.getSharedPreferences(MainActivity::class.java.name, Context.MODE_PRIVATE)
 
-    val KEY_PREF_TEMPERATURE: String = "temperature"
-    val KEY_PREF_SPEED: String = "speed"
-    val KEY_PREF_TIME: String = "time"
-    val KEY_PREF_THEME: String = "theme"
-    val KEY_PREF_WEATHER_PROVIDER: String = "weather_provider"
-    val KEY_PREF_PRO_VERSION: String = "is_pro_version"
-    val KEY_FIRST_LAUNCH: String = "is_first_launch"
-    val KEY_LAST_UPDATE: String = "last_update_data"
+fun Context.putValue(key: String, value: Any) {
+    myShared(this).edit().also {
+        when (value) {
+            is String -> it.putString(key, value)
+            is Boolean -> it.putBoolean(key, value)
+            is Int -> it.putInt(key, value)
+            is Float -> it.putFloat(key, value)
+            is Long -> it.putLong(key, value)
+        }
+    }.apply()
+}
 
-    val DEFAULT_PREF_TEMPERATURE: String = "celsius"
-    val DEFAULT_PREF_SPEED: String = "kmh"
-    val DEFAULT_PREF_TIME: String = "24"
-    val DEFAULT_PREF_THEME: String = "light"
-    val DEFAULT_PREF_WEATHER_PROVIDER: String = "darkSky"
+
+class PreferencesHelper @Inject constructor(context: Context) {
+
+    private val prefs by lazy { context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
+
+    companion object {
+        const val PREFS_NAME = "AllWeather pref"
+
+        const val KEY_PREF_TEMPERATURE: String = "temperature"
+        const val KEY_PREF_SPEED: String = "speed"
+        const val KEY_PREF_TIME: String = "time"
+        const val KEY_PREF_THEME: String = "theme"
+        const val KEY_PREF_WEATHER_PROVIDER: String = "weather_provider"
+        const val KEY_PREF_PRO_VERSION: String = "is_pro_version"
+        const val KEY_FIRST_LAUNCH: String = "is_first_launch"
+        const val KEY_LAST_UPDATE: String = "last_update_data"
+
+        const val DEFAULT_PREF_TEMPERATURE: String = "celsius"
+        const val DEFAULT_PREF_SPEED: String = "kmh"
+        const val DEFAULT_PREF_TIME: String = "24"
+        const val DEFAULT_PREF_THEME: String = "light"
+    }
+
+
+    var weatherProvider: WeatherProvider
+        get() = prefs.getString(KEY_PREF_WEATHER_PROVIDER, WeatherProvider.DARK_SKY.name).let { WeatherProvider.valueOf(it) }
+        set(value) { prefs.edit().putString(KEY_PREF_WEATHER_PROVIDER, value.name).apply() }
 
     fun setPreferences(context: Context, key: String, defaultValue: Any) {
         val sp = context.getSharedPreferences(MainActivity::class.java.name, Context.MODE_PRIVATE)
@@ -81,4 +107,5 @@ object PreferencesHelper {
         val newPreference = getDefaultPreferences(context, key, defaultValue)
         return oldPreference != newPreference
     }
+
 }

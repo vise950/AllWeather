@@ -15,7 +15,9 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(context: Context): WeatherDb =
-            Room.databaseBuilder(context, WeatherDb::class.java, "weather.db").build()
+            Room.databaseBuilder(context, WeatherDb::class.java, "weather.db")
+                    .fallbackToDestructiveMigration() //todo only debug implementing migration
+                    .build()
 
     @Provides
     @Singleton

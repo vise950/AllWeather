@@ -78,8 +78,8 @@ android {
         implementation "com.google.android.gms:play-services-ads:$play_services_version"
 
         // Lifecycle
-        implementation "android.arch.lifecycle:extensions:1.1.0"
-        kapt "android.arch.lifecycle:compiler:1.1.0"
+        implementation "android.arch.lifecycle:extensions:1.1.1"
+        kapt "android.arch.lifecycle:compiler:1.1.1"
 
         // Room
         implementation "android.arch.persistence.room:runtime:1.0.0"
@@ -102,7 +102,7 @@ android {
         // Dagger2
         implementation 'com.google.dagger:dagger:2.13'
         kapt 'com.google.dagger:dagger-compiler:2.13'
-        provided 'javax.annotation:jsr250-api:1.0'
+        compileOnly 'javax.annotation:jsr250-api:1.0'
 
         //Eggoid
         implementation 'com.github.coletz:eggoid:1.10.0'

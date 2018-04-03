@@ -57,11 +57,11 @@ class Billing(private val activity: Activity) {
         }
 
         val purchase = inventory.getPurchase(SKU_PRO_VERSION)
-        if (purchase != null && verifyDeveloperPayload(purchase)) {
-            PreferencesHelper.setPreferences(activity, PreferencesHelper.KEY_PREF_PRO_VERSION, true)
-        } else {
-            PreferencesHelper.setPreferences(activity, PreferencesHelper.KEY_PREF_PRO_VERSION, false)
-        }
+//        if (purchase != null && verifyDeveloperPayload(purchase)) {
+//            PreferencesHelper.setPreferences(activity, PreferencesHelper.KEY_PREF_PRO_VERSION, true)
+//        } else {
+//            PreferencesHelper.setPreferences(activity, PreferencesHelper.KEY_PREF_PRO_VERSION, false)
+//        }
     }
 
     private val purchaseFinishedListener = IabHelper.OnIabPurchaseFinishedListener { result, purchase ->
@@ -79,10 +79,10 @@ class Billing(private val activity: Activity) {
         }
 
         // bought the premium upgrade!
-        if (purchase.sku == SKU_PRO_VERSION) {
-            PreferencesHelper.setPreferences(activity, PreferencesHelper.KEY_PREF_PRO_VERSION, true)
-            //activity.recreate();
-        }
+//        if (purchase.sku == SKU_PRO_VERSION) {
+//            PreferencesHelper.setPreferences(activity, PreferencesHelper.KEY_PREF_PRO_VERSION, true)
+//            //activity.recreate();
+//        }
     }
 
 

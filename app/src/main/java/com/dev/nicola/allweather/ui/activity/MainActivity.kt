@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Utils.changeTheme(this)
+//        Utils.changeTheme(this)
         setContentView(R.layout.activity_main)
 
 //        setViewPager()
@@ -92,27 +92,27 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     override fun onResume() {
         super.onResume()
 
-        if (!goToSetting) {
-            Handler().postDelayed({
-                initCheckUp()
-            }, 1500)
-        } else {
-            if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME, prefTheme.toString()) == true) {
-                recreate()
-            } else if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER,
-                            PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER, prefWeatherProvider.toString()) == true) {
-                PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER, PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER).error("new provider")
-                getPreferences()
-//                view_pager.removeAllViews()
-                getData(location?.latitude, location?.longitude, true)
-            } else if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TEMPERATURE, PreferencesHelper.DEFAULT_PREF_TEMPERATURE, prefTemp.toString()) == true ||
-                    PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_SPEED, PreferencesHelper.DEFAULT_PREF_SPEED, prefSpeed.toString()) == true ||
-                    PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TIME, PreferencesHelper.DEFAULT_PREF_TIME, prefTime.toString()) == true) {
-                getPreferences()
-//                fragmentAdapter?.notifyDataSetChanged()
-            }
-            goToSetting = false
-        }
+//        if (!goToSetting) {
+//            Handler().postDelayed({
+//                initCheckUp()
+//            }, 1500)
+//        } else {
+//            if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME, prefTheme.toString()) == true) {
+//                recreate()
+//            } else if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER,
+//                            PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER, prefWeatherProvider.toString()) == true) {
+//                PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER, PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER).error("new provider")
+//                getPreferences()
+////                view_pager.removeAllViews()
+//                getData(location?.latitude, location?.longitude, true)
+//            } else if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TEMPERATURE, PreferencesHelper.DEFAULT_PREF_TEMPERATURE, prefTemp.toString()) == true ||
+//                    PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_SPEED, PreferencesHelper.DEFAULT_PREF_SPEED, prefSpeed.toString()) == true ||
+//                    PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TIME, PreferencesHelper.DEFAULT_PREF_TIME, prefTime.toString()) == true) {
+//                getPreferences()
+////                fragmentAdapter?.notifyDataSetChanged()
+//            }
+//            goToSetting = false
+//        }
     }
 
     override fun onPause() {
@@ -175,22 +175,22 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     }
 
     private fun initSetup() {
-        if (BuildConfig.DEBUG) {
-            PreferencesHelper.setPreferences(this, PreferencesHelper.KEY_PREF_PRO_VERSION, true)
-        }
-        getPreferences()
+//        if (BuildConfig.DEBUG) {
+//            PreferencesHelper.setPreferences(this, PreferencesHelper.KEY_PREF_PRO_VERSION, true)
+//        }
+//        getPreferences()
         setDrawer()
         setNavigationView()
     }
 
-    private fun getPreferences() {
-        prefTheme = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME) as String
-        prefWeatherProvider = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER, PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER) as String
-        prefTemp = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_TEMPERATURE, PreferencesHelper.DEFAULT_PREF_TEMPERATURE) as String
-        prefSpeed = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_SPEED, PreferencesHelper.DEFAULT_PREF_SPEED) as String
-        prefTime = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_TIME, PreferencesHelper.DEFAULT_PREF_TIME) as String
-        prefLastUpdate = PreferencesHelper.getPreferences(this, PreferencesHelper.KEY_LAST_UPDATE, 0L) as Long
-    }
+//    private fun getPreferences() {
+//        prefTheme = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME) as String
+//        prefWeatherProvider = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER, PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER) as String
+//        prefTemp = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_TEMPERATURE, PreferencesHelper.DEFAULT_PREF_TEMPERATURE) as String
+//        prefSpeed = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_SPEED, PreferencesHelper.DEFAULT_PREF_SPEED) as String
+//        prefTime = PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_TIME, PreferencesHelper.DEFAULT_PREF_TIME) as String
+//        prefLastUpdate = PreferencesHelper.getPreferences(this, PreferencesHelper.KEY_LAST_UPDATE, 0L) as Long
+//    }
 
     private fun getData(latitude: Double?, longitude: Double?, change: Boolean = false) {
 //        if ((prefLastUpdate ?: 0L < Utils.TimeHelper.localTimeMillis - time) || change) {
@@ -246,13 +246,13 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
                         goToSetting = true
                     }
 
-                    R.id.drawer_item_pro_version -> {
-                        if (PreferencesHelper.isProVersion(this) as Boolean) {
-                            SnackBarHelper.alreadyPro(this)
-                        } else {
-                            billing?.purchaseDialog()
-                        }
-                    }
+//                    R.id.drawer_item_pro_version -> {
+//                        if (PreferencesHelper.isProVersion(this) as Boolean) {
+//                            SnackBarHelper.alreadyPro(this)
+//                        } else {
+//                            billing?.purchaseDialog()
+//                        }
+//                    }
                 }
             }, 250)
             drawer_layout.closeDrawer(GravityCompat.START)

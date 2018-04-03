@@ -41,12 +41,12 @@ object SnackBarHelper {
         showSnackBar(activity, snackBar)
     }
 
-    fun offline(activity: Activity, view: View = activity.coordinator_layout) {
-        val s = String.format(activity.resources.getString(R.string.offline_mode),
-                Utils.TimeHelper.getOfflineTime(PreferencesHelper.getPreferences(activity, PreferencesHelper.KEY_LAST_UPDATE, 0L) as Long))
-        val snackBar = Snackbar.make(view, s, Snackbar.LENGTH_INDEFINITE)
-        showSnackBar(activity, snackBar)
-    }
+//    fun offline(activity: Activity, view: View = activity.coordinator_layout) {
+//        val s = String.format(activity.resources.getString(R.string.offline_mode),
+//                Utils.TimeHelper.getOfflineTime(PreferencesHelper.getPreferences(activity, PreferencesHelper.KEY_LAST_UPDATE, 0L) as Long))
+//        val snackBar = Snackbar.make(view, s, Snackbar.LENGTH_INDEFINITE)
+//        showSnackBar(activity, snackBar)
+//    }
 
     private fun showSnackBar(activity: Activity, snackBar: Snackbar) {
         activity.runOnUiThread {

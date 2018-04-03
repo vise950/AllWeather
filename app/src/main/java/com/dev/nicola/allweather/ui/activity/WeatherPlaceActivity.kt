@@ -3,8 +3,10 @@ package com.dev.nicola.allweather.ui.activity
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.view.MenuItem
+import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.application.Init
+import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.repository.WeatherRepository
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
@@ -25,6 +27,8 @@ class WeatherPlaceActivity : BaseActivity() {
 
     @Inject
     lateinit var weatherRepo: WeatherRepository
+
+    private var place: FavoritePlace? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +63,13 @@ class WeatherPlaceActivity : BaseActivity() {
 
     private fun observeData() {
         placeViewModel.getPlace(placeId).observe(this, Observer {
+            place = it
             supportActionBar?.title = it?.name
+            weatherViewModel.updateWeather(Pair(it?.latitude ?: 0.0, it?.longitude ?: 0.0))
+        })
+
+        weatherViewModel.weatherData.observe(this, Observer {
+            "weather updated".error()
         })
     }
 }
