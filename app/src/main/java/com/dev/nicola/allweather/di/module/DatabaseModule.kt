@@ -25,6 +25,6 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-//    @DarkSky
+    @DarkSky
     fun provideDarkSkyDao(db: WeatherDb): DarkSkyDao = db.darkSkyDao()
 }

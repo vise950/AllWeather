@@ -1,6 +1,5 @@
 package com.dev.nicola.allweather.di.module
 
-import com.dev.nicola.allweather.application.Init
 import com.dev.nicola.allweather.di.DarkSky
 import com.dev.nicola.allweather.utils.Constant
 import dagger.Module
@@ -11,7 +10,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module

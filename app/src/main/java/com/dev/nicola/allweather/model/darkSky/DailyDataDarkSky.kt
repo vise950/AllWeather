@@ -3,12 +3,11 @@ package com.dev.nicola.allweather.model.darkSky
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.Index
+import com.dev.nicola.allweather.model.darkSky.DailyDataDarkSky.Companion.TABLE
 
-@Entity(tableName = "darksky_daily_data",
+@Entity(tableName = TABLE,
         primaryKeys = ["latitude", "longitude"],
-        foreignKeys = [(ForeignKey(entity = RootDarkSky::class,
-                parentColumns = ["latitude", "longitude"],
-                childColumns = ["latitude", "longitude"]))],
+        foreignKeys = [(ForeignKey(entity = RootDarkSky::class, parentColumns = ["latitude", "longitude"], childColumns = ["latitude", "longitude"]))],
         indices = [(Index("latitude")), Index("longitude")])
 data class DailyDataDarkSky(
         var latitude: Double,
@@ -29,4 +28,8 @@ data class DailyDataDarkSky(
         var visibility: Double,
         var cloudCover: Double,
         var pressure: Double
-)
+) {
+    companion object {
+        const val TABLE = "darksky_daily_data"
+    }
+}

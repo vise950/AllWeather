@@ -17,8 +17,10 @@ class RepositoryModule {
     fun providePlaceRepository(dao: FavoritePlaceDao): FavoritePlaceRepository = FavoritePlaceRepository(dao)
 
     @Provides
+    @DarkSky
     fun provideDarkSkyLocalRepository(darkSkyDao: DarkSkyDao): DarkSkyLocalRepository = DarkSkyLocalRepository(darkSkyDao)
 
     @Provides
-    fun provideDarkSkyRemoteRepository(@DarkSky retrofit: Retrofit, darkSkyDao: DarkSkyDao): DarkSkyRemoteRepository = DarkSkyRemoteRepository(retrofit, darkSkyDao)
+    @DarkSky
+    fun provideDarkSkyRemoteRepository(retrofit: Retrofit, darkSkyDao: DarkSkyDao): DarkSkyRemoteRepository = DarkSkyRemoteRepository(retrofit, darkSkyDao)
 }

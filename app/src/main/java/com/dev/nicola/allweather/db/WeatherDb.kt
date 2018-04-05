@@ -8,7 +8,7 @@ import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.model.darkSky.DailyDataDarkSky
 import com.dev.nicola.allweather.model.darkSky.RootDarkSky
 
-@Database(entities = [FavoritePlace::class, RootDarkSky::class, DailyDataDarkSky::class], version = 2)
+@Database(entities = [FavoritePlace::class, RootDarkSky::class, DailyDataDarkSky::class], version = 2, exportSchema = false)
 abstract class WeatherDb : RoomDatabase() {
     abstract fun favoritePlaceDao(): FavoritePlaceDao
     abstract fun darkSkyDao(): DarkSkyDao

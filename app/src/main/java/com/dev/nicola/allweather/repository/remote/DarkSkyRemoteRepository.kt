@@ -11,23 +11,23 @@ import kotlinx.coroutines.experimental.async
 import retrofit2.Retrofit
 import javax.inject.Inject
 
-class DarkSkyRemoteRepository @Inject constructor(@DarkSky val retrofit: Retrofit, /*@DarkSky*/ val dao: DarkSkyDao) {
+class DarkSkyRemoteRepository @Inject constructor(@DarkSky val retrofit: Retrofit, @DarkSky val dao: DarkSkyDao) {
 
     fun getDarkSkyData(disposable: CompositeDisposable, lat: Double, lng: Double) {
         retrofit.create(WeatherService::class.java)
                 .getDarkSkyData(lat, lng)
                 .network(disposable, {
-                    insertResultIntoDb(it)
+                    saveData(it)
                 }, {
-                    it.error("darkSky error")
+                    it.error("DARKSKY")
                 })
     }
 
-    private fun insertResultIntoDb(data: RootDarkSky) {
+    private fun saveData(data: RootDarkSky) {
         async {
-//            data.updateKeys()
-            dao.insert(data)
-//            dao.insertDailyData(*weather.daily.data.toTypedArray())
+            data.updateKeys()
+            dao.insertData(data)
+            dao.insertDailyData(*data.daily.data.toTypedArray())
         }
     }
 }
