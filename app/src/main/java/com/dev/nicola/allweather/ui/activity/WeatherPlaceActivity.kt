@@ -6,6 +6,7 @@ import android.view.MenuItem
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.application.Init
+import com.dev.nicola.allweather.db.DBConstant.DATABASE_NAME
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.repository.WeatherRepository
@@ -43,6 +44,8 @@ class WeatherPlaceActivity : BaseActivity() {
         placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo, placeId) }
         weatherViewModel = this.viewModel { WeatherViewModel(weatherRepo, disposables) }
         observeData()
+
+        getDatabasePath(DATABASE_NAME).absolutePath.error("DB PATH")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

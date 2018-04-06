@@ -2,6 +2,7 @@ package com.dev.nicola.allweather.di.module
 
 import android.arch.persistence.room.Room
 import android.content.Context
+import com.dev.nicola.allweather.db.DBConstant.DATABASE_NAME
 import com.dev.nicola.allweather.db.WeatherDb
 import com.dev.nicola.allweather.db.dao.DarkSkyDao
 import com.dev.nicola.allweather.db.dao.FavoritePlaceDao
@@ -15,7 +16,7 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(context: Context): WeatherDb =
-            Room.databaseBuilder(context, WeatherDb::class.java, "weather.db")
+            Room.databaseBuilder(context, WeatherDb::class.java, DATABASE_NAME)
                     .fallbackToDestructiveMigration() //todo only debug implementing migration
                     .build()
 

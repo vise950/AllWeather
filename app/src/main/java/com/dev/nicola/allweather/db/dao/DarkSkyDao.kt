@@ -5,19 +5,23 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
+import com.dev.nicola.allweather.db.DBConstant.LATITUDE
+import com.dev.nicola.allweather.db.DBConstant.LONGITUDE
+import com.dev.nicola.allweather.db.DBConstant.TABLE_DAILY_DATA_DS
+import com.dev.nicola.allweather.db.DBConstant.TABLE_ROOT_DS
 import com.dev.nicola.allweather.model.darkSky.DailyDataDarkSky
 import com.dev.nicola.allweather.model.darkSky.RootDarkSky
 
-const val WEATHER_QUERY = """
-SELECT * FROM ${RootDarkSky.TABLE}
-WHERE latitude = :lat
-AND longitude = :lng
+const val DATA_QUERY = """
+SELECT * FROM $TABLE_ROOT_DS
+WHERE $LATITUDE = :lat
+AND $LONGITUDE = :lng
 LIMIT 1
 """
 const val DAILY_DATA_QUERY = """
-SELECT * FROM ${DailyDataDarkSky.TABLE}
-WHERE latitude = :lat
-AND longitude = :lng
+SELECT * FROM $TABLE_DAILY_DATA_DS
+WHERE $LATITUDE = :lat
+AND $LONGITUDE = :lng
 """
 
 @Dao
@@ -26,10 +30,11 @@ interface DarkSkyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertData(data: RootDarkSky)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    //todo viene salvato solo l'ultimo elelmente a causa del conflitto della primary key
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertDailyData(vararg data: DailyDataDarkSky)
 
-    @Query(WEATHER_QUERY)
+    @Query(DATA_QUERY)
     fun getData(lat: Double, lng: Double): LiveData<RootDarkSky>
 
     @Query(DAILY_DATA_QUERY)

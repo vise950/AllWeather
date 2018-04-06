@@ -2,23 +2,21 @@ package com.dev.nicola.allweather.model.darkSky
 
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
-import com.dev.nicola.allweather.model.darkSky.RootDarkSky.Companion.TABLE
+import com.dev.nicola.allweather.db.DBConstant.LATITUDE
+import com.dev.nicola.allweather.db.DBConstant.LONGITUDE
+import com.dev.nicola.allweather.db.DBConstant.TABLE_CURRENTLY_DS
+import com.dev.nicola.allweather.db.DBConstant.TABLE_DAILY_DS
+import com.dev.nicola.allweather.db.DBConstant.TABLE_ROOT_DS
 
-@Entity(tableName = TABLE, primaryKeys = ["latitude", "longitude"])
+@Entity(tableName = TABLE_ROOT_DS, primaryKeys = [LATITUDE, LONGITUDE])
 data class RootDarkSky(
         var latitude: Double,
         var longitude: Double,
         var timezone: String,
-        @Embedded(prefix = TABLE_CURRENTLY) var currently: CurrentlyDarkSky,
-        @Embedded(prefix = TABLE_DAILY) var daily: DailyDarkSky
+        @Embedded(prefix = TABLE_CURRENTLY_DS) var currently: CurrentlyDarkSky,
+        @Embedded(prefix = TABLE_DAILY_DS) var daily: DailyDarkSky
 //        @Embedded val hourly: HourlyDarkSky?,
 ) {
-    companion object {
-        const val TABLE = "dark_sky"
-        const val TABLE_CURRENTLY = "dark_sky_currently"
-        const val TABLE_DAILY = "dark_sky_daily"
-    }
-
     fun updateKeys() {
         daily.data.forEach {
             it.latitude = latitude
