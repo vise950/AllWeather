@@ -19,9 +19,12 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
                 })
     }
 
-    fun updateWeather(coordinates: Pair<Double, Double>? = null) {
-        weatherRepository.updateWeather(disposable,
-                coordinates?.first ?: 0.0,
-                coordinates?.second ?: 0.0)
+    override fun onCleared() {
+        super.onCleared()
+        disposable.clear()
+    }
+
+    fun updateWeather(coordinates: Pair<Double, Double>) {
+        weatherRepository.updateWeather(disposable, coordinates.first, coordinates.second)
     }
 }

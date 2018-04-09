@@ -27,7 +27,6 @@ class DarkSkyRemoteRepository @Inject constructor(@DarkSky val retrofit: Retrofi
         async {
             data.updateKeys()
             dao.insertData(data)
-            data.daily.data.error("DAILY_DATA")
             dao.insertDailyData(*data.daily.data.toTypedArray())
         }
     }

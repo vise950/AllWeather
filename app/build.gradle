@@ -70,7 +70,7 @@ android {
         implementation "com.android.support:cardview-v7:$support_version"
         implementation "com.android.support:recyclerview-v7:$support_version"
         implementation "com.android.support:design:$support_version"
-        implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
+        implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta6'
 
         //Play services library
         implementation "com.google.android.gms:play-services-location:$play_services_version"
@@ -107,6 +107,8 @@ android {
         //Eggoid
         implementation 'com.github.coletz:eggoid:1.10.0'
 
+        //Stetho
+        implementation 'com.facebook.stetho:stetho:1.5.0'
 
         //Rx
         implementation 'io.reactivex.rxjava2:rxjava:2.1.7'

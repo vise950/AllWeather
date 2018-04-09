@@ -3,10 +3,10 @@ package com.dev.nicola.allweather.ui.activity
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.view.MenuItem
+import co.eggon.eggoid.Nil
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.application.Init
-import com.dev.nicola.allweather.db.DBConstant.DATABASE_NAME
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.repository.WeatherRepository
@@ -44,8 +44,6 @@ class WeatherPlaceActivity : BaseActivity() {
         placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo, placeId) }
         weatherViewModel = this.viewModel { WeatherViewModel(weatherRepo, disposables) }
         observeData()
-
-        getDatabasePath(DATABASE_NAME).absolutePath.error("DB PATH")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -68,11 +66,13 @@ class WeatherPlaceActivity : BaseActivity() {
         placeViewModel.getPlace(placeId).observe(this, Observer {
             place = it
             supportActionBar?.title = it?.name
-            weatherViewModel.updateWeather(Pair(it?.latitude ?: 0.0, it?.longitude ?: 0.0))
+            Nil(it?.latitude, it?.longitude) let { (lat, lng) ->
+                weatherViewModel.updateWeather(Pair(lat, lng))
+            }
         })
 
         weatherViewModel.weatherData.observe(this, Observer {
-            it.toString().error("WEATHER DATA")
+//            it.toString().error("WEATHER DATA")
         })
     }
 }

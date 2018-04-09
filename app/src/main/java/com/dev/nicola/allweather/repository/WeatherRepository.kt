@@ -2,6 +2,7 @@ package com.dev.nicola.allweather.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.Transformations
 import android.content.Context
 import co.eggon.eggoid.extension.error
 import co.eggon.eggoid.extension.isConnectionAvailable
@@ -35,40 +36,38 @@ class WeatherRepository {
     fun updateWeather(disposable: CompositeDisposable, lat: Double, lng: Double) {
         when (prefs.weatherProvider) {
             WeatherProvider.DARK_SKY -> {
-//                weatherData.addSource(getDarkSkyWeather(disposable, lat, lng), {
-//                    it?.let {
+//                weatherData.addSource(getDarkSkyWeather(lat, lng), { root ->
+//                    "STEP_1".error()
+//                    root?.let {
+//                        "STEP_2".error()
+//                        getDarkSkyDailyData(root).value?.let {
+//                            "STEP_3".error()
+//                            root.daily.data = it
+//                        }
+//                        "STEP_4".error()
 //                        weatherData.value = Weather(it)
 //                    }
 //                })
 
-                weatherData.addSource(getDarkSkyWeather(disposable, lat, lng), { root ->
-                    root?.let {
-                        getDarkSkyDailyData(root).value?.let {
-                            it[0].latitude.error("STEP_1")
-                            root.daily.data = it
-                        }
+                getDarkSkyWeather(lat, lng).also {
+                    "STEP_1".error()
+                    Transformations.switchMap(it, { root ->
                         "STEP_2".error()
-                        weatherData.value = Weather(it)
-                    }
-                })
+                        getDarkSkyDailyData(root).also {
+                            "STEP_3".error()
+                            Transformations.map(it, {
+                                "STEP_4".error()
+                                root.daily.data = it
+                                root
+                            })
+                        }
+                    })
+                }.let {
+                    "STEP_5".error()
+                    weatherData.value = Weather(it.value)
+                }
 
-//                getDarkSkyWeather(disposable, lat, lng).also {
-//                    it.value?.latitude.error("STEP_1")
-//                    Transformations.switchMap(it, { root ->
-//                        getDarkSkyDailyData(root).also {
-//                            it.value?.get(0)?.latitude.error("STEP_2")
-//                            Transformations.map(it, {
-//                                root.daily.data = it
-//                                root.latitude.error("STEP_3")
-//                                root
-//                            })
-//                        }
-//                    })
-//                }.let {
-//                    it.value?.latitude.error("STEP_4")
-//                    weatherData.value = Weather(it.value)
-//                }
-
+                updateDarkSkyWeather(disposable, lat, lng)
             }
             WeatherProvider.APIXU -> {
             }
@@ -77,30 +76,12 @@ class WeatherRepository {
         }
     }
 
-    private fun getDarkSkyWeather(disposable: CompositeDisposable, lat: Double, lng: Double): LiveData<RootDarkSky> {
+    private fun updateDarkSkyWeather(disposable: CompositeDisposable, lat: Double, lng: Double) {
         if (context.isConnectionAvailable()) {
             darkSkyRemoteRepository.getDarkSkyData(disposable, lat, lng)
         }
-        return darkSkyLocalRepository.getData(lat, lng)
     }
 
+    private fun getDarkSkyWeather(lat: Double, lng: Double): LiveData<RootDarkSky> = darkSkyLocalRepository.getData(lat, lng)
     private fun getDarkSkyDailyData(data: RootDarkSky): LiveData<List<DailyDataDarkSky>> = darkSkyLocalRepository.getDailyData(data)
-
-    /*
-
-    var weatherLiveData = weatherRepository.getWeather(disposable,
-                coordinates?.first ?: 0.0,
-                coordinates?.second ?: 0.0)
-        weatherLiveData = Transformations.switchMap(weatherLiveData, { weather ->
-            weather?.let {
-                val dailyData = weatherRepository.getDailyData(it)
-                Transformations.map(dailyData, {
-                    weather.daily.data = it
-                    weather
-                })
-            }
-        })
-        return weatherLiveData
-
-     */
 }

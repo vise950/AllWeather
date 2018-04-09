@@ -11,4 +11,5 @@ object DBConstant {
 
     const val LATITUDE = "latitude"
     const val LONGITUDE = "longitude"
+    const val TIME = "time"
 }

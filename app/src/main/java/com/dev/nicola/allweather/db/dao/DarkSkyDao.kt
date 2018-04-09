@@ -30,8 +30,7 @@ interface DarkSkyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertData(data: RootDarkSky)
 
-    //todo viene salvato solo l'ultimo elelmente a causa del conflitto della primary key
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertDailyData(vararg data: DailyDataDarkSky)
 
     @Query(DATA_QUERY)
