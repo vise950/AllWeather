@@ -72,7 +72,7 @@ class WeatherPlaceActivity : BaseActivity() {
         })
 
         weatherViewModel.weatherData.observe(this, Observer {
-//            it.toString().error("WEATHER DATA")
+            it.toString().error("WEATHER DATA")
         })
     }
 }

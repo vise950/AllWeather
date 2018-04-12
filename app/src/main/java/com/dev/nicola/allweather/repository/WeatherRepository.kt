@@ -2,12 +2,12 @@ package com.dev.nicola.allweather.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.Transformations
 import android.content.Context
 import co.eggon.eggoid.extension.error
 import co.eggon.eggoid.extension.isConnectionAvailable
 import com.dev.nicola.allweather.model.Weather
 import com.dev.nicola.allweather.model.darkSky.DailyDataDarkSky
+import com.dev.nicola.allweather.model.darkSky.HourlyDataDarkSky
 import com.dev.nicola.allweather.model.darkSky.RootDarkSky
 import com.dev.nicola.allweather.repository.local.DarkSkyLocalRepository
 import com.dev.nicola.allweather.repository.remote.DarkSkyRemoteRepository
@@ -36,36 +36,37 @@ class WeatherRepository {
     fun updateWeather(disposable: CompositeDisposable, lat: Double, lng: Double) {
         when (prefs.weatherProvider) {
             WeatherProvider.DARK_SKY -> {
-//                weatherData.addSource(getDarkSkyWeather(lat, lng), { root ->
-//                    "STEP_1".error()
-//                    root?.let {
-//                        "STEP_2".error()
-//                        getDarkSkyDailyData(root).value?.let {
-//                            "STEP_3".error()
-//                            root.daily.data = it
-//                        }
-//                        "STEP_4".error()
-//                        weatherData.value = Weather(it)
-//                    }
-//                })
-
-                getDarkSkyWeather(lat, lng).also {
+                weatherData.addSource(getDarkSkyWeather(lat, lng), { root ->
                     "STEP_1".error()
-                    Transformations.switchMap(it, { root ->
+                    root?.let {
                         "STEP_2".error()
-                        getDarkSkyDailyData(root).also {
+                        getDarkSkyDailyData(root).value?.let {
+                            //fixme
                             "STEP_3".error()
-                            Transformations.map(it, {
-                                "STEP_4".error()
-                                root.daily.data = it
-                                root
-                            })
+                            root.daily.data = it
                         }
-                    })
-                }.let {
-                    "STEP_5".error()
-                    weatherData.value = Weather(it.value)
-                }
+                        "STEP_4".error()
+                        weatherData.value = Weather(it)
+                    }
+                })
+
+//                getDarkSkyWeather(lat, lng).also {
+//                    "STEP_1".error()
+//                    Transformations.map(it, { root ->
+//                        "STEP_2".error()
+//                        getDarkSkyDailyData(root).also {
+//                            "STEP_3".error()
+//                            Transformations.map(it, {
+//                                "STEP_4".error()
+//                                root.daily.data = it
+//                                root
+//                            })
+//                        }
+//                    })
+//                }.let {
+//                    "STEP_5".error()
+//                    weatherData.value = Weather(it.value)
+//                }
 
                 updateDarkSkyWeather(disposable, lat, lng)
             }
@@ -84,4 +85,5 @@ class WeatherRepository {
 
     private fun getDarkSkyWeather(lat: Double, lng: Double): LiveData<RootDarkSky> = darkSkyLocalRepository.getData(lat, lng)
     private fun getDarkSkyDailyData(data: RootDarkSky): LiveData<List<DailyDataDarkSky>> = darkSkyLocalRepository.getDailyData(data)
+    private fun getDarkSkyHourlyData(data: RootDarkSky): LiveData<List<HourlyDataDarkSky>> = darkSkyLocalRepository.getHourlyData(data)
 }

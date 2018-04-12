@@ -28,6 +28,7 @@ class DarkSkyRemoteRepository @Inject constructor(@DarkSky val retrofit: Retrofi
             data.updateKeys()
             dao.insertData(data)
             dao.insertDailyData(*data.daily.data.toTypedArray())
+            dao.insertHourlyData(*data.hourly.data.toTypedArray())
         }
     }
 }
