@@ -13,10 +13,7 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
     val weatherData: MediatorLiveData<Weather> = MediatorLiveData()
 
     init {
-        weatherData.addSource(weatherRepository.weatherData,
-                {
-                    weatherData.value = it
-                })
+        weatherData.addSource(weatherRepository.weatherData, { weatherData.value = it })
     }
 
     override fun onCleared() {

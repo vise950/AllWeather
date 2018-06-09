@@ -129,7 +129,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun observeData() {
-        placeViewModel.getPlaces().observe(this, Observer {
+        placeViewModel.places.observe(this, Observer {
             it?.let {
                 favoritePlace = it
                 placeAdapter.updateData(it)

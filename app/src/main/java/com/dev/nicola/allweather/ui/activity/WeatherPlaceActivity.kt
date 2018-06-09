@@ -63,7 +63,7 @@ class WeatherPlaceActivity : BaseActivity() {
     }
 
     private fun observeData() {
-        placeViewModel.getPlace(placeId).observe(this, Observer {
+        placeViewModel.place.observe(this, Observer {
             place = it
             supportActionBar?.title = it?.name
             Nil(it?.latitude, it?.longitude) let { (lat, lng) ->
