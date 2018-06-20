@@ -8,13 +8,21 @@ import com.facebook.stetho.Stetho
 
 class Init : Application() {
 
+    companion object {
+        private var INSTANCE: Init? = null
+
+        fun get(): Init = INSTANCE!!
+    }
+
     lateinit var appComponent: AppComponent
+        private set
 
     override fun onCreate() {
         super.onCreate()
 
         Stetho.initializeWithDefaults(this)
 
+        INSTANCE = this
         initDagger()
     }
 
@@ -22,5 +30,12 @@ class Init : Application() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
                 .build()
+    }
+}
+
+
+class Injector{
+    companion object {
+        fun get() : AppComponent = Init.get().appComponent
     }
 }

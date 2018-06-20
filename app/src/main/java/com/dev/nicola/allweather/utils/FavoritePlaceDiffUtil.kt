@@ -15,6 +15,4 @@ class FavoritePlaceDiffUtil(private val oldData: List<FavoritePlace>, private va
 
     override fun getNewListSize(): Int = newData.size
 
-    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? =
-            super.getChangePayload(oldItemPosition, newItemPosition)
 }

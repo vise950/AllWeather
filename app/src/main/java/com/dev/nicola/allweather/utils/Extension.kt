@@ -6,6 +6,6 @@ import com.dev.nicola.allweather.R
 
 fun RecyclerView.layoutAnimation() {
     this.layoutAnimation = AnimationUtils.loadLayoutAnimation(this.context, R.anim.layout_animation_fall_down)
-    this.adapter.notifyDataSetChanged()
+    this.adapter?.notifyDataSetChanged()
     this.scheduleLayoutAnimation()
 }

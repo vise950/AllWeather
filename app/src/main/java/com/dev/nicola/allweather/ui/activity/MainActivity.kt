@@ -89,32 +89,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 //        }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-//        if (!goToSetting) {
-//            Handler().postDelayed({
-//                initCheckUp()
-//            }, 1500)
-//        } else {
-//            if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_THEME, PreferencesHelper.DEFAULT_PREF_THEME, prefTheme.toString()) == true) {
-//                recreate()
-//            } else if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER,
-//                            PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER, prefWeatherProvider.toString()) == true) {
-//                PreferencesHelper.getDefaultPreferences(this, PreferencesHelper.KEY_PREF_WEATHER_PROVIDER, PreferencesHelper.DEFAULT_PREF_WEATHER_PROVIDER).error("new provider")
-//                getPreferences()
-////                view_pager.removeAllViews()
-//                getData(location?.latitude, location?.longitude, true)
-//            } else if (PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TEMPERATURE, PreferencesHelper.DEFAULT_PREF_TEMPERATURE, prefTemp.toString()) == true ||
-//                    PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_SPEED, PreferencesHelper.DEFAULT_PREF_SPEED, prefSpeed.toString()) == true ||
-//                    PreferencesHelper.isPreferenceChange(this, PreferencesHelper.KEY_PREF_TIME, PreferencesHelper.DEFAULT_PREF_TIME, prefTime.toString()) == true) {
-//                getPreferences()
-////                fragmentAdapter?.notifyDataSetChanged()
-//            }
-//            goToSetting = false
-//        }
-    }
-
     override fun onPause() {
         super.onPause()
         if (googleApiClient?.isConnected == true) {
@@ -137,8 +111,10 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         realm = null
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        billing?.onActivityResult(requestCode, resultCode, data)
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        billing?.onActivityResult(requestCode, resultCode, data!!)
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onBackPressed() {
@@ -358,14 +334,14 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         val transaction = supportFragmentManager.beginTransaction()
         if (replace) {
             if (!currentFragment?.tag.equals(tag)) {
-                transaction?.replace(R.id.fragment_container, fragment, tag)
+                transaction.replace(R.id.fragment_container, fragment, tag)
                 currentFragment = fragment
             }
         } else {
-            transaction?.add(R.id.fragment_container, fragment, tag)
+            transaction.add(R.id.fragment_container, fragment, tag)
             currentFragment = fragment
         }
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction?.commit()
+        transaction.commit()
     }
 }

@@ -14,22 +14,22 @@ class DarkSkyRepository @Inject constructor(var context: Context,
                                             var darkSkyLocalRepository: DarkSkyLocalRepository,
                                             var darkSkyRemoteRepository: DarkSkyRemoteRepository) {
 
-    private lateinit var coordinates: Pair<Double, Double>
+//    private lateinit var coordinates: Pair<Double, Double>
+    private var coordinates= Pair(30.0,45.0)
 
     var darkSkyData: MediatorLiveData<RootDarkSky> = MediatorLiveData()
 
     init {
-        val data = Transformations.switchMap(darkSkyLocalRepository.getData(coordinates.first, coordinates.second), { data ->
-            Transformations.map(darkSkyLocalRepository.getDailyData(data), {
+        val data = Transformations.switchMap(darkSkyLocalRepository.getData(coordinates.first, coordinates.second)) { data ->
+            Transformations.map(darkSkyLocalRepository.getDailyData(data)) {
                 data.daily.data = it
-                Transformations.map(darkSkyLocalRepository.getHourlyData(data), {
-                    data.hourly.data = it
-                })
+                Transformations.map(darkSkyLocalRepository.getHourlyData(data)) { data.hourly.data = it
+                }
                 data
-            })
-        })
+            }
+        }
 
-        darkSkyData.addSource(data, { darkSkyData.value = it })
+        darkSkyData.addSource(data) { darkSkyData.value = it }
     }
 
     fun updateDarkSkyWeather(disposable: CompositeDisposable, coordinates: Pair<Double, Double>) {

@@ -7,6 +7,7 @@ import co.eggon.eggoid.Nil
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.application.Init
+import com.dev.nicola.allweather.application.Injector
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.repository.WeatherRepository
@@ -35,7 +36,7 @@ class WeatherPlaceActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather_place)
 
-        (application as Init).appComponent.inject(this)
+        Injector.get().inject(this)
 
         placeId = intent.getStringExtra(HomeActivity.PLACE_ID)
 

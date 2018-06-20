@@ -2,6 +2,8 @@ package com.dev.nicola.allweather.repository
 
 import android.arch.lifecycle.MediatorLiveData
 import android.content.Context
+import com.dev.nicola.allweather.application.Init
+import com.dev.nicola.allweather.application.Injector
 import com.dev.nicola.allweather.di.DarkSky
 import com.dev.nicola.allweather.model.Weather
 import com.dev.nicola.allweather.repository.core.DarkSkyRepository
@@ -14,25 +16,12 @@ import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(private val context: Context) {
 
-//    private val darkSkyRepository: DarkSkyRepository()
-
     var weatherData: MediatorLiveData<Weather> = MediatorLiveData()
-
-    //    private lateinit var context: Context
-//    @Inject
-//    lateinit var darkSkyLocalRepository: DarkSkyLocalRepository
-//    @Inject
-//    lateinit var darkSkyRemoteRepository: DarkSkyRemoteRepository
-
-//    @Inject constructor(context: Context, darkSkyLocalRepository: DarkSkyLocalRepository, darkSkyRemoteRepository: DarkSkyRemoteRepository) {
-//        this.context = context
-//        this.darkSkyLocalRepository = darkSkyLocalRepository
-//        this.darkSkyRemoteRepository = darkSkyRemoteRepository
-//    }
 
     @Inject
     @DarkSky
     lateinit var darkSkyLocalRepository: DarkSkyLocalRepository
+
     @Inject
     @DarkSky
     lateinit var darkSkyRemoteRepository: DarkSkyRemoteRepository
@@ -40,10 +29,11 @@ class WeatherRepository @Inject constructor(private val context: Context) {
     private val prefs by lazy { PreferencesHelper(context) }
 
     init {
+        Injector.get().inject(this)
+
         when (prefs.weatherProvider) {
             WeatherProvider.DARK_SKY -> {
-                weatherData.addSource(DarkSkyRepository(context, darkSkyLocalRepository, darkSkyRemoteRepository).darkSkyData,
-                        { weatherData.value = Weather(it) })
+                weatherData.addSource(DarkSkyRepository(context, darkSkyLocalRepository, darkSkyRemoteRepository).darkSkyData) { weatherData.value = Weather(it) }
             }
             WeatherProvider.YAHOO -> {
             }

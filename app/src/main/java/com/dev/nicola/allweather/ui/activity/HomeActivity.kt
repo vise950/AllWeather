@@ -16,6 +16,7 @@ import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.adapter.FavoritePlaceAdapter
 import com.dev.nicola.allweather.application.Init
+import com.dev.nicola.allweather.application.Injector
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.utils.layoutAnimation
@@ -62,7 +63,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        (application as Init).appComponent.inject(this)
+        Injector.get().inject(this)
 
         initUI()
 
@@ -81,6 +82,7 @@ class HomeActivity : AppCompatActivity() {
                 PlaceAutocomplete.RESULT_ERROR -> {
                     val status = PlaceAutocomplete.getStatus(this, data)
                     //todo
+                    status.error("place autocomplete error")
                     Snackbar.make(root_view, status.statusMessage.toString(), Snackbar.LENGTH_LONG).show()
                 }
             }
