@@ -5,10 +5,10 @@ import io.reactivex.disposables.CompositeDisposable
 
 abstract class BaseActivity : AppCompatActivity() {
 
-    var disposables = CompositeDisposable()
+//    var disposables = CompositeDisposable()
 
     override fun onDestroy() {
         super.onDestroy()
-        disposables.clear()
+//        disposables.clear()
     }
 }

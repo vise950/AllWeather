@@ -4,11 +4,9 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.ViewModel
 import com.dev.nicola.allweather.model.Weather
 import com.dev.nicola.allweather.repository.WeatherRepository
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class WeatherViewModel @Inject constructor(private val weatherRepository: WeatherRepository,
-                                           private val disposable: CompositeDisposable) : ViewModel() {
+class WeatherViewModel @Inject constructor(private val weatherRepository: WeatherRepository) : ViewModel() {
 
     val weatherData: MediatorLiveData<Weather> = MediatorLiveData()
 
@@ -16,12 +14,7 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
         weatherData.addSource(weatherRepository.weatherData) { weatherData.value = it }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        disposable.clear()
-    }
-
     fun updateWeather(coordinates: Pair<Double, Double>) {
-        weatherRepository.updateWeather(disposable, coordinates.first, coordinates.second)
+        weatherRepository.updateWeather(coordinates)
     }
 }

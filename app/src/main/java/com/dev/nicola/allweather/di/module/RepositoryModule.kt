@@ -10,6 +10,7 @@ import com.dev.nicola.allweather.repository.local.DarkSkyLocalRepository
 import com.dev.nicola.allweather.repository.remote.DarkSkyRemoteRepository
 import dagger.Module
 import dagger.Provides
+import io.reactivex.disposables.CompositeDisposable
 import retrofit2.Retrofit
 
 @Module
@@ -30,6 +31,6 @@ class RepositoryModule {
 
     @Provides
     @DarkSky
-    fun provideDarkSkyRepository(context: Context, localRepository: DarkSkyLocalRepository, remoteRepository: DarkSkyRemoteRepository) =
-            DarkSkyRepository(context, localRepository, remoteRepository)
+    fun provideDarkSkyRepository(context: Context, localRepository: DarkSkyLocalRepository, remoteRepository: DarkSkyRemoteRepository, disposable: CompositeDisposable) =
+            DarkSkyRepository(context, localRepository, remoteRepository, disposable)
 }

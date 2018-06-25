@@ -12,27 +12,29 @@ import javax.inject.Inject
 
 class DarkSkyRepository @Inject constructor(var context: Context,
                                             var darkSkyLocalRepository: DarkSkyLocalRepository,
-                                            var darkSkyRemoteRepository: DarkSkyRemoteRepository) {
+                                            var darkSkyRemoteRepository: DarkSkyRemoteRepository,
+                                            private val disposable: CompositeDisposable) {
 
-//    private lateinit var coordinates: Pair<Double, Double>
-    private var coordinates= Pair(30.0,45.0)
+    //    private lateinit var coordinates: Pair<Double, Double>
+    private var coordinates = Pair(0.0, 0.0)
 
     var darkSkyData: MediatorLiveData<RootDarkSky> = MediatorLiveData()
 
     init {
         val data = Transformations.switchMap(darkSkyLocalRepository.getData(coordinates.first, coordinates.second)) { data ->
-            Transformations.map(darkSkyLocalRepository.getDailyData(data)) {
-                data.daily.data = it
-                Transformations.map(darkSkyLocalRepository.getHourlyData(data)) { data.hourly.data = it
+            data?.let {
+                Transformations.map(darkSkyLocalRepository.getDailyData(data)) {
+                    data.daily.data = it
+                    Transformations.map(darkSkyLocalRepository.getHourlyData(data)) { data.hourly.data = it }
+                    data
                 }
-                data
             }
         }
 
         darkSkyData.addSource(data) { darkSkyData.value = it }
     }
 
-    fun updateDarkSkyWeather(disposable: CompositeDisposable, coordinates: Pair<Double, Double>) {
+    fun updateDarkSkyWeather(coordinates: Pair<Double, Double>) {
         this.coordinates = coordinates
         if (context.isConnectionAvailable()) {
             darkSkyRemoteRepository.getDarkSkyData(disposable, coordinates.first, coordinates.second)

@@ -2,7 +2,6 @@ package com.dev.nicola.allweather.repository
 
 import android.arch.lifecycle.MediatorLiveData
 import android.content.Context
-import com.dev.nicola.allweather.application.Init
 import com.dev.nicola.allweather.application.Injector
 import com.dev.nicola.allweather.di.DarkSky
 import com.dev.nicola.allweather.model.Weather
@@ -16,24 +15,28 @@ import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(private val context: Context) {
 
+    private val prefs by lazy { PreferencesHelper(context) }
     var weatherData: MediatorLiveData<Weather> = MediatorLiveData()
+
+    @Inject
+    lateinit var disposable: CompositeDisposable
 
     @Inject
     @DarkSky
     lateinit var darkSkyLocalRepository: DarkSkyLocalRepository
-
     @Inject
     @DarkSky
     lateinit var darkSkyRemoteRepository: DarkSkyRemoteRepository
+    private lateinit var darkSkyRepository: DarkSkyRepository
 
-    private val prefs by lazy { PreferencesHelper(context) }
 
     init {
         Injector.get().inject(this)
 
         when (prefs.weatherProvider) {
             WeatherProvider.DARK_SKY -> {
-                weatherData.addSource(DarkSkyRepository(context, darkSkyLocalRepository, darkSkyRemoteRepository).darkSkyData) { weatherData.value = Weather(it) }
+                darkSkyRepository = DarkSkyRepository(context, darkSkyLocalRepository, darkSkyRemoteRepository, disposable)
+                weatherData.addSource(darkSkyRepository.darkSkyData) { weatherData.value = Weather(it) }
             }
             WeatherProvider.YAHOO -> {
             }
@@ -42,36 +45,11 @@ class WeatherRepository @Inject constructor(private val context: Context) {
         }
     }
 
-    fun updateWeather(disposable: CompositeDisposable, lat: Double, lng: Double) {
+    fun updateWeather(coordinates: Pair<Double, Double>) {
         when (prefs.weatherProvider) {
-            WeatherProvider.DARK_SKY -> {
-//                val data = Transformations.switchMap(getDarkSkyData(lat, lng), { data ->
-//                    Transformations.map(getDarkSkyDailyData(data), {
-//                        data.daily.data = it
-//                        Transformations.map(getDarkSkyHourlyData(data), {
-//                            data.hourly.data = it
-//                        })
-//                        data
-//                    })
-//                })
-//                weatherData.addSource(data, { weatherData.value = Weather(it) })
-
-                DarkSkyRepository(context, darkSkyLocalRepository, darkSkyRemoteRepository).updateDarkSkyWeather(disposable, Pair(lat, lng))
-            }
-            WeatherProvider.APIXU -> {
-            }
-            WeatherProvider.YAHOO -> {
-            }
+            WeatherProvider.DARK_SKY ->  darkSkyRepository.updateDarkSkyWeather(coordinates)
+            WeatherProvider.APIXU -> { }
+            WeatherProvider.YAHOO -> { }
         }
     }
-
-//    private fun updateDarkSkyWeather(disposable: CompositeDisposable, lat: Double, lng: Double) {
-//        if (context.isConnectionAvailable()) {
-//            darkSkyRemoteRepository.getDarkSkyData(disposable, lat, lng)
-//        }
-//    }
-//
-//    private fun getDarkSkyData(lat: Double, lng: Double): LiveData<RootDarkSky> = darkSkyLocalRepository.getData(lat, lng)
-//    private fun getDarkSkyDailyData(data: RootDarkSky): LiveData<List<DailyDataDarkSky>> = darkSkyLocalRepository.getDailyData(data)
-//    private fun getDarkSkyHourlyData(data: RootDarkSky): LiveData<List<HourlyDataDarkSky>> = darkSkyLocalRepository.getHourlyData(data)
 }

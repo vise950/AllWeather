@@ -6,7 +6,6 @@ import android.view.MenuItem
 import co.eggon.eggoid.Nil
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
-import com.dev.nicola.allweather.application.Init
 import com.dev.nicola.allweather.application.Injector
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
@@ -43,7 +42,7 @@ class WeatherPlaceActivity : BaseActivity() {
         initUI()
 
         placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo, placeId) }
-        weatherViewModel = this.viewModel { WeatherViewModel(weatherRepo, disposables) }
+        weatherViewModel = this.viewModel { WeatherViewModel(weatherRepo) }
         observeData()
     }
 
