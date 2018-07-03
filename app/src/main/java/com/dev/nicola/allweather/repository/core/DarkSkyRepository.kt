@@ -7,6 +7,8 @@ import co.eggon.eggoid.extension.isConnectionAvailable
 import com.dev.nicola.allweather.model.darkSky.RootDarkSky
 import com.dev.nicola.allweather.repository.local.DarkSkyLocalRepository
 import com.dev.nicola.allweather.repository.remote.DarkSkyRemoteRepository
+import com.dev.nicola.allweather.utils.LATITUDE
+import com.dev.nicola.allweather.utils.LONGITUDE
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -15,13 +17,34 @@ class DarkSkyRepository @Inject constructor(var context: Context,
                                             var darkSkyRemoteRepository: DarkSkyRemoteRepository,
                                             private val disposable: CompositeDisposable) {
 
-    //    private lateinit var coordinates: Pair<Double, Double>
-    private var coordinates = Pair(0.0, 0.0)
-
     var darkSkyData: MediatorLiveData<RootDarkSky> = MediatorLiveData()
 
+//    private var data: LiveData<RootDarkSky>? = null
+
     init {
-        val data = Transformations.switchMap(darkSkyLocalRepository.getData(coordinates.first, coordinates.second)) { data ->
+//        val data = Transformations.switchMap(darkSkyLocalRepository.getData(LATITUDE, LONGITUDE)) { data ->
+//            data?.let {
+//                Transformations.map(darkSkyLocalRepository.getDailyData(data)) {
+//                    data.daily.data = it
+//                    Transformations.map(darkSkyLocalRepository.getHourlyData(data)) { data.hourly.data = it }
+//                    data
+//                }
+//            }
+//        }
+//
+//        data?.let { darkSkyData.addSource(it) { darkSkyData.value = it } }
+    }
+
+    fun updateDarkSkyWeather() {
+        if (context.isConnectionAvailable())
+            darkSkyRemoteRepository.getDarkSkyData(disposable, LATITUDE, LONGITUDE)
+
+        getData()
+    }
+
+    //fixme la prima volta viene fatto l'observe 3 volte
+    private fun getData() {
+        Transformations.switchMap(darkSkyLocalRepository.getData(LATITUDE, LONGITUDE)) { data ->
             data?.let {
                 Transformations.map(darkSkyLocalRepository.getDailyData(data)) {
                     data.daily.data = it
@@ -29,15 +52,8 @@ class DarkSkyRepository @Inject constructor(var context: Context,
                     data
                 }
             }
-        }
-
-        darkSkyData.addSource(data) { darkSkyData.value = it }
-    }
-
-    fun updateDarkSkyWeather(coordinates: Pair<Double, Double>) {
-        this.coordinates = coordinates
-        if (context.isConnectionAvailable()) {
-            darkSkyRemoteRepository.getDarkSkyData(disposable, coordinates.first, coordinates.second)
+        }?.let {
+            darkSkyData.addSource(it) { darkSkyData.value = it }
         }
     }
 }

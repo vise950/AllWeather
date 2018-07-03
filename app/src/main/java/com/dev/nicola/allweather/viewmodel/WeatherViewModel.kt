@@ -14,7 +14,7 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
         weatherData.addSource(weatherRepository.weatherData) { weatherData.value = it }
     }
 
-    fun updateWeather(coordinates: Pair<Double, Double>) {
-        weatherRepository.updateWeather(coordinates)
+    fun updateWeather() {
+        weatherRepository.updateWeather()
     }
 }

@@ -2,6 +2,7 @@ package com.dev.nicola.allweather.utils
 
 import android.support.v7.widget.RecyclerView
 import android.view.animation.AnimationUtils
+import com.dev.nicola.allweather.BuildConfig
 import com.dev.nicola.allweather.R
 
 fun RecyclerView.layoutAnimation() {
@@ -9,3 +10,5 @@ fun RecyclerView.layoutAnimation() {
     this.adapter?.notifyDataSetChanged()
     this.scheduleLayoutAnimation()
 }
+
+fun isDebug(): Boolean =BuildConfig.DEBUG

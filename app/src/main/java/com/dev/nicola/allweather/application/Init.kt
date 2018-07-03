@@ -4,6 +4,7 @@ import android.app.Application
 import com.dev.nicola.allweather.di.component.AppComponent
 import com.dev.nicola.allweather.di.component.DaggerAppComponent
 import com.dev.nicola.allweather.di.module.AppModule
+import com.dev.nicola.allweather.utils.isDebug
 import com.facebook.stetho.Stetho
 
 class Init : Application() {
@@ -20,7 +21,9 @@ class Init : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Stetho.initializeWithDefaults(this)
+        if (isDebug()) {
+            Stetho.initializeWithDefaults(this)
+        }
 
         INSTANCE = this
         initDagger()
@@ -34,8 +37,8 @@ class Init : Application() {
 }
 
 
-class Injector{
+class Injector {
     companion object {
-        fun get() : AppComponent = Init.get().appComponent
+        fun get(): AppComponent = Init.get().appComponent
     }
 }

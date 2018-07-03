@@ -10,6 +10,8 @@ import com.dev.nicola.allweather.application.Injector
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.repository.WeatherRepository
+import com.dev.nicola.allweather.utils.LATITUDE
+import com.dev.nicola.allweather.utils.LONGITUDE
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
 import com.dev.nicola.allweather.viewmodel.WeatherViewModel
 import com.dev.nicola.allweather.viewmodel.viewModel
@@ -67,7 +69,9 @@ class WeatherPlaceActivity : BaseActivity() {
             place = it
             supportActionBar?.title = it?.name
             Nil(it?.latitude, it?.longitude) let { (lat, lng) ->
-                weatherViewModel.updateWeather(Pair(lat, lng))
+                LATITUDE = lat
+                LONGITUDE = lng
+                weatherViewModel.updateWeather()
             }
         })
 

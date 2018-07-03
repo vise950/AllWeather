@@ -45,11 +45,13 @@ class WeatherRepository @Inject constructor(private val context: Context) {
         }
     }
 
-    fun updateWeather(coordinates: Pair<Double, Double>) {
+    fun updateWeather() {
         when (prefs.weatherProvider) {
-            WeatherProvider.DARK_SKY ->  darkSkyRepository.updateDarkSkyWeather(coordinates)
-            WeatherProvider.APIXU -> { }
-            WeatherProvider.YAHOO -> { }
+            WeatherProvider.DARK_SKY -> darkSkyRepository.updateDarkSkyWeather()
+            WeatherProvider.APIXU -> {
+            }
+            WeatherProvider.YAHOO -> {
+            }
         }
     }
 }
