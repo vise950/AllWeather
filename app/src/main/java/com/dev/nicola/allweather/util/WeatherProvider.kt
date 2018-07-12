@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.utils
+package com.dev.nicola.allweather.util
 
 enum class WeatherProvider {
     DARK_SKY,

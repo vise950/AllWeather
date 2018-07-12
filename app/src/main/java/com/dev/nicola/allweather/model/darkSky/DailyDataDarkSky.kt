@@ -11,7 +11,7 @@ import com.dev.nicola.allweather.db.DBConstant.TIME
 @Entity(tableName = TABLE_DAILY_DATA_DS,
         primaryKeys = [LATITUDE, LONGITUDE, TIME],
         foreignKeys = [(ForeignKey(entity = RootDarkSky::class, parentColumns = [LATITUDE, LONGITUDE], childColumns = [LATITUDE, LONGITUDE]))],
-        indices = [(Index(LATITUDE)), Index(LONGITUDE)])
+        indices = [Index(LATITUDE), Index(LONGITUDE)])
 data class DailyDataDarkSky(
         var latitude: Double,
         var longitude: Double,

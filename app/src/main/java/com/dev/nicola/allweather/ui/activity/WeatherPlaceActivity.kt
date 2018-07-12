@@ -10,8 +10,6 @@ import com.dev.nicola.allweather.application.Injector
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.repository.WeatherRepository
-import com.dev.nicola.allweather.utils.LATITUDE
-import com.dev.nicola.allweather.utils.LONGITUDE
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
 import com.dev.nicola.allweather.viewmodel.WeatherViewModel
 import com.dev.nicola.allweather.viewmodel.viewModel
@@ -43,7 +41,7 @@ class WeatherPlaceActivity : BaseActivity() {
 
         initUI()
 
-        placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo, placeId) }
+        placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo) }
         weatherViewModel = this.viewModel { WeatherViewModel(weatherRepo) }
         observeData()
     }
@@ -65,18 +63,18 @@ class WeatherPlaceActivity : BaseActivity() {
     }
 
     private fun observeData() {
-        placeViewModel.place.observe(this, Observer {
+        placeViewModel.getPlace(placeId).observe(this, Observer {
             place = it
             supportActionBar?.title = it?.name
             Nil(it?.latitude, it?.longitude) let { (lat, lng) ->
-                LATITUDE = lat
-                LONGITUDE = lng
-                weatherViewModel.updateWeather()
-            }
-        })
 
-        weatherViewModel.weatherData.observe(this, Observer {
-            it.toString().error("WEATHER DATA")
+                weatherViewModel.getWeather(lat, lng).observe(this, Observer {
+//                    it.toString().error("WEATHER DATA")
+                    error("WEATHER DATA")
+                })
+
+                weatherViewModel.updateWeather(lat, lng)
+            }
         })
     }
 }

@@ -1,5 +1,6 @@
 package com.dev.nicola.allweather.viewmodel
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.ViewModel
 import com.dev.nicola.allweather.model.Weather
@@ -8,13 +9,9 @@ import javax.inject.Inject
 
 class WeatherViewModel @Inject constructor(private val weatherRepository: WeatherRepository) : ViewModel() {
 
-    val weatherData: MediatorLiveData<Weather> = MediatorLiveData()
-
-    init {
-        weatherData.addSource(weatherRepository.weatherData) { weatherData.value = it }
+    fun updateWeather(lat: Double, lng: Double) {
+        weatherRepository.updateWeather(lat, lng)
     }
 
-    fun updateWeather() {
-        weatherRepository.updateWeather()
-    }
+    fun getWeather(lat: Double, lng: Double): LiveData<Weather> = weatherRepository.getWeather(lat, lng)
 }

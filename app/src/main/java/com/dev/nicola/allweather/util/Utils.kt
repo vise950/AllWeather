@@ -1,15 +1,9 @@
-package com.dev.nicola.allweather.utils
+package com.dev.nicola.allweather.util
 
 import android.content.Context
-import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
-import android.support.v7.app.AppCompatDelegate
 import com.dev.nicola.allweather.R
-import com.dev.nicola.allweather.application.Init
-import com.dev.nicola.allweather.di.component.AppComponent
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat

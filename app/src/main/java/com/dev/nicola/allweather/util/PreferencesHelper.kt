@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.utils
+package com.dev.nicola.allweather.util
 
 import android.content.Context
 import android.preference.PreferenceManager

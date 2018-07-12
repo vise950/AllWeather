@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.utils
+package com.dev.nicola.allweather.util
 
 import android.support.v7.util.DiffUtil
 import com.dev.nicola.allweather.model.FavoritePlace

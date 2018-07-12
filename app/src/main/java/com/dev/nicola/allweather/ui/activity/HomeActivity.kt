@@ -15,11 +15,10 @@ import android.view.MenuItem
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.adapter.FavoritePlaceAdapter
-import com.dev.nicola.allweather.application.Init
 import com.dev.nicola.allweather.application.Injector
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
-import com.dev.nicola.allweather.utils.layoutAnimation
+import com.dev.nicola.allweather.util.layoutAnimation
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
 import com.dev.nicola.allweather.viewmodel.viewModel
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -131,7 +130,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun observeData() {
-        placeViewModel.places.observe(this, Observer {
+        placeViewModel.getPlaces().observe(this, Observer {
             it?.let {
                 favoritePlace = it
                 placeAdapter.updateData(it)

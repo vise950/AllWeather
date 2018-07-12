@@ -9,9 +9,9 @@ import com.dev.nicola.allweather.db.DBConstant.TABLE_HOURLY_DATA_DS
 import com.dev.nicola.allweather.db.DBConstant.TIME
 
 @Entity(tableName = TABLE_HOURLY_DATA_DS,
-        primaryKeys = [(LATITUDE), (LONGITUDE), (TIME)],
+        primaryKeys = [LATITUDE, LONGITUDE, TIME],
         foreignKeys = [(ForeignKey(entity = RootDarkSky::class, parentColumns = [LATITUDE, LONGITUDE], childColumns = [LATITUDE, LONGITUDE]))],
-        indices = [(Index(LATITUDE)), (Index(LONGITUDE))])
+        indices = [Index(LATITUDE), Index(LONGITUDE)])
 data class HourlyDataDarkSky(
         var latitude: Double,
         var longitude: Double,

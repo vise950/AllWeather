@@ -1,7 +1,7 @@
 package com.dev.nicola.allweather.di.module
 
 import com.dev.nicola.allweather.di.DarkSky
-import com.dev.nicola.allweather.utils.DARK_SKY_BASE_URL
+import com.dev.nicola.allweather.util.DARK_SKY_BASE_URL
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

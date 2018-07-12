@@ -1,7 +1,6 @@
 package com.dev.nicola.allweather.adapter
 
 import android.content.Context
-import android.support.v4.view.ViewCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
@@ -14,7 +13,7 @@ import android.widget.TextView
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.model.FavoritePlace
-import com.dev.nicola.allweather.utils.FavoritePlaceDiffUtil
+import com.dev.nicola.allweather.util.FavoritePlaceDiffUtil
 
 
 class FavoritePlaceAdapter(private val context: Context, private var data: List<FavoritePlace>) : RecyclerView.Adapter<FavoritePlaceAdapter.FavoritePlaceViewHolder>() {

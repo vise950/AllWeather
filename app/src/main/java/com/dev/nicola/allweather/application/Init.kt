@@ -4,7 +4,7 @@ import android.app.Application
 import com.dev.nicola.allweather.di.component.AppComponent
 import com.dev.nicola.allweather.di.component.DaggerAppComponent
 import com.dev.nicola.allweather.di.module.AppModule
-import com.dev.nicola.allweather.utils.isDebug
+import com.dev.nicola.allweather.util.isDebug
 import com.facebook.stetho.Stetho
 
 class Init : Application() {

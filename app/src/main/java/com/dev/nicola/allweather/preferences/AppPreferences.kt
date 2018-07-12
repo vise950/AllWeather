@@ -1,15 +1,9 @@
 package com.dev.nicola.allweather.preferences
 
 import android.os.Bundle
-import android.preference.ListPreference
-import android.preference.Preference
 import android.preference.PreferenceFragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import com.dev.nicola.allweather.utils.PreferencesHelper
-import com.dev.nicola.allweather.utils.SnackBarHelper
-import com.dev.nicola.allweather.utils.Utils
-import com.dev.nicola.allweather.utils.WeatherProvider
 
 class AppPreferences : AppCompatActivity() {
 

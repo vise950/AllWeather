@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.utils
+package com.dev.nicola.allweather.util
 
 import android.support.v7.widget.RecyclerView
 import android.view.animation.AnimationUtils
