@@ -38,7 +38,7 @@ class FavoritePlaceAdapter(private val context: Context, private var data: List<
                     selectItem(adapterPosition, container)
                     onItemLongClicked?.invoke()
                 } else {
-                    onItemClicked?.invoke(data[adapterPosition].id)
+//                    onItemClicked?.invoke(data[adapterPosition].id)
                 }
             }
             view.setOnLongClickListener {
@@ -92,7 +92,7 @@ class FavoritePlaceAdapter(private val context: Context, private var data: List<
             selectedItemPosition.remove(position)
         } else {
             view.isSelected = true
-            selectedItem.add(data[position].id)
+//            selectedItem.add(data[position].id)
             selectedItemPosition.add(position)
         }
     }

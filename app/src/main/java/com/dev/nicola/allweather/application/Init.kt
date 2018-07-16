@@ -6,6 +6,8 @@ import com.dev.nicola.allweather.di.component.DaggerAppComponent
 import com.dev.nicola.allweather.di.module.AppModule
 import com.dev.nicola.allweather.util.isDebug
 import com.facebook.stetho.Stetho
+import io.realm.Realm
+import io.realm.RealmConfiguration
 
 class Init : Application() {
 
@@ -26,6 +28,7 @@ class Init : Application() {
         }
 
         INSTANCE = this
+        initRealm()
         initDagger()
     }
 
@@ -33,6 +36,11 @@ class Init : Application() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
                 .build()
+    }
+
+    private fun initRealm() {
+        Realm.init(this)
+        Realm.setDefaultConfiguration(RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build())
     }
 }
 

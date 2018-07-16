@@ -64,17 +64,17 @@ class WeatherPlaceActivity : BaseActivity() {
 
     private fun observeData() {
         placeViewModel.getPlace(placeId).observe(this, Observer {
-            place = it
-            supportActionBar?.title = it?.name
-            Nil(it?.latitude, it?.longitude) let { (lat, lng) ->
-
-                weatherViewModel.getWeather(lat, lng).observe(this, Observer {
-//                    it.toString().error("WEATHER DATA")
-                    error("WEATHER DATA")
-                })
-
-                weatherViewModel.updateWeather(lat, lng)
-            }
+//            place = it
+//            supportActionBar?.title = it?.name
+//            Nil(it?.latitude, it?.longitude) let { (lat, lng) ->
+//
+//                weatherViewModel.getWeather(lat, lng).observe(this, Observer {
+                    it.toString().error("WEATHER DATA")
+//                    error("WEATHER DATA")
+//                })
+//
+//                weatherViewModel.updateWeather(lat, lng)
+//            }
         })
     }
 }

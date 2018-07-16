@@ -1,27 +1,28 @@
 package com.dev.nicola.allweather.db.dao
 
-import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
+import co.eggon.eggoid.extension.safeExec
 import com.dev.nicola.allweather.model.FavoritePlace
+import com.dev.nicola.allweather.util.RealmLiveData
+import com.dev.nicola.allweather.util.asLiveData
+import io.realm.Realm
+import javax.inject.Inject
 
-@Dao
-interface FavoritePlaceDao {
 
-    @Insert
-    fun insert(place: FavoritePlace)
+class FavoritePlaceDao @Inject constructor(private val realm: Realm) {
 
-    @Query("SELECT * FROM ${FavoritePlace.TABLE}")
-    fun getPlaces(): LiveData<List<FavoritePlace>>
+    fun insert(place: FavoritePlace) {
+        realm.safeExec {
+            it.copyToRealmOrUpdate(place)
+        }
+    }
 
-    @Query("SELECT * FROM ${FavoritePlace.TABLE} WHERE id = :placeId")
-    fun getPlace(placeId: String): LiveData<FavoritePlace>
+    fun delete(placeId: String) {
+        realm.safeExec {
+            it.where(FavoritePlace::class.java).equalTo("id", placeId).findFirst()?.deleteFromRealm()
+        }
+    }
 
-//    @Query("DELETE FROM ${FavoritePlace.TABLE} WHERE id IN (:placeIds)")
-//    fun removePlace(placeIds: List<String>)
+    fun getPlaces(): RealmLiveData<FavoritePlace> = realm.where(FavoritePlace::class.java).findAllAsync().asLiveData()
 
-    //todo
-    @Query("DELETE FROM ${FavoritePlace.TABLE} WHERE id = :placeId")
-    fun removePlace(placeId: String)
+    fun getPlace(placeId: String): RealmLiveData<FavoritePlace> = realm.where(FavoritePlace::class.java).equalTo("id", placeId).findAllAsync().asLiveData()
 }

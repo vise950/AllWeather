@@ -76,7 +76,12 @@ class HomeActivity : AppCompatActivity() {
             when (resultCode) {
                 Activity.RESULT_OK -> {
                     val place = PlaceAutocomplete.getPlace(this, data)
-                    placeViewModel.addPlace(FavoritePlace(place.id, place.name.toString(), place.latLng.latitude, place.latLng.longitude))
+                    placeViewModel.addPlace(FavoritePlace().apply {
+                        id = place.id
+                        name = place.name.toString()
+                        latitude = place.latLng.latitude
+                        longitude = place.latLng.longitude
+                    })
                 }
                 PlaceAutocomplete.RESULT_ERROR -> {
                     val status = PlaceAutocomplete.getStatus(this, data)
@@ -131,6 +136,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun observeData() {
         placeViewModel.getPlaces().observe(this, Observer {
+            "observe place".error()
             it?.let {
                 favoritePlace = it
                 placeAdapter.updateData(it)
