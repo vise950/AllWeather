@@ -1,10 +1,10 @@
 package com.dev.nicola.allweather.model.darkSky
 
-import android.arch.persistence.room.Ignore
+import io.realm.RealmList
+import io.realm.RealmObject
 
-data class HourlyDarkSky(
-        var summary: String = "",
-        var icon: String = "",
-        @Ignore
-        var data: List<HourlyDataDarkSky> = listOf()
-)
+open class HourlyDarkSky : RealmObject() {
+    var summary: String? = null
+    var icon: String? = null
+    var data: RealmList<HourlyDataDarkSky> = RealmList()
+}

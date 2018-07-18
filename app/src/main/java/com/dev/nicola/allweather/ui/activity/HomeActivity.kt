@@ -102,7 +102,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
-        placeAdapter = FavoritePlaceAdapter(this, listOf())
+        placeAdapter = FavoritePlaceAdapter()
         favorite_places_rv.layoutManager = LinearLayoutManager(this)
         favorite_places_rv.adapter = placeAdapter
         favorite_places_rv.layoutAnimation()

@@ -4,7 +4,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.animation.AnimationUtils
 import com.dev.nicola.allweather.BuildConfig
 import com.dev.nicola.allweather.R
-import com.dev.nicola.allweather.db.dao.FavoritePlaceDao
+import com.dev.nicola.allweather.dao.DarkSkyDao
+import com.dev.nicola.allweather.dao.FavoritePlaceDao
 import io.realm.Realm
 import io.realm.RealmModel
 import io.realm.RealmResults
@@ -22,3 +23,4 @@ fun isDebug(): Boolean = BuildConfig.DEBUG
 fun <T : RealmModel> RealmResults<T>.asLiveData() = RealmLiveData(this)
 
 fun Realm.favoritePlaceDao(): FavoritePlaceDao = FavoritePlaceDao(this)
+fun Realm.darkSkyDao(): DarkSkyDao = DarkSkyDao(this)

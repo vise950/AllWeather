@@ -1,4 +1,4 @@
-package com.dev.nicola.allweather.db.dao
+package com.dev.nicola.allweather.dao
 
 import co.eggon.eggoid.extension.safeExec
 import com.dev.nicola.allweather.model.FavoritePlace

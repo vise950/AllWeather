@@ -1,16 +1,19 @@
 package com.dev.nicola.allweather.model.darkSky
 
-data class CurrentlyDarkSky(
-        var time: Int,
-        var summary: String,
-        var icon: String,
-        var precipIntensity: Double,
-        var precipProbability: Double,
-        var temperature: Double,
-        var dewPoint: Double,
-        var humidity: Double,
-        var windSpeed: Double,
-        var windBearing: Int,
-        var visibility: Double,
-        var cloudCover: Double,
-        var pressure: Double)
+import io.realm.RealmObject
+
+open class CurrentlyDarkSky : RealmObject() {
+    var time: Int? = null
+    var summary: String? = null
+    var icon: String? = null
+    var precipIntensity: Double? = null
+    var precipProbability: Double? = null
+    var temperature: Double? = null
+    var dewPoint: Double? = null
+    var humidity: Double? = null
+    var windSpeed: Double? = null
+    var windBearing: Int? = null
+    var visibility: Double? = null
+    var cloudCover: Double? = null
+    var pressure: Double? = null
+}

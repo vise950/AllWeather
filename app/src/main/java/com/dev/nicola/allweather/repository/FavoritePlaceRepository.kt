@@ -1,6 +1,6 @@
 package com.dev.nicola.allweather.repository
 
-import com.dev.nicola.allweather.db.dao.FavoritePlaceDao
+import com.dev.nicola.allweather.dao.FavoritePlaceDao
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.util.RealmLiveData
 import javax.inject.Inject

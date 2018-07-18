@@ -7,7 +7,6 @@ import co.eggon.eggoid.Nil
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.application.Injector
-import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.repository.WeatherRepository
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
@@ -28,8 +27,6 @@ class WeatherPlaceActivity : BaseActivity() {
 
     @Inject
     lateinit var weatherRepo: WeatherRepository
-
-    private var place: FavoritePlace? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,17 +61,16 @@ class WeatherPlaceActivity : BaseActivity() {
 
     private fun observeData() {
         placeViewModel.getPlace(placeId).observe(this, Observer {
-//            place = it
-//            supportActionBar?.title = it?.name
-//            Nil(it?.latitude, it?.longitude) let { (lat, lng) ->
-//
-//                weatherViewModel.getWeather(lat, lng).observe(this, Observer {
-                    it.toString().error("WEATHER DATA")
-//                    error("WEATHER DATA")
-//                })
-//
-//                weatherViewModel.updateWeather(lat, lng)
-//            }
+            it?.first()?.let {
+                supportActionBar?.title = it.name
+                Nil(it.latitude, it.longitude) let { (lat, lng) ->
+                    weatherViewModel.getWeather(lat, lng).observe(this, Observer {
+                        it.toString().error("WEATHER DATA")
+                    })
+                    weatherViewModel.updateWeather(lat, lng)
+                }
+            }
         })
+
     }
 }
