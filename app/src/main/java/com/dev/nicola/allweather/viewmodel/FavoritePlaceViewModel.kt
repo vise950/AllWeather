@@ -1,6 +1,6 @@
 package com.dev.nicola.allweather.viewmodel
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.util.RealmLiveData

@@ -1,14 +1,14 @@
 package com.dev.nicola.allweather.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import com.dev.nicola.allweather.util.delay
+import com.dev.nicola.allweather.util.gotoWithFinish
 
 class SplashScreenActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startActivity(Intent(this, HomeActivity::class.java))
-        finish()
+        delay(1000) { gotoWithFinish<HomeActivity>() }
     }
 }

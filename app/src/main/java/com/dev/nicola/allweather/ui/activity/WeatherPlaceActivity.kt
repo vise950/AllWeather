@@ -1,8 +1,8 @@
 package com.dev.nicola.allweather.ui.activity
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.lifecycle.Observer
 import co.eggon.eggoid.Nil
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R

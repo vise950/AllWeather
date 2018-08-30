@@ -52,7 +52,7 @@ android {
 
     kotlin {
         experimental {
-            coroutines 'enable'
+            coroutines "enable"
         }
     }
 
@@ -63,41 +63,35 @@ android {
 
         //Kotlin
         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21"
+//        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21"
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0'
 
-        //Support library
-        implementation "com.android.support:appcompat-v7:$support_version"
-        implementation "com.android.support:cardview-v7:$support_version"
-        implementation "com.android.support:recyclerview-v7:$support_version"
-        implementation "com.android.support:design:$support_version"
-        implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+        // Support
+        implementation 'androidx.appcompat:appcompat:1.0.0-rc02'
+        implementation 'androidx.recyclerview:recyclerview:1.0.0-rc02'
+        implementation 'androidx.cardview:cardview:1.0.0-rc02'
+        implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+        implementation 'androidx.legacy:legacy-support-core-ui:1.0.0-rc02'
+        implementation 'androidx.legacy:legacy-support-v4:1.0.0-rc02'
+        implementation 'com.google.android.material:material:1.0.0-rc01'
 
-        //Play services library
-        implementation "com.google.android.gms:play-services-location:$play_services_version"
-        implementation "com.google.android.gms:play-services-places:$play_services_version"
-        implementation "com.google.android.gms:play-services-ads:$play_services_version"
+        // Architecture Components
+//        implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha05'
+//        implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha05'
+        implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-rc01'
+        kapt "androidx.lifecycle:lifecycle-compiler:2.0.0-rc01"
 
-        // Lifecycle
-        implementation "android.arch.lifecycle:extensions:1.1.1"
-        kapt "android.arch.lifecycle:compiler:1.1.1"
+        // Glide (Image loader)
+        implementation 'com.github.bumptech.glide:glide:4.8.0'
+        kapt 'com.github.bumptech.glide:compiler:4.8.0'
 
-        // Room
-        implementation "android.arch.persistence.room:runtime:1.1.1"
-        kapt "android.arch.persistence.room:compiler:1.1.1"
-
-        //Network
-        implementation "com.squareup.okhttp3:okhttp:$okHttp_version"
-        implementation "com.squareup.okhttp3:logging-interceptor:$okHttp_version"
-        implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-        implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-        implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+        //Play services
+        implementation 'com.google.android.gms:play-services-location:15.0.1'
+        implementation 'com.google.android.gms:play-services-places:15.0.1'
+        implementation 'com.google.android.gms:play-services-ads:15.0.1'
 
         //Joda Time
-        implementation 'joda-time:joda-time:2.9.9'
-
-        //Glide
-        implementation "com.github.bumptech.glide:glide:$glide_version"
-        kapt "com.github.bumptech.glide:compiler:$glide_version"
+        implementation 'joda-time:joda-time:2.10'
 
         // Dagger2
         implementation 'com.google.dagger:dagger:2.13'
@@ -113,6 +107,7 @@ android {
         //Rx
         implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
 
+        //Custom
         implementation 'com.thebluealliance:spectrum:0.7.1'
     }
 }

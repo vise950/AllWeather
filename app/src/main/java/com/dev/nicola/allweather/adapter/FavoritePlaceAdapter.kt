@@ -1,15 +1,14 @@
 package com.dev.nicola.allweather.adapter
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.util.FavoritePlaceDiffUtil

@@ -2,7 +2,7 @@ package com.dev.nicola.allweather.preferences
 
 import android.os.Bundle
 import android.preference.PreferenceFragment
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 
 class AppPreferences : AppCompatActivity() {

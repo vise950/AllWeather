@@ -1,6 +1,6 @@
 package com.dev.nicola.allweather.util
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import com.dev.nicola.allweather.model.FavoritePlace
 
 class FavoritePlaceDiffUtil(private val oldData: List<FavoritePlace>, private val newData: List<FavoritePlace>) : DiffUtil.Callback() {

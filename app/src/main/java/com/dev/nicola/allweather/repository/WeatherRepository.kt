@@ -1,9 +1,8 @@
 package com.dev.nicola.allweather.repository
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
 import android.content.Context
-import co.eggon.eggoid.extension.error
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import com.dev.nicola.allweather.application.Injector
 import com.dev.nicola.allweather.di.DarkSky
 import com.dev.nicola.allweather.model.Weather
@@ -57,11 +56,11 @@ class WeatherRepository @Inject constructor(private val context: Context) {
                 weatherData.addSource(darkSkyRepository.getDarkSkyWeather(lat, lng)) {
                     //todo it.first cause crash
 
-                    if (it?.first()==null){
-                        "null".error()
-                    }else{
-                        "non null".error()
-                    }
+//                    if (it?.first()==null){
+//                        "null".error()
+//                    }else{
+//                        "non null".error()
+//                    }
 
 //                    it?.let { weatherData.value = Weather(it.first()) }
                 }

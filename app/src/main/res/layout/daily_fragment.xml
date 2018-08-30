@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -46,7 +46,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/image_daily_fragment"
         app:layout_constraintRight_toRightOf="@+id/image_daily_fragment" />
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/forecast_daily_fragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         app:layout_constraintTop_toBottomOf="@+id/image_daily_fragment"
         tools:targetApi="lollipop">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/forecast_hour_recycle_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -67,7 +67,7 @@
             android:scrollbarSize="3dp"
             android:scrollbarThumbHorizontal="@color/accent"
             android:scrollbars="horizontal" />
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/wind_label_daily_fragment"
@@ -185,4 +185,4 @@
         android:layout_marginTop="@dimen/margin_12dp"
         app:layout_constraintTop_toBottomOf="@+id/sunset_label_daily_fragment" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,7 @@ package com.dev.nicola.allweather.util
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import co.eggon.eggoid.extension.error
 import com.billing.utils.IabHelper
 import com.billing.utils.Purchase

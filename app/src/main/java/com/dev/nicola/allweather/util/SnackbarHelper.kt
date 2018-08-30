@@ -1,7 +1,7 @@
 package com.dev.nicola.allweather.util
 
 import android.app.Activity
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import android.view.View
 import com.dev.nicola.allweather.R
 import kotlinx.android.synthetic.main.content_main.*
