@@ -2,6 +2,7 @@ package com.dev.nicola.allweather.ui.activity
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import co.eggon.eggoid.Nil
 import co.eggon.eggoid.extension.error
@@ -15,7 +16,7 @@ import com.dev.nicola.allweather.viewmodel.viewModel
 import javax.inject.Inject
 
 
-class WeatherPlaceActivity : BaseActivity() {
+class WeatherPlaceActivity : AppCompatActivity() {
 
     private lateinit var placeId: String
 
