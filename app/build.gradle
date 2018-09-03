@@ -76,8 +76,8 @@ android {
         implementation 'com.google.android.material:material:1.0.0-rc01'
 
         // Architecture Components
-//        implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha05'
-//        implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha05'
+        implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha05'
+        implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha05'
         implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-rc01'
         kapt "androidx.lifecycle:lifecycle-compiler:2.0.0-rc01"
 
@@ -90,22 +90,19 @@ android {
         implementation 'com.google.android.gms:play-services-places:15.0.1'
         implementation 'com.google.android.gms:play-services-ads:15.0.1'
 
+        // Network
+        implementation 'com.github.kittinunf.fuel:fuel-android:1.15.0'
+        implementation 'com.github.kittinunf.fuel:fuel-coroutines:1.15.0'
+        implementation 'com.github.kittinunf.fuel:fuel-gson:1.15.0'
+
         //Joda Time
         implementation 'joda-time:joda-time:2.10'
-
-        // Dagger2
-        implementation 'com.google.dagger:dagger:2.13'
-        kapt 'com.google.dagger:dagger-compiler:2.13'
-        compileOnly 'javax.annotation:jsr250-api:1.0'
 
         //Eggoid
         implementation 'com.github.coletz:eggoid:1.10.0'
 
-        //Stetho
-        implementation 'com.facebook.stetho:stetho:1.5.0'
-
         //Rx
-        implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+//        implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
 
         //Custom
         implementation 'com.thebluealliance:spectrum:0.7.1'

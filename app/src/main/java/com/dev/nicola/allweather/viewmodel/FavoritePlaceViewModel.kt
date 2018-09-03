@@ -1,12 +1,14 @@
 package com.dev.nicola.allweather.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.util.RealmLiveData
-import javax.inject.Inject
 
-class FavoritePlaceViewModel @Inject constructor(private val placeRepo: FavoritePlaceRepository) : ViewModel() {
+class FavoritePlaceViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val placeRepo: FavoritePlaceRepository = FavoritePlaceRepository()
 
     fun addPlace(favoritePlace: FavoritePlace) {
         placeRepo.addPlace(favoritePlace)

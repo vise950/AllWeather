@@ -5,9 +5,8 @@ import com.dev.nicola.allweather.model.darkSky.RootDarkSky
 import com.dev.nicola.allweather.util.RealmLiveData
 import com.dev.nicola.allweather.util.asLiveData
 import io.realm.Realm
-import javax.inject.Inject
 
-class DarkSkyDao @Inject constructor(private val realm: Realm) {
+class DarkSkyDao (private val realm: Realm) {
 
     fun insert(data: RootDarkSky) {
         realm.safeExec {

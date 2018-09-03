@@ -1,21 +1,23 @@
 package com.dev.nicola.allweather.repository
 
-import com.dev.nicola.allweather.dao.FavoritePlaceDao
+import com.dev.nicola.allweather.application.Init
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.util.RealmLiveData
-import javax.inject.Inject
+import com.dev.nicola.allweather.util.favoritePlaceDao
 
-class FavoritePlaceRepository @Inject constructor(private val dao: FavoritePlaceDao) {
+class FavoritePlaceRepository {
 
-    fun getPlace(placeId: String): RealmLiveData<FavoritePlace> = dao.getPlace(placeId)
+    private val favoritePlaceDao = Init.getRealmInstance().favoritePlaceDao()
 
-    fun getPlaces(): RealmLiveData<FavoritePlace> = dao.getPlaces()
+    fun getPlace(placeId: String): RealmLiveData<FavoritePlace> = favoritePlaceDao.getPlace(placeId)
+
+    fun getPlaces(): RealmLiveData<FavoritePlace> = favoritePlaceDao.getPlaces()
 
     fun addPlace(place: FavoritePlace) {
-        dao.insert(place)
+        favoritePlaceDao.insert(place)
     }
 
     fun removePlace(placeIds: List<String>) {
-        placeIds.forEach { dao.delete(it) }
+        placeIds.forEach { favoritePlaceDao.delete(it) }
     }
 }

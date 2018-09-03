@@ -5,10 +5,9 @@ import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.util.RealmLiveData
 import com.dev.nicola.allweather.util.asLiveData
 import io.realm.Realm
-import javax.inject.Inject
 
 
-class FavoritePlaceDao @Inject constructor(private val realm: Realm) {
+class FavoritePlaceDao (private val realm: Realm) {
 
     fun insert(place: FavoritePlace) {
         realm.safeExec {

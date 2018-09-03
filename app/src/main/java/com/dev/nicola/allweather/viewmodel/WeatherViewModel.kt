@@ -1,17 +1,18 @@
 package com.dev.nicola.allweather.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.ViewModel
-import com.dev.nicola.allweather.model.Weather
-import com.dev.nicola.allweather.repository.WeatherRepository
-import javax.inject.Inject
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import com.dev.nicola.allweather.model.darkSky.RootDarkSky
+import com.dev.nicola.allweather.repository.core.DarkSkyRepository
+import com.dev.nicola.allweather.util.RealmLiveData
 
-class WeatherViewModel @Inject constructor(private val weatherRepository: WeatherRepository) : ViewModel() {
+class WeatherViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val darkSkyRepository = DarkSkyRepository(application)
 
     fun updateWeather(lat: Double, lng: Double) {
-        weatherRepository.updateWeather(lat, lng)
+        darkSkyRepository.fetchDarkSkyWeather(lat, lng)
     }
 
-    fun getWeather(lat: Double, lng: Double): LiveData<Weather> = weatherRepository.getWeather(lat, lng)
+    fun getWeather(lat: Double, lng: Double): RealmLiveData<RootDarkSky> = darkSkyRepository.getDarkSkyWeather(lat, lng)
 }

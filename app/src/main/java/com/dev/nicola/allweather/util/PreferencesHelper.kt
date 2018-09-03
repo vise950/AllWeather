@@ -3,7 +3,6 @@ package com.dev.nicola.allweather.util
 import android.content.Context
 import android.preference.PreferenceManager
 import com.dev.nicola.allweather.ui.activity.MainActivity
-import javax.inject.Inject
 
 private fun myShared(context: Context) = context.getSharedPreferences(MainActivity::class.java.name, Context.MODE_PRIVATE)
 
@@ -20,7 +19,7 @@ fun Context.putValue(key: String, value: Any) {
 }
 
 
-class PreferencesHelper @Inject constructor(context: Context) {
+class PreferencesHelper (context: Context) {
 
     private val prefs by lazy { context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
 

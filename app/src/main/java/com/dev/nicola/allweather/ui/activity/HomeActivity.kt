@@ -14,9 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.adapter.FavoritePlaceAdapter
-import com.dev.nicola.allweather.application.Injector
 import com.dev.nicola.allweather.model.FavoritePlace
-import com.dev.nicola.allweather.repository.FavoritePlaceRepository
 import com.dev.nicola.allweather.util.layoutAnimation
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
 import com.dev.nicola.allweather.viewmodel.viewModel
@@ -27,7 +25,6 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.item_place.*
-import javax.inject.Inject
 
 
 class HomeActivity : AppCompatActivity() {
@@ -48,10 +45,7 @@ class HomeActivity : AppCompatActivity() {
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build()
     }
 
-    private lateinit var placeViewModel: FavoritePlaceViewModel
-
-    @Inject
-    lateinit var placeRepo: FavoritePlaceRepository
+    private val placeViewModel by lazy { this.viewModel { FavoritePlaceViewModel(application) } }
 
     private var favoritePlace: List<FavoritePlace>? = null
     private lateinit var placeAdapter: FavoritePlaceAdapter
@@ -62,11 +56,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        Injector.get().inject(this)
-
         initUI()
-
-        placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo) }
         observeData()
     }
 
@@ -136,7 +126,6 @@ class HomeActivity : AppCompatActivity() {
 
     private fun observeData() {
         placeViewModel.getPlaces().observe(this, Observer {
-            "observe place".error()
             it?.let {
                 favoritePlace = it
                 placeAdapter.updateData(it)

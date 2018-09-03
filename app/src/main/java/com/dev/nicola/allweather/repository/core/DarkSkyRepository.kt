@@ -6,17 +6,15 @@ import com.dev.nicola.allweather.model.darkSky.RootDarkSky
 import com.dev.nicola.allweather.repository.local.DarkSkyLocalRepository
 import com.dev.nicola.allweather.repository.remote.DarkSkyRemoteRepository
 import com.dev.nicola.allweather.util.RealmLiveData
-import javax.inject.Inject
 
-class DarkSkyRepository @Inject constructor(var context: Context,
-                                            var darkSkyLocalRepository: DarkSkyLocalRepository,
-                                            var darkSkyRemoteRepository: DarkSkyRemoteRepository) {
+class DarkSkyRepository(var context: Context) {
+    private var darkSkyLocalRepository: DarkSkyLocalRepository = DarkSkyLocalRepository()
+    private var darkSkyRemoteRepository: DarkSkyRemoteRepository = DarkSkyRemoteRepository()
 
-    fun updateDarkSkyWeather(lat: Double, lng: Double) {
+    fun fetchDarkSkyWeather(lat: Double, lng: Double) {
         if (context.isConnectionAvailable())
-            darkSkyRemoteRepository.getDarkSkyData(lat, lng)
+            darkSkyRemoteRepository.fetchDarkSky(lat, lng)
     }
 
-    fun getDarkSkyWeather(lat: Double, lng: Double): RealmLiveData<RootDarkSky> =
-            darkSkyLocalRepository.getData(lat, lng)
+    fun getDarkSkyWeather(lat: Double, lng: Double): RealmLiveData<RootDarkSky> = darkSkyLocalRepository.getData(lat, lng)
 }

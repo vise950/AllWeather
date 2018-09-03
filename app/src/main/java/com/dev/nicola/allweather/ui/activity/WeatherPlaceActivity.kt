@@ -7,40 +7,25 @@ import androidx.lifecycle.Observer
 import co.eggon.eggoid.Nil
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
-import com.dev.nicola.allweather.application.Injector
-import com.dev.nicola.allweather.repository.FavoritePlaceRepository
-import com.dev.nicola.allweather.repository.WeatherRepository
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
 import com.dev.nicola.allweather.viewmodel.WeatherViewModel
 import com.dev.nicola.allweather.viewmodel.viewModel
-import javax.inject.Inject
 
 
 class WeatherPlaceActivity : AppCompatActivity() {
 
     private lateinit var placeId: String
 
-    private lateinit var placeViewModel: FavoritePlaceViewModel
-    private lateinit var weatherViewModel: WeatherViewModel
-
-    @Inject
-    lateinit var placeRepo: FavoritePlaceRepository
-
-    @Inject
-    lateinit var weatherRepo: WeatherRepository
+    private val placeViewModel by lazy { this.viewModel { FavoritePlaceViewModel(application) } }
+    private val weatherViewModel by lazy { this.viewModel { WeatherViewModel(application) } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather_place)
 
-        Injector.get().inject(this)
-
         placeId = intent.getStringExtra(HomeActivity.PLACE_ID)
 
         initUI()
-
-        placeViewModel = this.viewModel { FavoritePlaceViewModel(placeRepo) }
-        weatherViewModel = this.viewModel { WeatherViewModel(weatherRepo) }
         observeData()
     }
 

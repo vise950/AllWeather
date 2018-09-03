@@ -1,12 +1,13 @@
 package com.dev.nicola.allweather.repository.local
 
-import com.dev.nicola.allweather.dao.DarkSkyDao
-import com.dev.nicola.allweather.di.DarkSky
+import com.dev.nicola.allweather.application.Init
 import com.dev.nicola.allweather.model.darkSky.RootDarkSky
 import com.dev.nicola.allweather.util.RealmLiveData
-import javax.inject.Inject
+import com.dev.nicola.allweather.util.darkSkyDao
 
-class DarkSkyLocalRepository @Inject constructor(@DarkSky val dao: DarkSkyDao) {
+class DarkSkyLocalRepository {
 
-    fun getData(lat: Double, lng: Double): RealmLiveData<RootDarkSky> = dao.getData(lat, lng)
+    private val darkSkyDao = Init.getRealmInstance().darkSkyDao()
+
+    fun getData(lat: Double, lng: Double): RealmLiveData<RootDarkSky> = darkSkyDao.getData(lat, lng)
 }
