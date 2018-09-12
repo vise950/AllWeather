@@ -1,5 +1,7 @@
 package com.dev.nicola.allweather.model.yahoo
 
-open class ResultsYahoo {
+import io.realm.RealmObject
+
+open class ResultsYahoo: RealmObject() {
     var channel: ChannelYahoo? = null
 }

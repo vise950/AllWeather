@@ -1,6 +1,8 @@
 package com.dev.nicola.allweather.model.apixu
 
-open class CurrentConditionApixu  {
+import io.realm.RealmObject
+
+open class CurrentConditionApixu:RealmObject()  {
     var text: String? = null
     var icon: String? = null
     var code: Int? = null

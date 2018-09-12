@@ -1,16 +1,11 @@
 package com.dev.nicola.allweather.model.apixu
 
-import com.google.gson.annotations.SerializedName
+import io.realm.RealmObject
 
-open class DayApixu {
-
-    @SerializedName("maxtemp_c")
-    var maxtempC: Double? = null
-    @SerializedName("mintemp_c")
-    var mintempC: Double? = null
-    @SerializedName("avgtemp_c")
-    var avgtempC: Double? = null
-    @SerializedName("totalprecip_mm")
-    var totalprecipMm: Double? = null
+open class DayApixu : RealmObject() {
+    var maxtemp_c: Double? = null
+    var mintemp_c: Double? = null
+    var avgtemp_c: Double? = null
+    var totalprecip_mm: Double? = null
     var condition: ForecastConditionApixu? = null
 }

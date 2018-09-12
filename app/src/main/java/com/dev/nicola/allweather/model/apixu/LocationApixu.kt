@@ -1,23 +1,14 @@
 package com.dev.nicola.allweather.model.apixu
 
-import com.google.gson.annotations.SerializedName
+import io.realm.RealmObject
 
-open class LocationApixu {
-
-    @SerializedName("name")
+open class LocationApixu : RealmObject() {
     var name: String? = null
-    @SerializedName("region")
     var region: String? = null
-    @SerializedName("country")
     var country: String? = null
-    @SerializedName("lat")
     var lat: Double? = null
-    @SerializedName("lon")
     var lon: Double? = null
-    @SerializedName("tz_id")
-    var tzId: String? = null
-    @SerializedName("localtime_epoch")
-    var localtimeEpoch: Int? = null
-    @SerializedName("localtime")
+    var tz_id: String? = null
+    var localtime_epoch: Int? = null
     var localtime: String? = null
 }

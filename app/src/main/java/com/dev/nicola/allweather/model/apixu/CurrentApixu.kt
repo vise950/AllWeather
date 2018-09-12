@@ -1,26 +1,16 @@
 package com.dev.nicola.allweather.model.apixu
 
-import com.google.gson.annotations.SerializedName
+import io.realm.RealmObject
 
-open class CurrentApixu  {
-    @SerializedName("temp_c")
-    var tempC: Double? = null
-    @SerializedName("is_day")
-    var isDay: Int? = null
-    @SerializedName("condition")
-    var currentConditionApixu: CurrentConditionApixu? = null
-    @SerializedName("wind_mph")
-    var windMph: Double? = null
-    @SerializedName("wind_degree")
-    var windDegree: Int? = null
-    @SerializedName("wind_dir")
-    var windDir: String? = null
-    @SerializedName("pressure_mb")
-    var pressureMb: Double? = null
-    @SerializedName("precip_mm")
-    var precipMm: Double? = null
-    @SerializedName("humidity")
+open class CurrentApixu : RealmObject() {
+    var temp_c: Double? = null
+    var is_day: Int? = null
+    var condition: CurrentConditionApixu? = null
+    var wind_mph: Double? = null
+    var wind_degree: Int? = null
+    var wind_dir: String? = null
+    var pressure_mb: Double? = null
+    var precip_mm: Double? = null
     var humidity: Int? = null
-    @SerializedName("cloud")
     var cloud: Int? = null
 }

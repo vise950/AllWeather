@@ -52,6 +52,7 @@ class WeatherPlaceActivity : AppCompatActivity() {
                 Nil(it.latitude, it.longitude) let { (lat, lng) ->
                     weatherViewModel.getWeather(lat, lng).observe(this, Observer {
                         it.toString().error("WEATHER DATA")
+                        //todo fill view
                     })
                     weatherViewModel.updateWeather(lat, lng)
                 }

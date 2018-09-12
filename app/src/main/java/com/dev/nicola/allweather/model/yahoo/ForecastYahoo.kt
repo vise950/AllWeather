@@ -1,6 +1,8 @@
 package com.dev.nicola.allweather.model.yahoo
 
-open class ForecastYahoo {
+import io.realm.RealmObject
+
+open class ForecastYahoo : RealmObject(){
     var code: String? = null
     var date: String? = null
     var day: String? = null
