@@ -1,48 +1,23 @@
 package com.dev.nicola.allweather.ui.activity
 
 import android.os.Bundle
-import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import co.eggon.eggoid.Nil
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
-import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
-import com.dev.nicola.allweather.viewmodel.WeatherViewModel
-import com.dev.nicola.allweather.viewmodel.viewModel
+import com.dev.nicola.allweather.base.BaseActivity
 
 
-class WeatherPlaceActivity : AppCompatActivity() {
+class WeatherPlaceActivity : BaseActivity(R.layout.activity_weather_place, showBackArrow = true) {
 
     private lateinit var placeId: String
 
-    private val placeViewModel by lazy { this.viewModel { FavoritePlaceViewModel(application) } }
-    private val weatherViewModel by lazy { this.viewModel { WeatherViewModel(application) } }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_weather_place)
 
         placeId = intent.getStringExtra(HomeActivity.PLACE_ID)
 
-        initUI()
         observeData()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> onBackPressed()
-        }
-        return true
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
-    }
-
-    private fun initUI() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun observeData() {
@@ -58,6 +33,5 @@ class WeatherPlaceActivity : AppCompatActivity() {
                 }
             }
         })
-
     }
 }

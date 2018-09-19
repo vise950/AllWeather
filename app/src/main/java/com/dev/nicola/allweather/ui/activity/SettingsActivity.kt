@@ -1,37 +1,25 @@
-package com.dev.nicola.allweather.preferences
+package com.dev.nicola.allweather.ui.activity
 
 import android.os.Bundle
-import android.preference.PreferenceFragment
-import androidx.appcompat.app.AppCompatActivity
-import android.view.MenuItem
+import androidx.preference.PreferenceFragmentCompat
+import com.dev.nicola.allweather.base.BaseActivity
 
-class AppPreferences : AppCompatActivity() {
+class SettingsActivity : BaseActivity(showBackArrow = true) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        Utils.changeTheme(this)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        fragmentManager.beginTransaction().replace(android.R.id.content, AppPreferenceFragment()).commit()
+        supportFragmentManager.beginTransaction().replace(android.R.id.content, AppPreferenceFragment()).commit()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> onBackPressed()
+    class AppPreferenceFragment : PreferenceFragmentCompat() {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(com.dev.nicola.allweather.R.xml.preferences,rootKey)
         }
-        return true
-    }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
-    }
-
-
-    class AppPreferenceFragment : PreferenceFragment() {
-
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            addPreferencesFromResource(com.dev.nicola.allweather.R.xml.preferences)
+//        override fun onCreate(savedInstanceState: Bundle?) {
+//            super.onCreate(savedInstanceState)
+//            addPreferencesFromResource(com.dev.nicola.allweather.R.xml.preferences)
 
 //            val isProVersion = PreferencesHelper.isProVersion(activity) as Boolean
 //
@@ -52,7 +40,7 @@ class AppPreferences : AppCompatActivity() {
 //                }
 //                true
 //            }
-        }
+//        }
     }
 
 }

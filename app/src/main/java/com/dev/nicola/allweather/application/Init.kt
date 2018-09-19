@@ -16,14 +16,11 @@ class Init : Application() {
                 realm = it
             }
         }
-
-//        var disposable: CompositeDisposable? = null
     }
 
     override fun onCreate() {
         super.onCreate()
         initRealm()
-//        disposable = CompositeDisposable()
     }
 
     private fun initRealm() {

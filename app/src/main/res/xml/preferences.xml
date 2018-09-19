@@ -7,6 +7,7 @@
             android:defaultValue="@string/default_pref_temperature"
             android:entries="@array/temperature_unit"
             android:entryValues="@array/temperature_value"
+            android:icon="@drawable/ic_android"
             android:key="@string/key_pref_temperature"
             android:summary="%s"
             android:title="@string/pref_temperature" />
@@ -15,6 +16,7 @@
             android:defaultValue="@string/default_pref_speed"
             android:entries="@array/speed_unit"
             android:entryValues="@array/speed_value"
+            android:icon="@drawable/ic_android"
             android:key="@string/key_pref_speed"
             android:summary="%s"
             android:title="@string/pref_speed" />
@@ -23,6 +25,7 @@
             android:defaultValue="@string/default_pref_time"
             android:entries="@array/time_unit"
             android:entryValues="@array/time_value"
+            android:icon="@drawable/ic_android"
             android:key="@string/key_pref_time"
             android:summary="%s"
             android:title="@string/pref_time" />
@@ -34,6 +37,7 @@
             android:defaultValue="@string/default_pref_theme"
             android:entries="@array/theme_unit"
             android:entryValues="@array/theme_value"
+            android:icon="@drawable/ic_android"
             android:key="@string/key_pref_theme"
             android:summary="%s"
             android:title="@string/pref_theme" />
@@ -42,6 +46,7 @@
             android:defaultValue="@string/default_pref_weather_provider"
             android:entries="@array/provider_unit"
             android:entryValues="@array/provider_value"
+            android:icon="@drawable/ic_android"
             android:key="@string/key_pref_weather_provider"
             android:summary="%s"
             android:title="@string/pref_provider" />

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
@@ -14,10 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.adapter.FavoritePlaceAdapter
+import com.dev.nicola.allweather.base.BaseActivity
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.util.layoutAnimation
-import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
-import com.dev.nicola.allweather.viewmodel.viewModel
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.places.AutocompleteFilter
@@ -27,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.item_place.*
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity(R.layout.activity_home,R.menu.main_menu) {
 
     companion object {
         const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 563
@@ -45,8 +43,6 @@ class HomeActivity : AppCompatActivity() {
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build()
     }
 
-    private val placeViewModel by lazy { this.viewModel { FavoritePlaceViewModel(application) } }
-
     private var favoritePlace: List<FavoritePlace>? = null
     private lateinit var placeAdapter: FavoritePlaceAdapter
     private var actionMode: ActionMode? = null
@@ -54,7 +50,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        //todo first card is position
 
         initUI()
         observeData()
