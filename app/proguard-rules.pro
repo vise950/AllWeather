@@ -44,3 +44,6 @@
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
 }
+
+# Billing client
+-keep class com.android.vending.billing.**

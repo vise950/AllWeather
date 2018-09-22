@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/action_settings"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_unlock_pro"
         android:icon="@drawable/ic_lock_open"
         android:title="@string/action_unlock_pro"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/action_settings"
         app:showAsAction="ifRoom" />
 </menu>

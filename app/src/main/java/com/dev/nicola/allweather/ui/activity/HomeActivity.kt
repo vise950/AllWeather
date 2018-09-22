@@ -52,6 +52,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home,R.menu.main_menu) {
         super.onCreate(savedInstanceState)
         //todo first card is position
 
+        initBilling()
         initUI()
         observeData()
     }

@@ -6,9 +6,14 @@ import android.view.MenuItem
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
+import co.eggon.eggoid.extension.error
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.application.Init
 import com.dev.nicola.allweather.ui.activity.SettingsActivity
+import com.dev.nicola.allweather.util.ALL_WEATHER_PRO_SKU
 import com.dev.nicola.allweather.util.goto
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
 import com.dev.nicola.allweather.viewmodel.WeatherViewModel
@@ -23,6 +28,10 @@ abstract class BaseActivity(@LayoutRes private val layoutRes: Int? = null,
 
     val placeViewModel by lazy { this.viewModel { FavoritePlaceViewModel(application) } }
     val weatherViewModel by lazy { this.viewModel { WeatherViewModel(application) } }
+
+    lateinit var billingClient: BillingClient
+    var skuMap = HashMap<String, List<String>>()
+    private val flowParams by lazy { BillingFlowParams.newBuilder() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,9 +54,70 @@ abstract class BaseActivity(@LayoutRes private val layoutRes: Int? = null,
         when (item?.itemId) {
             android.R.id.home -> onBackPressed()
             R.id.action_settings -> goto<SettingsActivity>()
-            R.id.action_unlock_pro -> {
-            }
+            R.id.action_unlock_pro -> checkIsPro()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        billingClient.endConnection()
+    }
+
+    fun initBilling() {
+        billingClient = BillingClient.newBuilder(this)
+                .setListener { responseCode, purchases ->
+                    when (responseCode) {
+                        BillingClient.BillingResponse.OK -> {
+                            "purchase update OK".error()
+                        }
+                        BillingClient.BillingResponse.USER_CANCELED -> {
+                            "purchase update USER CANCELED".error()
+                        }
+                    }
+                }.build()
+
+        billingClient.startConnection(object : BillingClientStateListener {
+            override fun onBillingSetupFinished(@BillingClient.BillingResponse billingResponseCode: Int) {
+                if (billingResponseCode == BillingClient.BillingResponse.OK) {
+                    "start connection OK".error()
+                    skuMap[BillingClient.SkuType.INAPP] = listOf(ALL_WEATHER_PRO_SKU)
+                }
+            }
+
+            override fun onBillingServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+                "disconnected billing client".error()
+            }
+        })
+    }
+
+    private fun checkIsPro() {
+        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP) { responseCode, purchasesList ->
+            when (responseCode) {
+                BillingClient.BillingResponse.OK -> {
+                    purchasesList?.let {
+                        if (it.isNotEmpty()) {
+                            it.firstOrNull()?.let {
+                                if (it.sku == ALL_WEATHER_PRO_SKU) {
+                                    "purchase pro".error()
+                                    //todo alert already pro
+                                }
+                            }
+                        } else {
+                            "no purchase".error()
+                            unlockPro()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun unlockPro() {
+        flowParams.setSku(ALL_WEATHER_PRO_SKU)
+        flowParams.setType(BillingClient.SkuType.INAPP)
+        billingClient.launchBillingFlow(this, flowParams.build())
     }
 }
