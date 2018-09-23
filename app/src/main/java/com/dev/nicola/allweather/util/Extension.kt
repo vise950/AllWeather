@@ -3,6 +3,8 @@ package com.dev.nicola.allweather.util
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.location.Geocoder
+import android.location.Location
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.dev.nicola.allweather.BuildConfig
@@ -13,6 +15,8 @@ import io.realm.Realm
 import io.realm.RealmModel
 import io.realm.RealmResults
 import kotlinx.coroutines.experimental.launch
+import java.util.*
+
 
 /* COMMON */
 inline fun <reified E> Context.goto(block: (Intent) -> Unit = {}) {
@@ -36,11 +40,22 @@ fun RecyclerView.layoutAnimation() {
 
 fun isDebug(): Boolean = BuildConfig.DEBUG
 
+fun uuid(): String = UUID.randomUUID().toString()
+
 inline fun delay(time: Long = 1500, crossinline block: () -> Unit = {}) {
     launch {
         kotlinx.coroutines.experimental.delay(time)
         block.invoke()
     }
+}
+
+fun Location.getName(context: Context): String? {
+    Geocoder(context, Locale.getDefault()).also {
+        it.getFromLocation(this.latitude, this.longitude, 1)?.let {
+            return it[0].locality
+        }
+    }
+    return null
 }
 
 

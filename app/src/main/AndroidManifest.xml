@@ -31,19 +31,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.activity.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyTheme" />
         <activity android:name=".ui.activity.HomeActivity" />
         <activity android:name=".ui.activity.WeatherPlaceActivity" />
         <activity android:name=".ui.activity.SettingsActivity"/>
-        <!--<activity-->
-        <!--android:name=".preferences.SettingsActivity"-->
-        <!--android:label="@string/action_settings"-->
-        <!--android:parentActivityName=".ui.activity.MainActivity"-->
-        <!--android:screenOrientation="sensorPortrait" />-->
-
 
         <!-- This meta-data tag is required to use Google Play Services. -->
         <meta-data

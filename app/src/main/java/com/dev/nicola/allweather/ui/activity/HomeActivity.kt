@@ -1,7 +1,9 @@
 package com.dev.nicola.allweather.ui.activity
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -15,9 +17,13 @@ import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.adapter.FavoritePlaceAdapter
 import com.dev.nicola.allweather.base.BaseActivity
 import com.dev.nicola.allweather.model.FavoritePlace
+import com.dev.nicola.allweather.util.getName
 import com.dev.nicola.allweather.util.layoutAnimation
+import com.dev.nicola.allweather.util.uuid
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import com.google.android.material.snackbar.Snackbar
@@ -25,12 +31,14 @@ import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.item_place.*
 
 
-class HomeActivity : BaseActivity(R.layout.activity_home,R.menu.main_menu) {
+class HomeActivity : BaseActivity(R.layout.activity_home, R.menu.main_menu) {
 
     companion object {
         const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 563
         const val PLACE_ID = "placeId"
     }
+
+    private val fusedLocationClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
 
     private val placeAutocompleteIntent by lazy {
         PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
@@ -52,6 +60,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home,R.menu.main_menu) {
         super.onCreate(savedInstanceState)
         //todo first card is position
 
+        getLastKnowPosition()
         initBilling()
         initUI()
         observeData()
@@ -94,9 +103,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home,R.menu.main_menu) {
         favorite_places_rv.adapter = placeAdapter
         favorite_places_rv.layoutAnimation()
 
-        placeAdapter.onItemClicked = {
-            gotoPlace(it)
-        }
+        placeAdapter.onItemClicked = { gotoPlace(it) }
 
         placeAdapter.onItemLongClicked = {
             if (placeAdapter.selectedItem.size > 0) {
@@ -128,6 +135,24 @@ class HomeActivity : BaseActivity(R.layout.activity_home,R.menu.main_menu) {
                 placeAdapter.updateData(it)
             }
         })
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getLastKnowPosition() {
+        //todo persmission
+        fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    //todo add location on first position of list
+                    FavoritePlace().apply {
+                        id = uuid()
+                        name = location?.getName(this@HomeActivity)
+                        latitude = location?.latitude
+                        longitude = location?.longitude
+                    }.also {
+                        placeViewModel.addPlace(it)
+                        "add last know location".error()
+                    }
+                }
     }
 
     //todo snackbar for undo deleted places
