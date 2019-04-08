@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
-import co.eggon.eggoid.extension.error
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
@@ -18,6 +17,7 @@ import com.dev.nicola.allweather.util.goto
 import com.dev.nicola.allweather.viewmodel.FavoritePlaceViewModel
 import com.dev.nicola.allweather.viewmodel.WeatherViewModel
 import com.dev.nicola.allweather.viewmodel.viewModel
+import com.ewt.nicola.common.extension.log
 import io.realm.Realm
 
 abstract class BaseActivity(@LayoutRes private val layoutRes: Int? = null,
@@ -69,10 +69,10 @@ abstract class BaseActivity(@LayoutRes private val layoutRes: Int? = null,
                 .setListener { responseCode, purchases ->
                     when (responseCode) {
                         BillingClient.BillingResponse.OK -> {
-                            "purchase update OK".error()
+                            "purchase update OK".log()
                         }
                         BillingClient.BillingResponse.USER_CANCELED -> {
-                            "purchase update USER CANCELED".error()
+                            "purchase update USER CANCELED".log()
                         }
                     }
                 }.build()
@@ -80,7 +80,7 @@ abstract class BaseActivity(@LayoutRes private val layoutRes: Int? = null,
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(@BillingClient.BillingResponse billingResponseCode: Int) {
                 if (billingResponseCode == BillingClient.BillingResponse.OK) {
-                    "start connection OK".error()
+                    "start connection OK".log()
                     skuMap[BillingClient.SkuType.INAPP] = listOf(ALL_WEATHER_PRO_SKU)
                 }
             }
@@ -88,7 +88,7 @@ abstract class BaseActivity(@LayoutRes private val layoutRes: Int? = null,
             override fun onBillingServiceDisconnected() {
                 // Try to restart the connection on the next request to
                 // Google Play by calling the startConnection() method.
-                "disconnected billing client".error()
+                "disconnected billing client".log()
             }
         })
     }
@@ -101,12 +101,12 @@ abstract class BaseActivity(@LayoutRes private val layoutRes: Int? = null,
                         if (it.isNotEmpty()) {
                             it.firstOrNull()?.let {
                                 if (it.sku == ALL_WEATHER_PRO_SKU) {
-                                    "purchase pro".error()
+                                    "purchase pro".log()
                                     //todo alert already pro
                                 }
                             }
                         } else {
-                            "no purchase".error()
+                            "no purchase".log()
                             unlockPro()
                         }
                     }

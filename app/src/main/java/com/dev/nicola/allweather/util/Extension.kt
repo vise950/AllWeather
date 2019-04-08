@@ -14,7 +14,6 @@ import com.dev.nicola.allweather.dao.FavoritePlaceDao
 import io.realm.Realm
 import io.realm.RealmModel
 import io.realm.RealmResults
-import kotlinx.coroutines.experimental.launch
 import java.util.*
 
 
@@ -42,13 +41,6 @@ fun isDebug(): Boolean = BuildConfig.DEBUG
 
 fun uuid(): String = UUID.randomUUID().toString()
 
-inline fun delay(time: Long = 1500, crossinline block: () -> Unit = {}) {
-    launch {
-        kotlinx.coroutines.experimental.delay(time)
-        block.invoke()
-    }
-}
-
 fun Location.getName(context: Context): String? {
     Geocoder(context, Locale.getDefault()).also {
         it.getFromLocation(this.latitude, this.longitude, 1)?.let {
@@ -56,6 +48,10 @@ fun Location.getName(context: Context): String? {
         }
     }
     return null
+}
+
+fun <T1: Any, T2: Any, R: Any> safeLet(p1: T1?, p2: T2?, block: (T1, T2)->R?): R? {
+    return if (p1 != null && p2 != null) block(p1, p2) else null
 }
 
 

@@ -2,10 +2,10 @@ package com.dev.nicola.allweather.ui.activity
 
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import co.eggon.eggoid.Nil
-import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.base.BaseActivity
+import com.dev.nicola.allweather.util.safeLet
+import com.ewt.nicola.common.extension.log
 
 
 class WeatherPlaceActivity : BaseActivity(R.layout.activity_weather_place, showBackArrow = true) {
@@ -24,9 +24,9 @@ class WeatherPlaceActivity : BaseActivity(R.layout.activity_weather_place, showB
         placeViewModel.getPlace(placeId).observe(this, Observer {
             it?.first()?.let {
                 supportActionBar?.title = it.name
-                Nil(it.latitude, it.longitude) let { (lat, lng) ->
+                safeLet(it.latitude, it.longitude) { lat, lng ->
                     weatherViewModel.getWeather(lat, lng).observe(this, Observer {
-                        it.toString().error("WEATHER DATA")
+                        it.toString().log("WEATHER DATA")
                         //todo fill view
                     })
                     weatherViewModel.updateWeather(lat, lng)

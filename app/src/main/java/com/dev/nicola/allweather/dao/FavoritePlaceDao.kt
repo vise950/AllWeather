@@ -1,9 +1,9 @@
 package com.dev.nicola.allweather.dao
 
-import co.eggon.eggoid.extension.safeExec
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.util.RealmLiveData
 import com.dev.nicola.allweather.util.asLiveData
+import com.ewt.nicola.realm.extension.safeExec
 import io.realm.Realm
 
 

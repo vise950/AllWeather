@@ -12,7 +12,6 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import co.eggon.eggoid.extension.error
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.adapter.FavoritePlaceAdapter
 import com.dev.nicola.allweather.base.BaseActivity
@@ -20,6 +19,7 @@ import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.util.getName
 import com.dev.nicola.allweather.util.layoutAnimation
 import com.dev.nicola.allweather.util.uuid
+import com.ewt.nicola.common.extension.log
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -82,7 +82,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home, R.menu.main_menu) {
                 PlaceAutocomplete.RESULT_ERROR -> {
                     val status = PlaceAutocomplete.getStatus(this, data)
                     //todo
-                    status.error("place autocomplete error")
+                    status.log("place autocomplete error")
                     Snackbar.make(root_view, status.statusMessage.toString(), Snackbar.LENGTH_LONG).show()
                 }
             }
@@ -120,10 +120,10 @@ class HomeActivity : BaseActivity(R.layout.activity_home, R.menu.main_menu) {
         try {
             startActivityForResult(placeAutocompleteIntent, PLACE_AUTOCOMPLETE_REQUEST_CODE)
         } catch (e: GooglePlayServicesRepairableException) {
-            e.printStackTrace().error("error")
+            e.printStackTrace().log("error")
             Snackbar.make(root_view, "Errore", Snackbar.LENGTH_LONG).show()
         } catch (e: GooglePlayServicesNotAvailableException) {
-            e.printStackTrace().error("error")
+            e.printStackTrace().log("error")
             Snackbar.make(root_view, "Errore", Snackbar.LENGTH_LONG).show()
         }
     }
@@ -150,7 +150,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home, R.menu.main_menu) {
                         longitude = location?.longitude
                     }.also {
                         placeViewModel.addPlace(it)
-                        "add last know location".error()
+                        "add last know location".log()
                     }
                 }
     }
@@ -181,7 +181,7 @@ class HomeActivity : BaseActivity(R.layout.activity_home, R.menu.main_menu) {
     }
 
     private fun removePlace() {
-        placeAdapter.selectedItem.error("selected item")
+        placeAdapter.selectedItem.log("selected item")
         placeViewModel.removePlace(placeAdapter.selectedItem)
     }
 
