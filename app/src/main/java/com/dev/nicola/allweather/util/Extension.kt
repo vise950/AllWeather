@@ -3,9 +3,13 @@ package com.dev.nicola.allweather.util
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.dev.nicola.allweather.BuildConfig
 import com.dev.nicola.allweather.R
@@ -60,3 +64,11 @@ fun <T : RealmModel> RealmResults<T>.asLiveData() = RealmLiveData(this)
 
 fun Realm.favoritePlaceDao(): FavoritePlaceDao = FavoritePlaceDao(this)
 fun Realm.darkSkyDao(): DarkSkyDao = DarkSkyDao(this)
+
+/* RUNTIME PERMISSION */
+fun String.isPermissionGranted(context: Context): Boolean =
+        ContextCompat.checkSelfPermission(context, this) == PackageManager.PERMISSION_GRANTED
+
+fun String.requestPermission(activity: AppCompatActivity, requestCode: Int) {
+    ActivityCompat.requestPermissions(activity, arrayOf(this), requestCode)
+}

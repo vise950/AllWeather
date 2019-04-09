@@ -3,6 +3,7 @@ package com.dev.nicola.allweather.ui.activity
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.view.Menu
@@ -16,9 +17,7 @@ import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.adapter.FavoritePlaceAdapter
 import com.dev.nicola.allweather.base.BaseActivity
 import com.dev.nicola.allweather.model.FavoritePlace
-import com.dev.nicola.allweather.util.getName
-import com.dev.nicola.allweather.util.layoutAnimation
-import com.dev.nicola.allweather.util.uuid
+import com.dev.nicola.allweather.util.*
 import com.ewt.nicola.common.extension.log
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
@@ -33,12 +32,7 @@ import kotlinx.android.synthetic.main.item_place.*
 
 class HomeActivity : BaseActivity(R.layout.activity_home, R.menu.main_menu) {
 
-    companion object {
-        const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 563
-        const val PLACE_ID = "placeId"
-    }
-
-    private val fusedLocationClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
+    private val locationUtil by lazy { LocationUtil(this) }
 
     private val placeAutocompleteIntent by lazy {
         PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
@@ -50,17 +44,17 @@ class HomeActivity : BaseActivity(R.layout.activity_home, R.menu.main_menu) {
         AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build()
     }
-
     private var favoritePlace: List<FavoritePlace>? = null
     private lateinit var placeAdapter: FavoritePlaceAdapter
     private var actionMode: ActionMode? = null
+
     private val actionModeCallback = ActionModeCallback()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //todo first card is position
 
-        getLastKnowPosition()
+        locationUtil.getLastKnowPosition()
         initBilling()
         initUI()
         observeData()
@@ -85,6 +79,21 @@ class HomeActivity : BaseActivity(R.layout.activity_home, R.menu.main_menu) {
                     status.log("place autocomplete error")
                     Snackbar.make(root_view, status.statusMessage.toString(), Snackbar.LENGTH_LONG).show()
                 }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED) {
+                "permission granted".log()
+                locationUtil.getLastKnowPosition()
+            } else {
+//                this.dialog(R.string.permission_required, R.string.permission_required_desc,
+//                        positiveAction = { LOCATION_PERMISSION.requestPermission(this, LOCATION_PERMISSION_CODE) })
+                "request persmission".log()
+                LOCATION_PERMISSION.requestPermission(this, LOCATION_PERMISSION_CODE)
             }
         }
     }
@@ -135,24 +144,6 @@ class HomeActivity : BaseActivity(R.layout.activity_home, R.menu.main_menu) {
                 placeAdapter.updateData(it)
             }
         })
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun getLastKnowPosition() {
-        //todo persmission
-        fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    //todo add location on first position of list
-                    FavoritePlace().apply {
-                        id = uuid()
-                        name = location?.getName(this@HomeActivity)
-                        latitude = location?.latitude
-                        longitude = location?.longitude
-                    }.also {
-                        placeViewModel.addPlace(it)
-                        "add last know location".log()
-                    }
-                }
     }
 
     //todo snackbar for undo deleted places

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.dev.nicola.allweather.R
 import com.dev.nicola.allweather.base.BaseActivity
+import com.dev.nicola.allweather.util.PLACE_ID
 import com.dev.nicola.allweather.util.safeLet
 import com.ewt.nicola.common.extension.log
 
@@ -15,7 +16,7 @@ class WeatherPlaceActivity : BaseActivity(R.layout.activity_weather_place, showB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        placeId = intent.getStringExtra(HomeActivity.PLACE_ID)
+        placeId = intent.getStringExtra(PLACE_ID)
 
         observeData()
     }
