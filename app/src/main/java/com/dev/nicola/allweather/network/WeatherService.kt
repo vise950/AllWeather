@@ -20,8 +20,7 @@ interface WeatherService {
     }
 
     @GET("forecast/$DARK_SKY_API_KEY/{latitude},{longitude}")
-    fun getDarkSkyData(@Url url: String,
-                       @Path("latitude") latitude: Double,
+    fun getDarkSkyData(@Path("latitude") latitude: Double,
                        @Path("longitude") longitude: Double,
                        @Query("units") units: String = "us",
                        @Query("lang") language: String = Locale.getDefault().language,

@@ -46,11 +46,12 @@ class Init : Application() {
                             }
                 }
 
-        fun getRetrofit(): Retrofit =
+        fun getRetrofit(baseUrl: String): Retrofit =
                 retrofit?.let {
                     it
                 } ?: run {
                     Retrofit.Builder()
+                            .baseUrl(baseUrl)
                             .client(getOkHttpClient())
                             .addCallAdapterFactory(CoroutineCallAdapterFactory())
                             .addConverterFactory(GsonConverterFactory.create())

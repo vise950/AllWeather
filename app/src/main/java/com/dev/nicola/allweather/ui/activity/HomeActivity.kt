@@ -1,10 +1,8 @@
 package com.dev.nicola.allweather.ui.activity
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -21,8 +19,6 @@ import com.dev.nicola.allweather.util.*
 import com.ewt.nicola.common.extension.log
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import com.google.android.material.snackbar.Snackbar
@@ -30,9 +26,10 @@ import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.item_place.*
 
 
-class HomeActivity : BaseActivity(R.layout.activity_home, R.menu.main_menu) {
+class HomeActivity : BaseActivity() {
 
     private val locationUtil by lazy { LocationUtil(this) }
+    private val billingUtil by lazy { BillingUtil(this) }
 
     private val placeAutocompleteIntent by lazy {
         PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
@@ -52,12 +49,15 @@ class HomeActivity : BaseActivity(R.layout.activity_home, R.menu.main_menu) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_home)
         //todo first card is position
 
-        locationUtil.getLastKnowPosition()
-        initBilling()
-        initUI()
-        observeData()
+        init()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        billingUtil.destroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -87,15 +87,31 @@ class HomeActivity : BaseActivity(R.layout.activity_home, R.menu.main_menu) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED) {
-                "permission granted".log()
                 locationUtil.getLastKnowPosition()
             } else {
-//                this.dialog(R.string.permission_required, R.string.permission_required_desc,
-//                        positiveAction = { LOCATION_PERMISSION.requestPermission(this, LOCATION_PERMISSION_CODE) })
-                "request persmission".log()
                 LOCATION_PERMISSION.requestPermission(this, LOCATION_PERMISSION_CODE)
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_settings -> goto<SettingsActivity>()
+            R.id.action_unlock_pro -> billingUtil.checkIsPro()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun init() {
+        locationUtil.getLastKnowPosition()
+        billingUtil.initBilling()
+        initUI()
+        observeData()
     }
 
     private fun initUI() {

@@ -9,12 +9,13 @@ import com.dev.nicola.allweather.util.safeLet
 import com.ewt.nicola.common.extension.log
 
 
-class WeatherPlaceActivity : BaseActivity(R.layout.activity_weather_place, showBackArrow = true) {
+class WeatherPlaceActivity : BaseActivity(true) {
 
     private lateinit var placeId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_weather_place)
 
         placeId = intent.getStringExtra(PLACE_ID)
 
