@@ -5,7 +5,7 @@ import com.dev.nicola.allweather.model.darkSky.RootDarkSky
 import com.dev.nicola.allweather.util.RealmLiveData
 import com.dev.nicola.allweather.util.darkSkyDao
 
-class DarkSkyLocalRepository {
+class WeatherLocalRepository {
 
     private val darkSkyDao = Init.getRealmInstance().darkSkyDao()
 
