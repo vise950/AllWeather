@@ -17,9 +17,6 @@ import com.dev.nicola.allweather.base.BaseActivity
 import com.dev.nicola.allweather.model.FavoritePlace
 import com.dev.nicola.allweather.util.*
 import com.ewt.nicola.common.extension.log
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_home.*
@@ -30,17 +27,8 @@ class HomeActivity : BaseActivity() {
 
     private val locationUtil by lazy { LocationUtil(this) }
     private val billingUtil by lazy { BillingUtil(this) }
+    private val placeAutocompleteUtil by lazy { PlaceAutocompleteUtil(this) }
 
-    private val placeAutocompleteIntent by lazy {
-        PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                .setFilter(placeAutocompleteFilter)
-                .build(this)
-    }
-
-    private val placeAutocompleteFilter by lazy {
-        AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build()
-    }
     private var favoritePlace: List<FavoritePlace>? = null
     private lateinit var placeAdapter: FavoritePlaceAdapter
     private var actionMode: ActionMode? = null
@@ -50,8 +38,6 @@ class HomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        //todo first card is position
-
         init()
     }
 
@@ -116,7 +102,7 @@ class HomeActivity : BaseActivity() {
 
     private fun initUI() {
         add_place_fab.setOnClickListener {
-            searchPlace()
+            placeAutocompleteUtil.gotoSearchPlace()
             actionMode?.finish()
         }
         initRecycler()
@@ -138,18 +124,6 @@ class HomeActivity : BaseActivity() {
             } else {
                 actionMode?.finish()
             }
-        }
-    }
-
-    private fun searchPlace() {
-        try {
-            startActivityForResult(placeAutocompleteIntent, PLACE_AUTOCOMPLETE_REQUEST_CODE)
-        } catch (e: GooglePlayServicesRepairableException) {
-            e.printStackTrace().log("error")
-            Snackbar.make(root_view, "Errore", Snackbar.LENGTH_LONG).show()
-        } catch (e: GooglePlayServicesNotAvailableException) {
-            e.printStackTrace().log("error")
-            Snackbar.make(root_view, "Errore", Snackbar.LENGTH_LONG).show()
         }
     }
 
